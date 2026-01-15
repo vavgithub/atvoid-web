@@ -3,15 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build:tokens": "style-dictionary build --config style-dictionary.config.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@sanity/client": "^7.13.2",
+    "@sanity/image-url": "^2.0.2",
+    "@sanity/vision": "^5.0.1",
     "next": "16.0.10",
+    "next-sanity": "^12.0.1",
     "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "react-dom": "19.2.1",
+    "sanity": "^5.0.1",
+    "styled-components": "^6.1.19"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -20,6 +27,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
+    "style-dictionary": "^5.1.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -1,26 +1,141 @@
 @import "tailwindcss";
+@import "./variables.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* PP Editorial Bold */
+@font-face {
+  font-family: 'PP Editorial';
+  src: url('/fonts/PPEditorialNew-Italic.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Goia Display Regular */
+@font-face {
+  font-family: 'Goia Display';
+  src: url('/fonts/GoiaDisplay-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Satoshi Regular */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-satoshi), sans-serif;
+}
+
+.bg-about-us {
+  background-image: url('/images/bg/about-us-bg.png');
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
+}
+
+
+/* Button Primary */
+.button-primary {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  transition: background 0.2s, color 0.2s;
+}
+.button-primary:hover:not(:disabled):not(.button-primary-disabled) {
+  background-color: var(--button-primary-bgHover);
+  color: var(--button-primary-text);
+}
+.button-primary:disabled,
+.button-primary.button-primary-disabled {
+  background-color: var(--button-primary-bgDisabled);
+  color: var(--button-primary-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Button Secondary */
+.button-secondary {
+  background-color: var(--button-secondary-bg);
+  color: var(--button-secondary-text);
+  transition: background 0.2s, color 0.2s;
+}
+.button-secondary:hover:not(:disabled):not(.button-secondary-disabled) {
+  background-color: var(--button-secondary-bgHover);
+  color: var(--button-secondary-text);
+}
+.button-secondary:disabled,
+.button-secondary.button-secondary-disabled {
+  background-color: var(--button-secondary-bgDisabled);
+  color: var(--button-secondary-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Button Tertiary */
+.button-tertiary {
+  background-color: var(--button-tertiary-bg);
+  color: var(--button-tertiary-text);
+  transition: background 0.2s, color 0.2s;
+  border: 2px solid var(--button-tertiary-border);
+}
+.button-tertiary:hover:not(:disabled):not(.button-tertiary-disabled) {
+  background-color: var(--button-tertiary-bgHover);
+  color: var(--button-tertiary-text);
+}
+.button-tertiary:disabled,
+.button-tertiary.button-tertiary-disabled {
+  background-color: var(--button-tertiary-bgDisabled);
+  color: var(--button-tertiary-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Button Error */
+.button-error {
+  background-color: var(--button-error-bg);
+  color: var(--button-error-text);
+  transition: background 0.2s, color 0.2s;
+  border: 2px solid var(--button-error-border);
+}
+.button-error:hover:not(:disabled):not(.button-error-disabled) {
+  background-color: var(--button-error-bgHover);
+  color: var(--button-error-text);
+}
+.button-error:disabled,
+.button-error.button-error-disabled {
+  background-color: var(--button-error-bgDisabled);
+  color: var(--button-error-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Button Danger */
+.button-danger {
+  background-color: var(--button-danger-bg);
+  color: var(--button-danger-text);
+  transition: background 0.2s, color 0.2s;
+  border: 2px solid var(--button-danger-border);
+}
+.button-danger:hover:not(:disabled):not(.button-danger-disabled) {
+  background-color: var(--button-danger-bgHover);
+  color: var(--button-danger-text);
+}
+.button-danger:disabled,
+.button-danger.button-danger-disabled {
+  background-color: var(--button-danger-bgDisabled);
+  color: var(--button-danger-text-disabled);
+  cursor: not-allowed;
+}
+
+@layer base {
+  h1 {
+    font-size: var(--font-size-7xl);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.1;
+    color: var(--color-text-primary);
+  }
 }
