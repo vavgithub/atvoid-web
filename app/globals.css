@@ -10,23 +10,38 @@
   font-display: swap;
 }
 
-/* Goia Display Regular */
 @font-face {
-  font-family: 'Goia Display';
-  src: url('/fonts/GoiaDisplay-Regular.otf') format('opentype');
-  font-weight: 400;
+  font-family: 'PP Neue Corp';
+  src: url('/fonts/PPNeueCorpNormalMedium.otf') format('opentype');
+  font-weight: 500;
   font-style: normal;
-  font-display: swap;
 }
 
-/* Satoshi Regular */
+/* 1. Wide Medium */
 @font-face {
-  font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Regular.otf') format('opentype');
-  font-weight: 400;
+  font-family: 'PP Neue Corp Wide';
+  src: url('/fonts/PPNeueCorp-WideMedium.otf') format('opentype');
+  font-weight: 500;
   font-style: normal;
-  font-display: swap;
 }
+
+/* 2. Extended Medium */
+@font-face {
+  font-family: 'PP Neue Corp Extended';
+  src: url('/fonts/PPNeueCorp-ExtendedMedium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* 3. Narrow Ultrabold */
+@font-face {
+  font-family: 'PP Neue Corp Narrow';
+  src: url('/fonts/PPNeueCorp-NarrowUltrabold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+
 
 body {
   margin: 0;
@@ -129,6 +144,26 @@ body {
   background-color: var(--button-danger-bgDisabled);
   color: var(--button-danger-text-disabled);
   cursor: not-allowed;
+}
+
+/* Button Gradient */
+.btn-gradient {
+  border-radius: 32px;
+  border: 2px solid #29FFAA;
+  background: linear-gradient(93deg, #6838F2 0.11%, #FFF 44.13%, #73F8C3 92.77%);
+  box-shadow: 
+    0 4px 12px 0 rgba(0, 0, 0, 0.25) inset,
+    -10px 4px 25px 0 rgba(104, 56, 242, 0.8),
+    15px 6px 30px 0 rgba(115, 248, 195, 0.8);
+}
+
+/* Hide scrollbar but keep scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
 @layer base {

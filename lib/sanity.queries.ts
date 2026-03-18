@@ -1,5 +1,5 @@
 import { client } from './sanity.client';
-import type { AboutPage } from './sanity.types';
+import type { AboutPage, HomePage } from './sanity.types';
 
 export const aboutPageQuery = `*[_type == "aboutPage" && _id == "aboutPage"][0]{
   _id,
@@ -64,5 +64,221 @@ export const aboutPageQuery = `*[_type == "aboutPage" && _id == "aboutPage"][0]{
 
 export async function getAboutPage(): Promise<AboutPage | null> {
   return await client.fetch(aboutPageQuery);
+}
+
+export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
+  _id,
+  title,
+  slug,
+  hero{
+    mainHeading,
+    discoveryCall{
+      label,
+      href
+    },
+    primaryCta{
+      label,
+      href
+    },
+    showreelCard{
+      logo{
+        asset->{
+          _id,
+          url,
+          metadata{
+            dimensions{ width, height }
+          }
+        }
+      },
+      yearLabel,
+      heading,
+      subheading,
+      locationText,
+      reachText,
+      backgroundImage{
+        asset->{
+          _id,
+          url,
+          metadata{
+            dimensions{ width, height }
+          }
+        }
+      }
+    }
+  },
+  awardWinningStudio{
+    experienceBadge{
+      icon{
+        asset->{
+          _id,
+          url,
+          metadata{
+            dimensions{ width, height }
+          }
+        }
+      },
+      description
+    },
+    intro{
+      heading,
+      description
+    },
+    trustedBy{
+      heading,
+      logos[]{
+        image{
+          asset->{
+            _id,
+            url,
+            metadata{
+              dimensions{ width, height }
+            }
+          }
+        },
+        altText
+      }
+    },
+    messageSection{
+      textContent{
+        backgroundText{
+          asset->{
+            _id,
+            url,
+            metadata{ dimensions{ width, height } }
+          }
+        },
+        paragraph1,
+        paragraph2,
+        concludingStatement
+      },
+      image{
+        asset->{
+          _id,
+          url,
+          metadata{
+            dimensions{ width, height }
+          }
+        }
+      }
+    }
+  },
+  digitalEcosystem{
+    mainHeading,
+    backgroundImage{
+      asset->{
+        _id,
+        url,
+        metadata{
+          dimensions{ width, height }
+        }
+      }
+    },
+    categories[]{
+      title,
+      description,
+      style
+    },
+    services[]{
+      name
+    }
+  },
+  selectedWorks{
+    heading,
+    cta{
+      label,
+      href
+    },
+    cards[]{
+      title,
+      client,
+      narrative,
+      index,
+      href,
+      image{
+        asset->{
+          _id,
+          url,
+          metadata{
+            dimensions{ width, height }
+          }
+        }
+      },
+      scopeTags[]{
+        name,
+        color
+      }
+    }
+  },
+  diverseTeam{
+    heading{
+      prefix1,
+      main1,
+      prefix2,
+      main2
+    },
+    backgroundImage{
+      asset->{
+        _id,
+        url,
+        metadata{
+          dimensions{ width, height }
+        }
+      }
+    },
+    teamMembers[]{
+      name,
+      color,
+      positionX,
+      positionY
+    }
+  },
+  roiOfCoherence{
+    heading,
+    backgroundImage{
+      asset->{
+        _id,
+        url,
+        metadata{
+          dimensions{ width, height }
+        }
+      }
+    },
+    cards[]{
+      heading,
+      description,
+      image{
+        asset->{
+          _id,
+          url,
+          metadata{
+            dimensions{ width, height }
+          }
+        }
+      }
+    }
+  },
+  finalCta{
+    heading,
+    subheading,
+    description,
+    discoveryCall{
+      label,
+      href
+    }
+  },
+  seo{
+    metaTitle,
+    metaDescription,
+    ogImage{
+      asset->{
+        _id,
+        url
+      }
+    }
+  }
+}`;
+
+export async function getHomePage(): Promise<HomePage | null> {
+  return await client.fetch(homePageQuery);
 }
 

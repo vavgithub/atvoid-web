@@ -92,9 +92,10 @@
   --color-text-selection: #478000;
 
   /* Font */
-  --font-editorial: 'PP Editorial', serif;
-  --font-goia: 'Goia Display', serif;
-  --font-satoshi: 'Satoshi', sans-serif;
+  --font-pp-neue-corp: 'PP Neue Corp', sans-serif;
+  --font-pp-neue-corp-wide: 'PP Neue Corp Wide', sans-serif;
+  --font-pp-neue-corp-extended: 'PP Neue Corp Extended', sans-serif;
+  --font-pp-neue-corp-narrow: 'PP Neue Corp Narrow', sans-serif;
 
   /* Font-size */
   --font-size-xs: 0.75rem;
