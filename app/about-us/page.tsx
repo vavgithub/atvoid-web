@@ -1,6 +1,5 @@
 import { getAboutPage } from "@/lib/sanity.queries";
 import Container from "@/components/Layout/Container";
-import Button from "@/components/Button/Button";
 
 export default async function AboutUs() {
   const data = await getAboutPage();
@@ -22,7 +21,7 @@ export default async function AboutUs() {
           </div>
           <div className="flex justify-center items-center mt-6">
             <p className="max-w-[559px] text-center">{data.intro.description}</p>
-            <Button>{data.intro.ctaText}</Button>
+            {data.intro.ctaText}
           </div>
 
         </section>
