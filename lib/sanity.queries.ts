@@ -70,18 +70,28 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
   _id,
   title,
   slug,
-  hero{
-    mainHeading,
-    discoveryCall{
-      label,
-      href
+  showReelsSection{
+    image{
+      asset->{
+        _id,
+        url,
+        metadata{
+          dimensions{ width, height }
+        }
+      }
     },
-    primaryCta{
-      label,
-      href
-    },
-    showreelCard{
-      logo{
+    video{
+      asset->{
+        _id,
+        url,
+        originalFilename,
+        mimeType
+      }
+    }
+  },
+  heroSection{
+    experienceBadge{
+      icon{
         asset->{
           _id,
           url,
@@ -90,19 +100,25 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
           }
         }
       },
-      yearLabel,
+      description
+    },
+    intro{
       heading,
-      subheading,
-      locationText,
-      reachText,
-      backgroundImage{
-        asset->{
-          _id,
-          url,
-          metadata{
-            dimensions{ width, height }
+      description
+    },
+    trustedBy{
+      heading,
+      logos[]{
+        image{
+          asset->{
+            _id,
+            url,
+            metadata{
+              dimensions{ width, height }
+            }
           }
-        }
+        },
+        altText
       }
     }
   },
@@ -164,6 +180,10 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
   },
   digitalEcosystem{
     mainHeading,
+    subheading{
+      line1,
+      line2
+    },
     backgroundImage{
       asset->{
         _id,
@@ -182,18 +202,20 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
       name
     }
   },
-  selectedWorks{
-    heading,
-    cta{
-      label,
-      href
+  coherenceIsAlive{
+    headline,
+    image{
+      asset->{
+        _id,
+        url,
+        metadata{
+          dimensions{ width, height }
+        }
+      }
     },
-    cards[]{
-      title,
-      client,
-      narrative,
-      index,
-      href,
+    subline,
+    line1,
+    items[]{
       image{
         asset->{
           _id,
@@ -203,6 +225,26 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
           }
         }
       },
+      label
+    }
+  },
+  selectedWorks{
+    heading,
+    cards[]{
+      title,
+      image{
+        asset->{
+          _id,
+          url,
+          metadata{
+            dimensions{ width, height }
+          }
+        }
+      },
+      client,
+      narrative,
+      index,
+      href,
       scopeTags[]{
         name,
         color
@@ -229,7 +271,10 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
       name,
       color,
       positionX,
-      positionY
+      positionY,
+      arrowColor,
+      arrowPositionX,
+      arrowPositionY
     }
   },
   roiOfCoherence{
@@ -259,6 +304,15 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
   },
   finalCta{
     heading,
+    image{
+      asset->{
+        _id,
+        url,
+        metadata{
+          dimensions{ width, height }
+        }
+      }
+    },
     subheading,
     description,
     discoveryCall{

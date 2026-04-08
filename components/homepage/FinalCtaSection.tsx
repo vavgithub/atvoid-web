@@ -1,18 +1,21 @@
 import Link from "next/link";
+import Image from "next/image";
+import { urlFor } from "@/lib/sanity.image";
 import type { HomePage } from "@/lib/sanity.types";
 
 interface FinalCtaSectionProps {
   finalCta: HomePage["finalCta"];
 }
 
+const DEFAULT_DISCOVERY_CALL_HREF = "https://www.atvoid.com/enquiry";
+
 export default function FinalCtaSection({ finalCta }: FinalCtaSectionProps) {
   if (!finalCta) return null;
 
   return (
-    <section className="w-full mt-[100px] md:mt-[215px]">
-      <div className="">
-        {/* Left: Heading */}
-        <div className="max-w-[380px]">
+      <section className="w-full ">
+      <div className="flex flex-col md:h-[305px] md:flex-row md:items-end">
+        <div className="max-w-[380px] md:self-start md:text-left">
           {finalCta.heading && (
             <h2 className="text-[#F6F6F6] font-pp-neue-corp-wide text-[24px] md:text-[40px] font-medium leading-[120%] tracking-[-0.8px] uppercase">
               {finalCta.heading}
@@ -20,60 +23,36 @@ export default function FinalCtaSection({ finalCta }: FinalCtaSectionProps) {
           )}
         </div>
 
-        {/* Middle: Subheading + description + button (button aligned to bottom) */}
-        <div className="flex items-end justify-end gap-10 mt-10 md:mt-[-100px]">
-          <div className="max-w-[380px]">
-            {finalCta.subheading && (
-              <h3 className="text-[#F6F6F6] font-pp-neue-corp text-[18px] md:text-[24px] font-medium leading-[120%] tracking-[-0.8px] uppercase">
-                {finalCta.subheading}
-              </h3>
-            )}
-            {finalCta.description && (
-              <p className="mt-4 text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium leading-[120%] tracking-[0.32px]">
-                {finalCta.description}
-              </p>
-            )}
-          </div>
+        <div className="max-w-[380px] text-left md:pb-4">
+          {finalCta.subheading && (
+            <h3 className="text-[#F6F6F6] font-pp-neue-corp text-[18px] md:text-[24px] font-medium leading-[120%] tracking-[-0.8px] uppercase">
+              {finalCta.subheading}
+            </h3>
+          )}
+          {finalCta.description && (
+            <p className="mt-6 max-w-[315px] text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium not-italic leading-[120%] tracking-[0.32px]">
+              {finalCta.description}
+            </p>
+          )}
+        </div>
 
-          {/* Push CTA to bottom on desktop */}
-          <div className="mt-8 lg:mt-auto flex lg:justify-end">
-            {finalCta.discoveryCall?.href ? (
-              <Link
-                href={finalCta.discoveryCall.href}
-                className="group relative flex h-32 w-32 md:h-[260px] md:w-[260px] shrink-0 items-center justify-center rounded-full border border-white/10 bg-black transition-transform hover:scale-105"
-              >
-                {/* Center arrow */}
-                <span className="text-4xl md:text-7xl text-white transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1">
-                  ↗
-                </span>
-
-                {/* Rotating circular text */}
-                <div className="absolute inset-0">
-                  <svg viewBox="0 0 100 100" className="h-full w-full">
-                    <defs>
-                      <path
-                        id="finalCtaCirclePath"
-                        d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
-                      />
-                    </defs>
-                    <text>
-                      <textPath
-                        xlinkHref="#finalCtaCirclePath"
-                        className="fill-[rgb(118,255,200)] text-[11.8px] font-bold uppercase tracking-widest"
-                      >
-                        {finalCta.discoveryCall.label && (
-                          <>
-                            {finalCta.discoveryCall.label}
-                            <tspan className="fill-white text-[20px]"> •</tspan>
-                          </>
-                        )}
-                      </textPath>
-                    </text>
-                  </svg>
-                </div>
-              </Link>
+        <div className="mt-8 flex md:ml-auto md:mt-0 md:shrink-0 md:justify-end md:pb-4">
+          <Link
+            href={DEFAULT_DISCOVERY_CALL_HREF}
+            className="group relative flex h-32 w-32 md:h-[230px] md:w-[230px] shrink-0 items-center justify-center rounded-full bg-black transition-transform hover:scale-105"
+          >
+            {finalCta.image?.asset?.url ? (
+              <div className="pointer-events-none absolute inset-0">
+                <Image
+                  src={urlFor(finalCta.image).url()}
+                  alt=""
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 128px, 230px"
+                />
+              </div>
             ) : null}
-          </div>
+          </Link>
         </div>
       </div>
     </section>

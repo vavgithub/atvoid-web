@@ -23,122 +23,17 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'hero',
+      name: 'heroSection',
       title: 'Hero Section',
-      type: 'object',
-      fields: [
-        defineField({
-          name: 'mainHeading',
-          title: 'Main Heading',
-          description: 'Top-left text (e.g., "MEET YOUR STRATEGIC DESIGN PARTNER").',
-          type: 'string',
-          validation: (Rule) => Rule.required(),
-        }),
-        defineField({
-          name: 'discoveryCall',
-          title: 'Discovery Call CTA',
-          description: 'Circular CTA (label + link).',
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'label',
-              title: 'Label',
-              description: 'e.g., "BOOK A DISCOVERY CALL NOW!"',
-              type: 'string',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'href',
-              title: 'Link (URL)',
-              type: 'url',
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
-        }),
-        defineField({
-          name: 'primaryCta',
-          title: 'Primary CTA Button',
-          description: 'Top-right button (label + link).',
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'label',
-              title: 'Label',
-              description: 'e.g., "Start Your Project"',
-              type: 'string',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'href',
-              title: 'Link (URL)',
-              type: 'url',
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
-        }),
-        defineField({
-          name: 'showreelCard',
-          title: 'Showreel Card',
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'logo',
-              title: 'Logo / Icon',
-              type: 'image',
-              options: { hotspot: true },
-            }),
-            defineField({
-              name: 'yearLabel',
-              title: 'Year Label',
-              description: 'e.g., "2025"',
-              type: 'string',
-            }),
-            defineField({
-              name: 'heading',
-              title: 'Heading',
-              description: 'e.g., "SHOWREEL"',
-              type: 'string',
-              validation: (Rule) => Rule.required(),
-            }),
-            defineField({
-              name: 'subheading',
-              title: 'Subheading',
-              description: 'e.g., "BRANDING • PRODUCT • DEVELOPMENT • MOTION"',
-              type: 'string',
-            }),
-            defineField({
-              name: 'locationText',
-              title: 'Location Text',
-              description: 'Bottom-left (e.g., "BASED IN UAE & USA")',
-              type: 'string',
-            }),
-            defineField({
-              name: 'reachText',
-              title: 'Reach Text',
-              description: 'Bottom-right (e.g., "GLOBAL REACH")',
-              type: 'string',
-            }),
-            defineField({
-              name: 'backgroundImage',
-              title: 'Card Background Image',
-              description: 'Background image/pattern for the showreel card.',
-              type: 'image',
-              options: { hotspot: true },
-            }),
-          ],
-        }),
-      ],
-    }),
-    defineField({
-      name: 'awardWinningStudio',
-      title: 'Award winning Studio',
+      description:
+        'Experience badge, intro, and trusted-by logos (top of home page, above the showreel).',
       type: 'object',
       fields: [
         defineField({
           name: 'experienceBadge',
           title: 'Experience Badge',
           type: 'object',
-          fields: [ 
+          fields: [
             defineField({
               name: 'icon',
               title: 'Badge Icon',
@@ -148,7 +43,8 @@ export default defineType({
             defineField({
               name: 'description',
               title: 'Description Text',
-              description: 'e.g., "AWARD-WINNING STUDIO WITH OVER 20 YEARS OF EXPERIENCE WORLDWIDE"',
+              description:
+                'e.g., "AWARD-WINNING STUDIO WITH OVER 20 YEARS OF EXPERIENCE WORLDWIDE"',
               type: 'text',
             }),
           ],
@@ -161,7 +57,8 @@ export default defineType({
             defineField({
               name: 'heading',
               title: 'Main Heading',
-              description: 'Multi-line heading (e.g., "STRATEGIC BRANDING. ROBUST ENGINEERING. ONE COHERENT VISION.")',
+              description:
+                'Multi-line heading (e.g., "STRATEGIC BRANDING. ROBUST ENGINEERING. ONE COHERENT VISION.")',
               type: 'text',
             }),
             defineField({
@@ -181,7 +78,8 @@ export default defineType({
             defineField({
               name: 'heading',
               title: 'Heading',
-              description: 'e.g., "TRUSTED BY GLOBAL INNOVATORS & FORTUNE 100 LEADERS"',
+              description:
+                'e.g., "TRUSTED BY GLOBAL INNOVATORS & FORTUNE 100 LEADERS"',
               type: 'string',
             }),
             defineField({
@@ -210,6 +108,35 @@ export default defineType({
             }),
           ],
         }),
+      ],
+    }),
+    defineField({
+      name: 'showReelsSection',
+      title: 'ShowReels Section',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'image',
+          title: 'Thumbnail',
+          description: 'Optional still used as the video poster (and shown if no video is set).',
+          type: 'image',
+          options: { hotspot: true },
+        }),
+        defineField({
+          name: 'video',
+          title: 'Showreel video',
+          type: 'file',
+          options: {
+            accept: 'video/*',
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'awardWinningStudio',
+      title: 'Award winning Studio',
+      type: 'object',
+      fields: [
         defineField({
           name: 'messageSection',
           title: 'Message Section',
@@ -276,6 +203,25 @@ export default defineType({
           description: 'e.g. "A COMPLETE DIGITAL ECOSYSTEM"',
           type: 'string',
         }),
+        defineField({
+          name: 'subheading',
+          title: 'Subheading',
+          description: 'Two-line subheading below the main heading.',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'line1',
+              title: 'Line 1',
+              type: 'string',
+            }),
+            defineField({
+              name: 'line2',
+              title: 'Line 2',
+              type: 'string',
+            }),
+          ],
+        }),
+
         defineField({
           name: 'categories',
           title: 'Categories (Brand / Experience / Engineering)',
@@ -349,6 +295,66 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'coherenceIsAlive',
+      title: 'Coherence Is Alive',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'headline',
+          title: 'Headline',
+          type: 'string',
+        }),
+        defineField({
+          name: 'image',
+          title: 'Orb glow image',
+          description: 'Bottom orb / glow graphic.',
+          type: 'image',
+          options: { hotspot: true },
+        }),
+        defineField({
+          name: 'subline',
+          title: 'Subline',
+          type: 'string',
+        }),
+        defineField({
+          name: 'line1',
+          title: 'Line 1',
+          type: 'string',
+        }),
+        defineField({
+          name: 'items',
+          title: 'Items',
+          description: 'Image + label for each entry.',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              name: 'coherenceIsAliveItem',
+              fields: [
+                defineField({
+                  name: 'image',
+                  title: 'Image',
+                  type: 'image',
+                  options: { hotspot: true },
+                }),
+                defineField({
+                  name: 'label',
+                  title: 'Label',
+                  type: 'string',
+                }),
+              ],
+              preview: {
+                select: { label: 'label', media: 'image' },
+                prepare({ label, media }) {
+                  return { title: label || 'Item', media };
+                },
+              },
+            },
+          ],
+        }),
+      ],
+    }),
+    defineField({
       name: 'selectedWorks',
       title: 'Selected Works Section',
       type: 'object',
@@ -360,24 +366,6 @@ export default defineType({
           type: 'string',
         }),
         defineField({
-          name: 'cta',
-          title: 'CTA Button',
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'label',
-              title: 'Label',
-              description: 'e.g. "View Our Portfolio"',
-              type: 'string',
-            }),
-            defineField({
-              name: 'href',
-              title: 'Link URL',
-              type: 'url',
-            }),
-          ],
-        }),
-        defineField({
           name: 'cards',
           title: 'Project Cards',
           type: 'array',
@@ -387,16 +375,16 @@ export default defineType({
               name: 'workCard',
               fields: [
                 defineField({
-                  name: 'image',
-                  title: 'Image',
-                  type: 'image',
-                  options: { hotspot: true },
-                }),
-                defineField({
                   name: 'title',
                   title: 'Title',
                   description: 'e.g. "The Full Stack"',
                   type: 'string',
+                }),
+                defineField({
+                  name: 'image',
+                  title: 'Image',
+                  type: 'image',
+                  options: { hotspot: true },
                 }),
                 defineField({
                   name: 'client',
@@ -565,6 +553,41 @@ export default defineType({
                   type: 'number',
                   validation: (Rule) => Rule.required(),
                 }),
+                defineField({
+                  name: 'arrowColor',
+                  title: 'Arrow Color',
+                  description: 'Optional. Cursor/arrow fill color. Defaults to the speech bubble color when empty.',
+                  type: 'string',
+                  options: {
+                    list: [
+                      { title: 'White', value: 'white' },
+                      { title: 'Light Blue', value: 'light-blue' },
+                      { title: 'Purple', value: 'purple' },
+                      { title: 'Light Green', value: 'light-green' },
+                      { title: 'Pink', value: 'pink' },
+                      { title: 'Orange', value: 'orange' },
+                      { title: 'Dark Blue', value: 'dark-blue' },
+                      { title: 'Teal', value: 'teal' },
+                      { title: 'Red', value: 'red' },
+                      { title: 'Magenta', value: 'magenta' },
+                      { title: 'Black', value: 'black' },
+                    ],
+                  },
+                }),
+                defineField({
+                  name: 'arrowPositionX',
+                  title: 'Arrow Position X (%)',
+                  description:
+                    'Optional. Horizontal position of the arrow on the map (same % system as Position X). Leave empty to keep the arrow attached to the bottom-right of the name tag.',
+                  type: 'number',
+                }),
+                defineField({
+                  name: 'arrowPositionY',
+                  title: 'Arrow Position Y (%)',
+                  description:
+                    'Optional. Vertical position of the arrow on the map (same % system as Position Y). Both Arrow Position X and Y must be set to use map positioning.',
+                  type: 'number',
+                }),
               ],
               preview: {
                 select: {
@@ -651,6 +674,12 @@ export default defineType({
           title: 'Heading',
           description: 'e.g. "READY TO BUILD YOUR DEFINITIVE BRAND?"',
           type: 'string',
+        }),
+        defineField({
+          name: 'image',
+          title: 'Image',
+          type: 'image',
+          options: { hotspot: true },
         }),
         defineField({
           name: 'subheading',

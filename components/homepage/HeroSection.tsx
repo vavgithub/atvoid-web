@@ -1,145 +1,152 @@
-import Link from "next/link";
+ "use client";
+
+import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { PortableText } from "@portabletext/react";
+import { motion } from "framer-motion";
 import { urlFor } from "@/lib/sanity.image";
-import type { HomePage } from "@/lib/sanity.types";
+import type { HeroSectionContent } from "@/lib/sanity.types";
 
 interface HeroSectionProps {
-  hero: HomePage["hero"];
+  heroSection?: HeroSectionContent;
 }
 
-export default function HeroSection({ hero }: HeroSectionProps) {
-  if (!hero) return null;
+export default function HeroSection({ heroSection }: HeroSectionProps) {
+  if (!heroSection) return null;
+
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
+  const trustedLogos =
+    heroSection.trustedBy?.logos?.filter((logo) => logo.image?.asset?.url) ?? [];
 
   return (
     <section className="w-full">
-      {/* Main Heading and CTAs */}
-      <div className="flex flex-col md:flex-row items-start justify-between gap-6">
-        {hero.mainHeading && (
-          <h1 className="text-white font-pp-neue-corp-wide text-[20px] md:text-[40px] font-medium uppercase leading-none tracking-tight md:max-w-[308px] lg:max-w-[408px]">
-            {hero.mainHeading}
-          </h1>
-        )}
+      <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2">
+        <Image
+          src="/images/Group.png"
+          alt=""
+          fill
+          priority
+          aria-hidden
+          className="object-cover object-center"
+        />
+        <div className="relative z-10 min-h-screen flex flex-col px-5 pt-4 md:min-h-[813px] md:px-10 md:pt-0 lg:px-20">
+          <div className="flex items-center justify-between pt-1 md:pt-20">
+          <div className="pointer-events-auto hidden md:block">
+            <Link href="/" className="relative block h-[32px] w-[110px] md:h-[43px] md:w-[190px]">
+              <motion.div
+                className="absolute left-0 top-0 z-10"
+                onHoverStart={() => setIsLogoHovered(true)}
+                onHoverEnd={() => setIsLogoHovered(false)}
+              >
+                <Image
+                  src="/images/Logo.svg"
+                  alt="Value at Void logo"
+                  width={125}
+                  height={44}
+                  className="h-[32px] w-auto md:h-[43px]"
+                  priority
+                />
+              </motion.div>
+              <motion.div
+                className="absolute left-[22px] top-[7px] md:left-[48px] md:top-0"
+                initial={false}
+                animate={{ opacity: isLogoHovered ? 1 : 0 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+              >
+                <Image
+                  src="/images/VAV.svg"
+                  alt="Value at Void"
+                  width={891}
+                  height={486}
+                  className="h-[18px] w-auto md:h-[43px]"
+                  priority
+                />
+              </motion.div>
+            </Link>
+          </div>
 
-        <div className="flex flex-row items-center justify-between gap-6 w-full md:w-auto">
-          {hero.discoveryCall && (
-            <>
-              {hero.discoveryCall.href ? (
-                <Link
-                  href={hero.discoveryCall.href}
-                  className="group relative flex h-32 w-32 shrink-0 items-center justify-center rounded-full border border-white/10 bg-black transition-transform hover:scale-105"
-                >
-                  {/* 1. The Center Arrow */}
-                  <span className="text-4xl text-white transition-transform duration-300 group-hover:-translate-y-1 group-hover:translate-x-1">
-                    ↗
-                  </span>
+        </div>
 
-                  {/* 2. The Rotating Circular Text */}
-                  <div className="absolute inset-0">
-                    <svg viewBox="0 0 100 100" className="h-full w-full">
-                      <defs>
-                        {/* Define the path for the text to follow (a circle) */}
-                        <path
-                          id="circlePath"
-                          d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0"
+          <div className="mt-auto flex flex-col justify-between gap-6 md:flex-row md:items-end md:gap-10">
+            <div className="md:max-w-[550px]">
+              {heroSection.experienceBadge && (
+                <div className="mt-8 flex items-start gap-3 md:mt-16 md:items-center">
+                  <div>
+                    {heroSection.experienceBadge.icon?.asset?.url ? (
+                      <div className="relative w-12 h-12">
+                        <Image
+                          src={urlFor(heroSection.experienceBadge.icon).url()}
+                          alt="Experience badge"
+                          fill
+                          className="object-contain"
+                          sizes="48px"
                         />
-                      </defs>
-                      <text>
-                        <textPath
-                          xlinkHref="#circlePath"
-                          className="fill-[rgb(118,255,200)] text-[11.8px] font-bold uppercase tracking-widest"
-                        >
-                          {hero.discoveryCall.label && (
-                            <>
-                              {hero.discoveryCall.label}
-                              <tspan className="fill-white text-[20px]"> •</tspan>
-                            </>
-                          )}
-                        </textPath>
-                      </text>
-                    </svg>
+                      </div>
+                    ) : (
+                      <div className="rounded-full border flex items-center justify-center">
+                        <span>20</span>
+                      </div>
+                    )}
                   </div>
-                </Link>
-              ) : null}
-            </>
-          )}
-
-          {hero.primaryCta && (
-            <>
-              {hero.primaryCta.href ? (
-                <div className="btn-gradient py-2 px-6 rounded-[32px] shrink-0">
-                  <Link
-                    href={hero.primaryCta.href}
-                    className=" text-[#0A0A0A] font-pp-neue-corp text-[14px] md:text-base font-medium leading-none capitalize "
-                  >
-                    {hero.primaryCta.label && hero.primaryCta.label}
-                  </Link>
+                  {heroSection.experienceBadge.description && (
+                    <div className="md:max-w-[305px] text-sm md:text-base not-italic font-pp-neue-corp font-medium leading-[120%] text-white">
+                      <p>{heroSection.experienceBadge.description}</p>
+                    </div>
+                  )}
                 </div>
-              ) : null}
-            </>
-          )}
+              )}
+
+              {heroSection.intro?.heading && (
+                <div className="mt-5 md:mt-8">
+                  <h2 className="text-[28px] md:text-[40px] leading-[120%] font-medium uppercase text-white font-pp-neue-corp-wide">
+                    {heroSection.intro.heading}
+                  </h2>
+                </div>
+              )}
+            </div>
+
+            {heroSection.intro?.description && (
+              <div className="w-full md:self-end md:flex md:justify-end">
+                <div className="max-w-full text-left text-white font-pp-neue-corp text-base font-medium leading-[145%] tracking-[0.32px] md:max-w-[226px] md:text-right">
+                  <PortableText value={heroSection.intro.description} />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Showreel Card */}
-      {hero.showreelCard && (
-        <div className="mt-10 md:mt-[100px]">
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5">
-            {hero.showreelCard.backgroundImage?.asset?.url && (
-              <Image
-                src={urlFor(hero.showreelCard.backgroundImage).url()}
-                alt=""
-                fill
-                className="object-cover opacity-80"
-                sizes="100vw"
-              />
+      {heroSection.trustedBy && (
+        <div className="relative left-1/2 right-1/2 mt-8 w-screen -translate-x-1/2 px-5 md:mt-8 md:px-10 lg:px-20">
+          <div className="flex w-full flex-col gap-4 md:flex-row md:items-end md:justify-start md:gap-10">
+            {heroSection.trustedBy.heading && (
+              <h3 className="max-w-[280px] font-pp-neue-corp text-[#FFFDEB] text-[18px] md:text-[24px] font-medium leading-[120%] tracking-[0.32px] uppercase">
+                {heroSection.trustedBy.heading}
+              </h3>
             )}
-            <div className="absolute inset-0 bg-black/35" />
-
-            <div className="relative px-6 py-10 sm:px-10 sm:py-14 md:px-16 md:py-18">
-              {/* Logo and Year Label */}
-              <div className="flex flex-col items-center text-center gap-3">
-                {hero.showreelCard.logo?.asset?.url ? (
-                  <div className="relative h-10 w-10">
-                    <Image
-                      src={urlFor(hero.showreelCard.logo).url()}
-                      alt="Logo"
-                      fill
-                      className="object-contain"
-                      sizes="40px"
-                    />
-                  </div>
-                ) : null}
-                {hero.showreelCard.yearLabel && (
-                  <div className="font-pp-neue-corp text-white text-center text-[24px] font-medium leading-[100%] capitalize">
-                    {hero.showreelCard.yearLabel}
-                  </div>
-                )}
+            {trustedLogos.length > 0 && (
+              <div className="relative left-1/2 right-1/2 w-screen min-w-0 -translate-x-1/2 overflow-hidden md:left-auto md:right-auto md:-mr-10 md:w-[calc(100%+2.5rem)] md:flex-1 md:translate-x-0 lg:-mr-20 lg:w-[calc(100%+5rem)]">
+                <motion.div
+                  className="flex w-max will-change-transform"
+                  animate={{ x: ["0%", "-50%"] }}
+                  transition={{ duration: 10, ease: "linear", repeat: Infinity }}
+                >
+                  {[...trustedLogos, ...trustedLogos].map((logo, i) => (
+                    <div className="relative mr-5 h-[30px] w-[110px] shrink-0 md:mr-10 md:h-[36px] md:w-[139px]" key={i}>
+                      <Image
+                        src={urlFor(logo.image).url()}
+                        alt={logo.altText || `Brand logo ${i + 1}`}
+                        fill
+                        className="object-contain object-bottom"
+                        sizes="(max-width: 768px) 80px, 96px"
+                      />
+                    </div>
+                  ))}
+                </motion.div>
+                <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-linear-to-r from-black via-black/85 to-transparent md:w-16" />
               </div>
-
-              {/* Heading and Subheading */}
-              <div className="mt-10 md:mt-[100px] text-center">
-                {hero.showreelCard.heading && (
-                  <div className="text-white text-center font-pp-neue-corp-narrow text-[50px] sm:text-[80px] md:text-[100px] lg:text-[140px] xl:text-[180px] font-bold leading-[100%] md:tracking-[-2.055px] capitalize">
-                    {hero.showreelCard.heading}
-                  </div>
-                )}
-                {hero.showreelCard.subheading && (
-                  <div className="mt-3 font-pp-neue-corp text-xs sm:text-sm tracking-[0.18em] text-white/80 uppercase">
-                    {hero.showreelCard.subheading}
-                  </div>
-                )}
-              </div>
-
-              {/* Location and Reach Text */}
-              <div className="font-pp-neue-corp mt-20 md:mt-[120px] xl:mt-[170px] flex items-end justify-between text-xs sm:text-sm tracking-wide uppercase text-white/80">
-                {hero.showreelCard.locationText && (
-                  <div>{hero.showreelCard.locationText}</div>
-                )}
-                {hero.showreelCard.reachText && (
-                  <div>{hero.showreelCard.reachText}</div>
-                )}
-              </div>
-            </div>
+            )}
           </div>
         </div>
       )}

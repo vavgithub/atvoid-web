@@ -61,92 +61,77 @@ export interface AboutPage {
   };
 }
 
+/** Experience badge, intro, trusted-by — used by Hero section (and legacy awardWinningStudio). */
+export type HeroSectionContent = {
+  experienceBadge?: {
+    icon?: {
+      asset?: {
+        _id: string;
+        url: string;
+        metadata?: {
+          dimensions?: {
+            width: number;
+            height: number;
+          };
+        };
+      };
+    };
+    description?: string;
+  };
+  intro?: {
+    heading?: string;
+    description?: any[];
+  };
+  trustedBy?: {
+    heading?: string;
+    logos?: Array<{
+      image?: {
+        asset?: {
+          _id: string;
+          url: string;
+          metadata?: {
+            dimensions?: {
+              width: number;
+              height: number;
+            };
+          };
+        };
+      };
+      altText?: string;
+    }>;
+  };
+};
+
 export interface HomePage {
   _id: string;
   title: string;
   slug: {
     current: string;
   };
-  hero?: {
-    mainHeading?: string;
-    discoveryCall?: {
-      label?: string;
-      href?: string;
-    };
-    primaryCta?: {
-      label?: string;
-      href?: string;
-    };
-    showreelCard?: {
-      logo?: {
-        asset?: {
-          _id: string;
-          url: string;
-          metadata?: {
-            dimensions?: {
-              width: number;
-              height: number;
-            };
+  showReelsSection?: {
+    image?: {
+      asset?: {
+        _id: string;
+        url: string;
+        metadata?: {
+          dimensions?: {
+            width: number;
+            height: number;
           };
         };
       };
-      yearLabel?: string;
-      heading?: string;
-      subheading?: string;
-      locationText?: string;
-      reachText?: string;
-      backgroundImage?: {
-        asset?: {
-          _id: string;
-          url: string;
-          metadata?: {
-            dimensions?: {
-              width: number;
-              height: number;
-            };
-          };
-        };
+    };
+    video?: {
+      asset?: {
+        _id: string;
+        url: string;
+        originalFilename?: string;
+        mimeType?: string;
       };
     };
   };
-  awardWinningStudio?: {
-    experienceBadge?: {
-      icon?: {
-        asset?: {
-          _id: string;
-          url: string;
-          metadata?: {
-            dimensions?: {
-              width: number;
-              height: number;
-            };
-          };
-        };
-      };
-      description?: string;
-    };
-    intro?: {
-      heading?: string;
-      description?: any[];
-    };
-    trustedBy?: {
-      heading?: string;
-      logos?: Array<{
-        image?: {
-          asset?: {
-            _id: string;
-            url: string;
-            metadata?: {
-              dimensions?: {
-                width: number;
-                height: number;
-              };
-            };
-          };
-        };
-        altText?: string;
-      }>;
-    };
+  heroSection?: HeroSectionContent;
+  awardWinningStudio?: HeroSectionContent & {
     messageSection?: {
       textContent?: {
         backgroundText?: {
@@ -181,6 +166,10 @@ export interface HomePage {
   };
   digitalEcosystem?: {
     mainHeading?: string;
+    subheading?: {
+      line1?: string;
+      line2?: string;
+    };
     backgroundImage?: {
       asset?: {
         _id: string;
@@ -202,18 +191,23 @@ export interface HomePage {
       name?: string;
     }>;
   };
-  selectedWorks?: {
-    heading?: string;
-    cta?: {
-      label?: string;
-      href?: string;
+  coherenceIsAlive?: {
+    headline?: string;
+    image?: {
+      asset?: {
+        _id: string;
+        url: string;
+        metadata?: {
+          dimensions?: {
+            width: number;
+            height: number;
+          };
+        };
+      };
     };
-    cards?: Array<{
-      title?: string;
-      client?: string;
-      narrative?: string;
-      index?: string;
-      href?: string;
+    subline?: string;
+    line1?: string;
+    items?: Array<{
       image?: {
         asset?: {
           _id: string;
@@ -226,6 +220,29 @@ export interface HomePage {
           };
         };
       };
+      label?: string;
+    }>;
+  };
+  selectedWorks?: {
+    heading?: string;
+    cards?: Array<{
+      title?: string;
+      image?: {
+        asset?: {
+          _id: string;
+          url: string;
+          metadata?: {
+            dimensions?: {
+              width: number;
+              height: number;
+            };
+          };
+        };
+      };
+      client?: string;
+      narrative?: string;
+      index?: string;
+      href?: string;
       scopeTags?: Array<{
         name?: string;
         color?: string;
@@ -287,10 +304,25 @@ export interface HomePage {
       color?: string;
       positionX?: number;
       positionY?: number;
+      arrowColor?: string;
+      arrowPositionX?: number;
+      arrowPositionY?: number;
     }>;
   };
   finalCta?: {
     heading?: string;
+    image?: {
+      asset?: {
+        _id: string;
+        url: string;
+        metadata?: {
+          dimensions?: {
+            width: number;
+            height: number;
+          };
+        };
+      };
+    };
     subheading?: string;
     description?: string;
     discoveryCall?: {

@@ -2,6 +2,10 @@ import Image from "next/image";
 import { urlFor } from "@/lib/sanity.image";
 import type { HomePage } from "@/lib/sanity.types";
 
+/** Design canvas — label % positions match this aspect box. */
+const ARTBOARD_W = 1280;
+const ARTBOARD_H = 832;
+
 interface DigitalEcosystemSectionProps {
   digitalEcosystem: HomePage["digitalEcosystem"];
 }
@@ -11,92 +15,98 @@ export default function DigitalEcosystemSection({
 }: DigitalEcosystemSectionProps) {
   if (!digitalEcosystem) return null;
 
+  const dims = digitalEcosystem.backgroundImage?.asset?.metadata?.dimensions;
+  const dw = dims?.width;
+  const dh = dims?.height;
+  const hasDims =
+    typeof dw === "number" && typeof dh === "number" && dw > 0 && dh > 0;
+  // Match the frame to the bitmap so object-cover does not crop (fixed 1280×832 was shorter than the art).
+  const aspectW = hasDims ? dw : ARTBOARD_W;
+  const aspectH = hasDims ? dh : ARTBOARD_H;
+  const imageFitClass = hasDims ? "object-cover object-center" : "object-contain object-center";
+
   return (
-    <section className="w-full mt-[100px] relative min-h-[600px] md:min-h-[832px] overflow-hidden">
-      {digitalEcosystem.backgroundImage?.asset?.url && (
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={urlFor(digitalEcosystem.backgroundImage).url()}
-            alt=""
-            fill
-            className="object-cover object-center"
-            sizes="100vw"
-          />
-        </div>
-      )}
-      <div className="relative z-10 mt-[60px] md:mt-[112px] p-5">
-        {/* Main Heading */}
-        {digitalEcosystem.mainHeading && (
-          <h2 className="max-w-[580px] mx-auto font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[40px] font-medium leading-[1.2] tracking-[0.8px] uppercase">
-            {digitalEcosystem.mainHeading}
-          </h2>
-        )}
-
-        {/* Categories Row: BRAND | EXPERIENCE | ENGINEERING */}
-        {digitalEcosystem.categories &&
-          digitalEcosystem.categories.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 mb-16 md:mb-24 max-w-[900px] mx-auto mt-11">
-              {digitalEcosystem.categories.map((cat, i) => (
-                <div
-                  key={i}
-                  className={
-                    i === 0
-                      ? "text-left"
-                      : i === 1
-                        ? "text-center"
-                        : "text-right"
-                  }
-                >
-                  {cat.title && (
-                    <h3
-                      className="font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase"
-                      style={
-                        i === 0
-                          ? { color: "#F5FAF8" }
-                          : { color: "rgba(245, 250, 248, 0.2)" }
-                      }
-                    >
-                      {cat.title}
-                    </h3>
-                  )}
-                  {cat.description && (
-                    <p className="mt-5 font-pp-neue-corp text-[#FFF] text-[16px] font-medium leading-[120%] tracking-[0.32px] max-w-[230px]">
-                      {cat.description}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-        {/* Service Labels: positioned lower-left, mid-right, lower-right */}
-        {digitalEcosystem.services && digitalEcosystem.services.length > 0 && (
-          <div className="relative min-h-[200px] md:min-h-[260px]">
-            {digitalEcosystem.services[0]?.name && (
-              <div className="absolute left-0 bottom-0 md:left-[8%] md:bottom-[54%]">
-                <span className="font-pp-neue-corp text-white text-base md:text-[18px] font-medium">
-                  {digitalEcosystem.services[0].name}
-                </span>
-              </div>
-            )}
-            {digitalEcosystem.services[1]?.name && (
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 md:top-[0%] md:right-[11%]">
-                <span className="font-pp-neue-corp text-white text-base md:text-[18px] font-medium">
-                  {digitalEcosystem.services[1].name}
-                </span>
-              </div>
-            )}
-            {digitalEcosystem.services[2]?.name && (
-              <div className="absolute right-0 bottom-0 md:right-[16%] md:bottom-[0%]">
-                <span className="font-pp-neue-corp text-white text-base md:text-[18px] font-medium">
-                  {digitalEcosystem.services[2].name}
-                </span>
-              </div>
-            )}
+    <section className="@container relative mt-[100px] w-full max-w-[1280px] mx-auto">
+      <div
+        className="relative w-full overflow-hidden"
+        style={{ aspectRatio: `${aspectW} / ${aspectH}` }}
+      >
+        {digitalEcosystem.backgroundImage?.asset?.url && (
+          <div className="absolute inset-0 z-0 bg-[#070708]">
+            <Image
+              src={urlFor(digitalEcosystem.backgroundImage).url()}
+              alt=""
+              fill
+              className={imageFitClass}
+              sizes="(max-width: 1280px) 100vw, 1280px"
+            />
           </div>
         )}
+
+        {/* No horizontal padding here — % positions match the image edge-to-edge */}
+        <div className="absolute inset-0 z-10">
+            {digitalEcosystem.mainHeading && (
+              <h2 className="absolute left-1/2 top-[7%] w-[min(580px,calc(100%-40px))] -translate-x-1/2 text-center font-pp-neue-corp-extended text-[40px] font-medium leading-[1.2] tracking-[0.8px] uppercase text-[#F5FAF8] md:top-[10%]">
+                {digitalEcosystem.mainHeading}
+              </h2>
+            )}
+
+            {(digitalEcosystem.subheading?.line1 || digitalEcosystem.subheading?.line2) && (
+              <div className="absolute left-1/2 top-[20%] w-[260px] max-w-[calc(100%-70px)] -translate-x-1/2 rounded-md bg-black/40 px-4 py-3 text-center backdrop-blur-sm md:top-[30%]">
+                {digitalEcosystem.subheading?.line1 && (
+                  <div className="font-pp-neue-corp-extended text-[#F5FAF8] text-xl font-medium leading-[120%] tracking-[0.4px] uppercase">
+                    {digitalEcosystem.subheading.line1}
+                  </div>
+                )}
+                {digitalEcosystem.subheading?.line2 && (
+                  <div className="mt-1 font-pp-neue-corp text-[#FFF] text-base font-light leading-[120%] tracking-[0.32px]">
+                    {digitalEcosystem.subheading.line2}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {digitalEcosystem.services && digitalEcosystem.services.length > 0 && (
+              <>
+                {digitalEcosystem.services[0]?.name && (
+                  <div className="absolute bottom-[34%] left-[21%] max-w-[110px] text-center">
+                    <span className="font-pp-neue-corp text-base font-medium text-[#F45584]">
+                      {digitalEcosystem.services[0].name}
+                    </span>
+                  </div>
+                )}
+                {digitalEcosystem.services[1]?.name && (
+                  <div className="absolute top-[35%] right-[26.5%] max-w-[110px] text-center">
+                    <span className="font-pp-neue-corp text-base font-medium text-[#F95D79]">
+                      {digitalEcosystem.services[1].name}
+                    </span>
+                  </div>
+                )}
+                {digitalEcosystem.services[2]?.name && (
+                  <div className="absolute bottom-[34.5%] right-[17.5%] max-w-[110px] text-center">
+                    <span className="font-pp-neue-corp text-base font-medium text-[#EF4E8E]">
+                      {digitalEcosystem.services[2].name}
+                    </span>
+                  </div>
+                )}
+                {digitalEcosystem.categories?.[0]?.title && (
+                  <div className="absolute bottom-[18%] left-[16.5%]">
+                    <span className="font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase text-[#F5FAF8]/[0.07]">
+                      {digitalEcosystem.categories[0].title}
+                    </span>
+                  </div>
+                )}
+                {digitalEcosystem.categories?.[1]?.title && (
+                  <div className="absolute bottom-[15%] right-[22%]">
+                    <span className="font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase text-[#F5FAF8]/[0.07]">
+                      {digitalEcosystem.categories[1].title}
+                    </span>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
       </div>
     </section>
   );
 }
-

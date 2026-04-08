@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { urlFor } from "@/lib/sanity.image";
 import type { HomePage } from "@/lib/sanity.types";
+import { ArrowUpRight } from "lucide-react";
 
 interface SelectedWorksSectionProps {
   selectedWorks: HomePage["selectedWorks"];
@@ -13,7 +14,7 @@ export default function SelectedWorksSection({
   if (!selectedWorks) return null;
 
   return (
-    <section className="relative w-full mt-[100px] md:mt-[215px] -mr-5 md:-mr-10 lg:-mr-20 z-10">
+    <section className="relative w-full mt-[100px] md:mt[282px] -mr-5 md:-mr-10 lg:-mr-20 z-10">
       {/* Header: Heading + CTA - Aligned with Container */}
       <div className="w-full mx-auto max-w-[1280px]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
@@ -22,59 +23,43 @@ export default function SelectedWorksSection({
               {selectedWorks.heading}
             </h2>
           )}
-          {selectedWorks.cta?.href && (
-            <div className="btn-gradient py-3 px-5 sm:py-2 sm:px-6 rounded-[32px] shrink-0 inline-block w-fit">
-              <Link
-                href={selectedWorks.cta.href}
-                className="text-[#0A0A0A] font-pp-neue-corp text-[14px] md:text-base font-medium leading-none capitalize "
-              >
-                {selectedWorks.cta.label || "View Our Portfolio"}
-              </Link>
-            </div>
-          )}
         </div>
       </div>
 
       {/* Cards: 1 col mobile, 3 cols desktop - Full Width to Right Edge */}
       {selectedWorks.cards && selectedWorks.cards.length > 0 && (
-        <div className="relative mt-8 md:mt-12 w-screen overflow-x-auto scrollbar-hide z-10 -ml-5 md:-ml-10 lg:-ml-20 pl-6 md:pl-10 xl:pl-20 2xl:pl-0">
-          <div className="w-full px-5 max-w-[1280px]">
-            <div className="flex gap-10 flex-row pr-5 md:pr-10 lg:pr-20" style={{ paddingRight: 'max(1.25rem, calc((100vw - 1280px) / 2 + 5rem))' }}>
+        <div className="relative mt-8 md:mt-12 z-10 w-screen ml-[calc(50%-50vw)] overflow-x-auto scrollbar-hide pl-5 md:pl-10 lg:pl-20">
+          <div className="flex gap-10 flex-row pr-0">
             {selectedWorks.cards.map((card, idx) => {
             const cardContent = (
               <>
                 {/* Card image */}
                 {card.image?.asset?.url ? (
-                  <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-white/5">
+                  <div className="relative w-full max-w-full h-[488px] rounded-2xl overflow-hidden">
                     <Image
                       src={urlFor(card.image).url()}
                       alt={card.title || ""}
                       fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 544px"
+                      className="object-contain"
+                      sizes="799px"
                     />
                   </div>
                 ) : (
-                  <div className="w-full aspect-[4/3] rounded-2xl border border-white/10 bg-white/5" />
+                  <div className="w-full h-[488px] rounded-2xl border border-white/10 bg-white/5" />
                 )}
 
                 {/* Title + Arrow */}
-                <div className="mt-4 flex items-center justify-between mt-8">
+                <div className="flex items-center justify-between -mt-6">
                   {card.title && (
                     <h3 className="text-[#F6F6F6] font-pp-neue-corp-wide text-[32px] font-medium leading-[1.2] tracking-[0.6px]">
                       {card.title}
                     </h3>
                   )}
-                  <div className="relative w-16 h-16 md:w-28 md:h-28 shrink-0">
-                    <Image
-                      src="/images/arrow.svg"
-                      alt=""
-                      fill
-                      className="object-contain"
-                      sizes="(max-width: 768px) 64px, 112px"
-                      aria-hidden
-                    />
-                  </div>
+                  <ArrowUpRight
+                    className="size-16 shrink-0 md:size-28 text-[#F6F6F6] hover:text-[#73F8C3]"
+                    strokeWidth={0.7}
+                    aria-hidden
+                  />
                 </div>
 
                 <div className="flex flex-col gap-4">
@@ -147,24 +132,22 @@ export default function SelectedWorksSection({
               <Link
                 key={idx}
                 href={card.href}
-                className="flex flex-col shrink-0 w-full md:w-[544px]"
+                className="flex flex-col shrink-0 w-[799px] max-w-full"
               >
                 {cardContent}
               </Link>
             ) : (
               <div
                 key={idx}
-                className="flex flex-col shrink-0 w-full md:w-[544px]"
+                className="flex flex-col shrink-0 w-[799px] max-w-full"
               >
                 {cardContent}
               </div>
             );
           })}
             </div>
-          </div>
         </div>
       )}
     </section>
   );
 }
-
