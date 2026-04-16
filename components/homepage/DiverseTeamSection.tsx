@@ -16,29 +16,26 @@ const floatStyle = `
 `;
 
 interface DiverseTeamSectionProps {
-  diverseTeam: HomePage["diverseTeam"];
+  diverseTeam: (HomePage["diverseTeam"] & {
+    arrowTarget?: { x?: number; y?: number };
+  }) | undefined;
 }
 
-
-const colorValues: Record<string, string> = {
-  white: "#ffffff",
-  "light-blue": "#87CEEB",
-  purple: "#9B59B6",
-  "light-green": "#90EE90",
-  pink: "#FF69B4",
-  orange: "#FFA500",
-  "dark-blue": "#1E3A8A",
-  teal: "#20B2AA",
-  red: "#FF4444",
-  magenta: "#FF00FF",
-};
+function isHexColor(value: string | undefined): value is string {
+  return !!value && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value);
+}
 
 /** SVG default points down-right; subtract 45° so 0° aligns with +X. */
 const CURSOR_ROTATION_OFFSET = 45;
 
-/** Angle (deg) from (x, y) toward map center (50%, 50%). */
-function angleTowardMapCenterPercent(x: number, y: number): number {
-  return (Math.atan2(50 - y, 50 - x) * 180) / Math.PI;
+/** Angle (deg) from (x, y) toward a target point (percent coords). */
+function angleTowardTargetPercent(
+  x: number,
+  y: number,
+  targetX: number,
+  targetY: number,
+): number {
+  return (Math.atan2(targetY - y, targetX - x) * 180) / Math.PI;
 }
 
 function TeamCursorArrow({
@@ -80,6 +77,9 @@ export default function DiverseTeamSection({
   diverseTeam,
 }: DiverseTeamSectionProps) {
   if (!diverseTeam) return null;
+
+  const targetX = diverseTeam.arrowTarget?.x ?? 50;
+  const targetY = diverseTeam.arrowTarget?.y ?? 50;
 
   return (
     <>
@@ -150,28 +150,48 @@ export default function DiverseTeamSection({
           {diverseTeam.teamMembers && diverseTeam.teamMembers.length > 0 && (
             <div className="relative w-full h-full min-h-[400px] md:min-h-[500px]">
               {diverseTeam.teamMembers.map((member, idx) => {
-                if (!member.name || !member.color || member.positionX === undefined || member.positionY === undefined) {
+                if (
+                  !member.name ||
+                  !member.color ||
+                  member.positionX === undefined ||
+                  member.positionY === undefined
+                ) {
                   return null;
                 }
 
-                const bgColor = colorValues[member.color] || "#ffffff";
-                const arrowFill =
-                  colorValues[member.arrowColor ?? member.color] || "#ffffff";
+                const bgColor = isHexColor(member.color)
+                  ? member.color
+                  : "#ffffff";
+                const arrowFill = isHexColor(member.arrowColor)
+                  ? member.arrowColor
+                  : bgColor;
                 const hasMapArrow =
                   member.arrowPositionX !== undefined &&
                   member.arrowPositionY !== undefined;
 
-                const angleToCenterDeg = angleTowardMapCenterPercent(
+                const angleToCenterDeg = angleTowardTargetPercent(
                   member.positionX,
                   member.positionY,
+                  targetX,
+                  targetY,
                 );
 
-                const angleArrowToCenterDeg = hasMapArrow
-                  ? angleTowardMapCenterPercent(
-                      member.arrowPositionX!,
-                      member.arrowPositionY!,
-                    )
-                  : 0;
+                const rotationOverrideDeg =
+                  typeof member.arrowRotationDeg === "number"
+                    ? member.arrowRotationDeg
+                    : undefined;
+
+                const angleArrowToCenterDeg =
+                  rotationOverrideDeg !== undefined
+                    ? rotationOverrideDeg + CURSOR_ROTATION_OFFSET
+                    : hasMapArrow
+                      ? angleTowardTargetPercent(
+                          member.arrowPositionX!,
+                          member.arrowPositionY!,
+                          targetX,
+                          targetY,
+                        )
+                      : 0;
 
                 const floatStyleBlock: CSSProperties = {
                   animationName: "float",
@@ -219,7 +239,7 @@ export default function DiverseTeamSection({
                           <TeamCursorArrow
                             fill={arrowFill}
                             rotationDeg={
-                              angleToCenterDeg - CURSOR_ROTATION_OFFSET
+                              rotationOverrideDeg ?? (angleToCenterDeg - CURSOR_ROTATION_OFFSET)
                             }
                             className="absolute"
                             style={{

@@ -90,6 +90,7 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
     }
   },
   heroSection{
+    backgroundVideoUrl,
     experienceBadge{
       icon{
         asset->{
@@ -258,6 +259,10 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
       prefix2,
       main2
     },
+    arrowTarget{
+      x,
+      y
+    },
     backgroundImage{
       asset->{
         _id,
@@ -274,7 +279,8 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
       positionY,
       arrowColor,
       arrowPositionX,
-      arrowPositionY
+      arrowPositionY,
+      arrowRotationDeg
     }
   },
   roiOfCoherence{

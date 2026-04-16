@@ -35,52 +35,66 @@ export default function AwardWinningStudioSection({
           )}
 
           {awardWinningStudio.messageSection.textContent && (
-            <div className="relative mt-10 w-full lg:-mt-26">
-              <div className="relative mx-auto w-full max-w-[980px] px-4 sm:px-6 md:px-10 lg:px-0">
-                {awardWinningStudio.messageSection.textContent.backgroundText
-                  ?.asset?.url && (
-                  <div className="absolute left-1/2 top-0 z-0 h-[150px] w-[88vw] max-w-[360px] -translate-x-1/2 select-none sm:h-[240px] sm:max-w-[560px] lg:h-[356px] lg:w-[820px] lg:max-w-none">
-                    <Image
-                      src={urlFor(
-                        awardWinningStudio.messageSection.textContent.backgroundText
-                      ).url()}
-                      alt="Background text"
-                      fill
-                      className="object-contain object-left"
-                      sizes="(min-width: 1024px) 820px, (min-width: 640px) 560px, 88vw"
-                    />
-                  </div>
-                )}
+            <div className="relative mt-10 w-full lg:-mt-26 px-4 md:px-10">
+              <div className="relative mx-auto w-full max-w-[820px]">
+                <svg 
+                  viewBox="0 0 820 356" 
+                  className="w-full h-auto block"
+                  preserveAspectRatio="xMidYMid meet"
+                >
+                  <foreignObject x="0" y="0" width="820" height="356">
+                    <div 
+                      xmlns="http://www.w3.org/1999/xhtml" 
+                      className="relative w-full h-full text-left"
+                    >
+                      {awardWinningStudio.messageSection.textContent.backgroundText
+                        ?.asset?.url && (
+                        <div className="absolute inset-0 z-0">
+                          <Image
+                            src={urlFor(
+                              awardWinningStudio.messageSection.textContent.backgroundText
+                            ).url()}
+                            alt="Background text"
+                            fill
+                            className="object-contain object-left"
+                            sizes="(max-width: 820px) 100vw, 820px"
+                            priority
+                          />
+                        </div>
+                      )}
 
-                <div className="relative z-10 flex flex-col gap-8 pt-40 sm:pt-36 lg:h-[390px] lg:pt-0">
-                  {awardWinningStudio.messageSection.textContent.paragraph1 && (
-                    <div className="w-full max-w-[362px] sm:ml-auto lg:absolute lg:left-[43%] lg:top-[22px] lg:ml-0">
-                      <p className="font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white lg:text-base">
-                        {awardWinningStudio.messageSection.textContent.paragraph1}
-                      </p>
-                    </div>
-                  )}
+                      <div className="absolute inset-0 z-10 pointer-events-none">
+                        {awardWinningStudio.messageSection.textContent.paragraph1 && (
+                          <div className="absolute left-[352px] top-[22px] w-[362px] pointer-events-auto">
+                            <p className="font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white m-0">
+                              {awardWinningStudio.messageSection.textContent.paragraph1}
+                            </p>
+                          </div>
+                        )}
 
-                  {awardWinningStudio.messageSection.textContent.paragraph2 && (
-                    <div className="w-full max-w-[362px] sm:ml-auto lg:absolute lg:left-[43%] lg:top-[171px] lg:ml-0">
-                      <p className="font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white lg:text-base">
-                        {awardWinningStudio.messageSection.textContent.paragraph2}
-                      </p>
-                    </div>
-                  )}
+                        {awardWinningStudio.messageSection.textContent.paragraph2 && (
+                          <div className="absolute left-[352px] top-[171px] w-[362px] pointer-events-auto">
+                            <p className="font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white m-0">
+                              {awardWinningStudio.messageSection.textContent.paragraph2}
+                            </p>
+                          </div>
+                        )}
 
-                  {awardWinningStudio.messageSection.textContent
-                    .concludingStatement && (
-                    <div className="w-full max-w-[280px] lg:absolute lg:left-[8%] lg:top-[250px]">
-                      <p className="font-pp-neue-corp text-[26px] font-medium leading-[145%] tracking-[0.32px] text-white lg:text-[22px]">
-                        {
-                          awardWinningStudio.messageSection.textContent
-                            .concludingStatement
-                        }
-                      </p>
+                        {awardWinningStudio.messageSection.textContent
+                          .concludingStatement && (
+                          <div className="absolute left-[10px] top-[250px] w-[280px] pointer-events-auto">
+                            <p className="font-pp-neue-corp text-[22px] font-medium leading-[145%] tracking-[0.32px] text-white m-0">
+                              {
+                                awardWinningStudio.messageSection.textContent
+                                  .concludingStatement
+                              }
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
+                  </foreignObject>
+                </svg>
               </div>
             </div>
           )}
@@ -89,4 +103,3 @@ export default function AwardWinningStudioSection({
     </section>
   );
 }
-

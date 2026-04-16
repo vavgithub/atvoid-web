@@ -1,10 +1,10 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import React from 'react';
+import Link from "next/link";
+import Image from "next/image";
+import React from "react";
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 py-6 px-5 md:px-10 flex justify-between items-center pointer-events-none bg-black h-[120px]">
+    <nav className="fixed top-0 left-0 w-full z-50 py-6 px-5 md:px-10 flex justify-between items-center pointer-events-none bg-transparent h-[120px]">
       {/* Logo */}
       <div className="pointer-events-auto">
         <Link href="/" className="block relative w-[125px] h-[44px]">
@@ -19,7 +19,7 @@ const Navbar = () => {
       </div>
 
       {/* Menu Icon */}
-      <div className="pointer-events-auto cursor-pointer">
+      {/* <div className="pointer-events-auto cursor-pointer">
         <button className="relative w-[32px] h-[15px] flex items-center justify-center">
           <Image
             src="/images/menu.svg"
@@ -28,10 +28,9 @@ const Navbar = () => {
             className="object-contain"
           />
         </button>
-      </div>
+      </div> */}
     </nav>
   );
 };
 
 export default Navbar;
-

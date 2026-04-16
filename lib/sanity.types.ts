@@ -63,6 +63,8 @@ export interface AboutPage {
 
 /** Experience badge, intro, trusted-by — used by Hero section (and legacy awardWinningStudio). */
 export type HeroSectionContent = {
+  /** Centered video layered above the hero background image */
+  backgroundVideoUrl?: string;
   experienceBadge?: {
     icon?: {
       asset?: {
@@ -287,6 +289,10 @@ export interface HomePage {
       prefix2?: string;
       main2?: string;
     };
+    arrowTarget?: {
+      x?: number;
+      y?: number;
+    };
     backgroundImage?: {
       asset?: {
         _id: string;
@@ -307,6 +313,7 @@ export interface HomePage {
       arrowColor?: string;
       arrowPositionX?: number;
       arrowPositionY?: number;
+      arrowRotationDeg?: number;
     }>;
   };
   finalCta?: {
