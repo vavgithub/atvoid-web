@@ -44,7 +44,6 @@ export default function AwardWinningStudioSection({
                 >
                   <foreignObject x="0" y="0" width="820" height="356">
                     <div 
-                      xmlns="http://www.w3.org/1999/xhtml" 
                       className="relative w-full h-full text-left"
                     >
                       {awardWinningStudio.messageSection.textContent.backgroundText
