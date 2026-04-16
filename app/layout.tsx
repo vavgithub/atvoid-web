@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Layout/Navbar";
-import Footer from "@/components/Layout/Footer";
+import SiteShell from "@/components/Layout/SiteShell";
 import "./globals.css";
 import "./variables.css";
-
 
 export const metadata: Metadata = {
   title: "Value at Void",
@@ -20,11 +18,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className="antialiased bg-black"
-      >
-        {children}
-        <Footer />
+      <body className="antialiased bg-black">
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );

@@ -56,15 +56,15 @@ export default function CoherenceIsAlive({
   const showCenterBlock = hasSubline || hasHeadline || hasLine1;
 
   return (
-    <section className="relative mt-[150px] w-full max-w-[1280px] mx-auto bg-[#070708] overflow-hidden">
-      <div className="relative h-[852px] w-full">
+    <section className="relative mt-20 md:mt-[150px] w-full max-w-[1280px] mx-auto overflow-hidden rounded-[24px] md:rounded-none">
+      <div className="relative flex flex-col items-center px-4 py-16 md:block md:h-[852px] md:w-full md:p-0">
         {hasImage && coherenceIsAlive.image && (
           <div className="pointer-events-none absolute inset-0 z-0 select-none">
             <Image
               src={urlFor(coherenceIsAlive.image).url()}
               alt=""
               fill
-              className="object-cover object-[center_58%]"
+              className="object-cover object-bottom md:object-[center_58%]"
               sizes="(max-width: 1280px) 100vw, 1280px"
             />
           </div>
@@ -77,73 +77,82 @@ export default function CoherenceIsAlive({
         />
 
         {showCenterBlock && (
-          <div className="absolute left-1/2 top-[36%] z-20 w-[min(100%,520px)] -translate-x-1/2 -translate-y-1/2 px-4 text-center md:top-[49%]">
+          <div className="relative z-20 flex w-full flex-col items-center text-center md:absolute md:left-1/2 md:top-[49%] md:w-[min(100%,520px)] md:-translate-x-1/2 md:-translate-y-1/2">
             {hasSubline && (
-              <p className="font-pp-neue-corp mb-2 text-[18px] font-medium uppercase leading-normal tracking-normal text-[#43454d] md:text-[24px]">
+              <p className="font-pp-neue-corp mb-2 text-[16px] font-medium uppercase leading-normal tracking-normal text-[#43454d] md:text-[24px]">
                 {coherenceIsAlive.subline}
               </p>
             )}
             {hasHeadline && (
-              <h2 className="font-pp-neue-corp-wide mb-4 text-[28px] font-medium uppercase leading-[0.8] tracking-[-0.8px] text-[#f6f6f6] md:text-[40px]">
+              <h2 className="font-pp-neue-corp-wide mb-4 text-[26px] font-medium uppercase leading-[0.8] tracking-[-0.8px] text-[#f6f6f6] md:text-[40px]">
                 {coherenceIsAlive.headline}
               </h2>
             )}
             {hasLine1 && (
               <p
-                className="font-pp-neue-corp mt-[37px] text-[15px] font-medium leading-[1.45] tracking-[0.32px] text-white md:text-[16px]"
+                className="font-pp-neue-corp mt-5 text-[14px] font-medium leading-[1.45] tracking-[0.32px] text-white md:mt-[37px] md:text-[16px]"
                 style={{ letterSpacing: "0.32px" }}
               >
                 {coherenceIsAlive.line1}
               </p>
             )}
           </div>
-        )}  
+        )}
 
         {Array.isArray(coherenceIsAlive.items) &&
           coherenceIsAlive.items.some((it) => it?.label) && (
-          <div className="absolute inset-0 z-10 translate-y-[16%]">
-            {ITEM_SLOTS.map((slot, idx) => {
-              const item = coherenceIsAlive.items?.[idx];
-              if (!item?.label) return null;
+            <div className="relative z-10 mt-16 grid w-full grid-cols-2 gap-y-10 md:absolute md:inset-0 md:mt-0 md:block md:translate-y-[16%]">
+              {ITEM_SLOTS.map((slot, idx) => {
+                const item = coherenceIsAlive.items?.[idx];
+                if (!item?.label) return null;
 
-              const itemImageUrl = item.image?.asset?.url
-                ? urlFor(item.image).url()
-                : null;
+                const itemImageUrl = item.image?.asset?.url
+                  ? urlFor(item.image).url()
+                  : null;
 
-              return (
-                <div
-                  key={`${item.label}-${idx}`}
-                  className="absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-2 md:gap-2.5"
-                  style={{ left: slot.left, top: slot.top }}
-                >
-                  <div className="relative h-10 w-10 shrink-0 md:h-[45px] md:w-[45px]">
-                    {itemImageUrl && item.image ? (
-                      <Image
-                        src={itemImageUrl}
-                        alt={item.label ?? ""}
-                        fill
-                        className="object-contain"
-                        sizes="45px"
-                      />
-                    ) : (
-                      <span
-                        className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full md:h-3 md:w-3"
-                        style={{ backgroundColor: slot.color }}
-                        aria-hidden
-                      />
-                    )}
-                  </div>
-                  <p
-                    className="max-w-[120px] text-center font-pp-neue-corp text-[13px] font-medium leading-[1.45] tracking-[0.32px] md:max-w-[140px] md:text-[16px]"
-                    style={{ color: slot.color }}
+                const isLastItem = idx === 8;
+
+                return (
+                  <div
+                    key={`${item.label}-${idx}`}
+                    className={`relative flex flex-col items-center gap-2 md:absolute md:-translate-x-1/2 md:-translate-y-1/2 md:gap-2.5 md:left-[var(--md-left)] md:top-[var(--md-top)] ${
+                      isLastItem ? "col-span-2" : ""
+                    }`}
+                    style={
+                      {
+                        "--md-left": slot.left,
+                        "--md-top": slot.top,
+                      } as React.CSSProperties
+                    }
                   >
-                    {item.label}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        )}
+                    <div className="relative h-12 w-12 shrink-0 md:h-[47px] md:w-[47px]">
+                      {itemImageUrl && item.image ? (
+                        <Image
+                          src={itemImageUrl}
+                          alt={item.label ?? ""}
+                          fill
+                          className="object-contain"
+                          sizes="45px"
+                        />
+                      ) : (
+                        <span
+                          className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full md:h-3 md:w-3"
+                          style={{ backgroundColor: slot.color }}
+                          aria-hidden
+                        />
+                      )}
+                    </div>
+                    <p
+                      className="px-2 text-center font-pp-neue-corp text-[13px] font-medium leading-[1.45] tracking-[0.32px] md:max-w-[140px] md:px-0 md:text-[16px]"
+                      style={{ color: slot.color }}
+                    >
+                      {item.label}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
       </div>
     </section>
   );

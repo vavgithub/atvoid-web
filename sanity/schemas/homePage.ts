@@ -30,6 +30,13 @@ export default defineType({
       type: 'object',
       fields: [
         defineField({
+          name: 'backgroundVideoUrl',
+          title: 'Hero background video (URL)',
+          description:
+            'Optional. MP4 (or other) URL shown centered on top of the static hero background image. Example: Framer CDN or your own host.',
+          type: 'url',
+        }),
+        defineField({
           name: 'experienceBadge',
           title: 'Experience Badge',
           type: 'object',
@@ -368,6 +375,8 @@ export default defineType({
         defineField({
           name: 'cards',
           title: 'Project Cards',
+          description:
+            'Shown in the Selected Works horizontal scroll on the homepage. No fixed limit — add as many as you need.',
           type: 'array',
           of: [
             {
@@ -410,14 +419,14 @@ export default defineType({
                         defineField({
                           name: 'color',
                           title: 'Tag Color',
+                          description:
+                            'Enter a hex color like #73F8C3 (supports #RGB or #RRGGBB).',
                           type: 'string',
-                          options: {
-                            list: [
-                              { title: 'Blue', value: 'blue' },
-                              { title: 'Green', value: 'green' },
-                              { title: 'Red', value: 'red' },
-                            ],
-                          },
+                          validation: (Rule) =>
+                            Rule.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {
+                              name: 'hex-color',
+                              invert: false,
+                            }).warning('Use a hex color like #73F8C3'),
                         }),
                       ],
                       preview: {
@@ -455,7 +464,6 @@ export default defineType({
               },
             },
           ],
-          validation: (Rule) => Rule.max(3),
         }),
       ],
     }),
@@ -503,6 +511,29 @@ export default defineType({
           options: { hotspot: true },
         }),
         defineField({
+          name: 'arrowTarget',
+          title: 'Arrow Target (Center Point)',
+          description:
+            'Arrows will point toward this target point (percent-based). Default is true center (50/50).',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'x',
+              title: 'Target X (%)',
+              type: 'number',
+              initialValue: 50,
+              validation: (Rule) => Rule.min(-100).max(200),
+            }),
+            defineField({
+              name: 'y',
+              title: 'Target Y (%)',
+              type: 'number',
+              initialValue: 50,
+              validation: (Rule) => Rule.min(-100).max(200),
+            }),
+          ],
+        }),
+        defineField({
           name: 'teamMembers',
           title: 'Team Members',
           description: 'Add team members with their names, colors, and positions on the map',
@@ -521,23 +552,14 @@ export default defineType({
                 defineField({
                   name: 'color',
                   title: 'Speech Bubble Color',
-                  description: 'Color for the speech bubble (e.g., white, light-blue, purple, light-green, pink, orange, dark-blue, teal, red, magenta)',
+                  description:
+                    'Enter a hex color like #73F8C3 (supports #RGB or #RRGGBB).',
                   type: 'string',
-                  options: {
-                    list: [
-                      { title: 'White', value: 'white' },
-                      { title: 'Light Blue', value: 'light-blue' },
-                      { title: 'Purple', value: 'purple' },
-                      { title: 'Light Green', value: 'light-green' },
-                      { title: 'Pink', value: 'pink' },
-                      { title: 'Orange', value: 'orange' },
-                      { title: 'Dark Blue', value: 'dark-blue' },
-                      { title: 'Teal', value: 'teal' },
-                      { title: 'Red', value: 'red' },
-                      { title: 'Magenta', value: 'magenta' },
-                    ],
-                  },
-                  validation: (Rule) => Rule.required(),
+                  validation: (Rule) =>
+                    Rule.required().regex(
+                      /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/,
+                      { name: 'hex-color' },
+                    ),
                 }),
                 defineField({
                   name: 'positionX',
@@ -558,21 +580,10 @@ export default defineType({
                   title: 'Arrow Color',
                   description: 'Optional. Cursor/arrow fill color. Defaults to the speech bubble color when empty.',
                   type: 'string',
-                  options: {
-                    list: [
-                      { title: 'White', value: 'white' },
-                      { title: 'Light Blue', value: 'light-blue' },
-                      { title: 'Purple', value: 'purple' },
-                      { title: 'Light Green', value: 'light-green' },
-                      { title: 'Pink', value: 'pink' },
-                      { title: 'Orange', value: 'orange' },
-                      { title: 'Dark Blue', value: 'dark-blue' },
-                      { title: 'Teal', value: 'teal' },
-                      { title: 'Red', value: 'red' },
-                      { title: 'Magenta', value: 'magenta' },
-                      { title: 'Black', value: 'black' },
-                    ],
-                  },
+                  validation: (Rule) =>
+                    Rule.regex(/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, {
+                      name: 'hex-color',
+                    }).warning('Use a hex color like #111111'),
                 }),
                 defineField({
                   name: 'arrowPositionX',
@@ -586,6 +597,13 @@ export default defineType({
                   title: 'Arrow Position Y (%)',
                   description:
                     'Optional. Vertical position of the arrow on the map (same % system as Position Y). Both Arrow Position X and Y must be set to use map positioning.',
+                  type: 'number',
+                }),
+                defineField({
+                  name: 'arrowRotationDeg',
+                  title: 'Arrow Rotation (deg)',
+                  description:
+                    'Optional. Overrides auto-rotation. 0 = points right, 90 = down, -90 = up. Leave empty to auto-point to the Arrow Target.',
                   type: 'number',
                 }),
               ],

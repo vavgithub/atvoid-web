@@ -9,6 +9,7 @@ import SelectedWorksSection from "@/components/homepage/SelectedWorksSection";
 import ROICoherenceSection from "@/components/homepage/ROICoherenceSection";
 import DiverseTeamSection from "@/components/homepage/DiverseTeamSection";
 import FinalCtaSection from "@/components/homepage/FinalCtaSection";
+import Ecosystem from "@/components/homepage/Ecosystem";
 
 // Always fetch fresh data so new Sanity content (e.g. uploaded images) shows
 export const dynamic = "force-dynamic";
@@ -25,8 +26,11 @@ export default async function Home() {
       <Container variant="medium" className="pb-16 ">
         <HeroSection heroSection={data.heroSection} />
         <ShowReelSection showReelsSection={data.showReelsSection} />
-        <AwardWinningStudioSection awardWinningStudio={data.awardWinningStudio} />
-        <DigitalEcosystemSection digitalEcosystem={data.digitalEcosystem} />
+        <AwardWinningStudioSection
+          awardWinningStudio={data.awardWinningStudio}
+        />
+        {/* <DigitalEcosystemSection digitalEcosystem={data.digitalEcosystem} /> */}
+        <Ecosystem />
         <CoherenceIsAlive coherenceIsAlive={data.coherenceIsAlive} />
       </Container>
       <SelectedWorksSection selectedWorks={data.selectedWorks} />
