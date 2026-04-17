@@ -58,7 +58,8 @@ export default function CoherenceIsAlive({
   return (
     <section className="relative mt-20 md:mt-[150px] w-full max-w-[1280px] mx-auto overflow-hidden rounded-[24px] md:rounded-none">
       <div className="relative flex flex-col items-center px-4 py-16 md:block md:h-[852px] md:w-full md:p-0">
-        {hasImage && coherenceIsAlive.image && (
+        {/* Background image from Sanity (disabled for now) */}
+        {/* {hasImage && coherenceIsAlive.image && (
           <div className="pointer-events-none absolute inset-0 z-0 select-none">
             <Image
               src={urlFor(coherenceIsAlive.image).url()}
@@ -68,7 +69,24 @@ export default function CoherenceIsAlive({
               sizes="(max-width: 1280px) 100vw, 1280px"
             />
           </div>
-        )}
+        )} */}
+
+        {/* Bottom orbit: show only top half; rotate endlessly */}
+        <div
+          className="pointer-events-none absolute bottom-0  left-1/2 z-[1] w-[520px] -translate-x-1/2 overflow-hidden h-[260px] md:w-[920px] md:h-[460px] select-none"
+          aria-hidden
+        >
+          <div className="relative h-[520px] w-[520px] md:h-[960px] md:w-[960px] motion-safe:[animation:spin_70s_linear_infinite] motion-reduce:animate-none">
+            <Image
+              src="/images/coherence-is-alive/orbit-rays.svg"
+              alt=""
+              fill
+              sizes="(max-width: 768px) 520px, 1040px"
+              className="object-contain object-top"
+              priority
+            />
+          </div>
+        </div>
 
         {/* Fade into page background */}
         <div

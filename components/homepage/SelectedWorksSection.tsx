@@ -87,15 +87,10 @@ export default function SelectedWorksSection({
                             {card.scopeTags.map((tag, ti) => (
                               <span
                                 key={ti}
-                                className="text-[#070708] text-center font-pp-neue-corp text-[12px] font-medium leading-[1.2] tracking-[0.24px] px-2 py-0.5 rounded-full capitalize"
+                                className="text-[#070708] text-center font-pp-neue-corp text-[12px] font-medium leading-[1.2] tracking-[0.24px] px-2 py-0.5 rounded-full uppercase"
                                 style={{
                                   backgroundColor:
                                     tag.color || "rgba(255,255,255,0.2)",
-                                  color:
-                                    (tag.color || "").toLowerCase() ===
-                                    "#73f8c3"
-                                      ? "#0A0A0A"
-                                      : "#070708",
                                 }}
                               >
                                 {tag.name}
