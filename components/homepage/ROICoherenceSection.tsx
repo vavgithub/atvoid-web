@@ -35,10 +35,10 @@ export default function ROICoherenceSection({
             {roiOfCoherence.cards.map((card, idx) => (
               <div
                 key={idx}
-                className="flex flex-col shrink-0 snap-center md:snap-start rounded-2xl bg-[#141414] p-6 w-[270px] h-[290px] overflow-visible"
+                className="flex flex-col shrink-0 snap-center md:snap-start rounded-2xl bg-[#141414] p-6 w-[270px] h-[280px] overflow-visible"
               >
                 {card.image?.asset?.url && (
-                  <div className="w-full mb-3 mt-[-75px] overflow-visible">
+                  <div className="w-full mb-3 mt-[-100px] overflow-visible">
                     <div className="relative w-[180px] h-[200px] mx-auto">
                       <Image
                         src={urlFor(card.image).url()}
