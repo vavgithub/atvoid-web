@@ -14,7 +14,7 @@ export default function SelectedWorksSection({
   if (!selectedWorks) return null;
 
   return (
-    <section className="relative w-full mt-[100px] md:mt[282px] -mr-5 md:-mr-10 lg:-mr-20 z-10">
+    <section className="relative z-10 -mr-5 mt-[100px] w-full md:-mr-10 md:mt-[282px] lg:-mr-20">
       {/* Header: Heading + CTA - Aligned with Container */}
       <div className="w-full mx-auto max-w-[1280px]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
@@ -28,24 +28,24 @@ export default function SelectedWorksSection({
 
       {/* Cards: 1 col mobile, 3 cols desktop - Full Width to Right Edge */}
       {selectedWorks.cards && selectedWorks.cards.length > 0 && (
-        <div className="relative mt-8 md:mt-12 z-10 w-screen ml-[calc(50%-50vw)] overflow-x-auto scrollbar-hide pl-5 md:pl-10 lg:pl-20">
-          <div className="flex gap-10 flex-row pr-0">
+        <div className="relative z-10 mt-8 w-screen max-w-[100vw] ml-[calc(50%-50vw)] overflow-x-auto overscroll-x-contain scrollbar-hide pl-5 pr-3 md:mt-12 md:pl-10 md:pr-5 lg:pl-20 lg:pr-8">
+          <div className="flex w-max flex-row gap-10">
             {selectedWorks.cards.map((card, idx) => {
               const cardContent = (
                 <>
                   {/* Card image */}
                   {card.image?.asset?.url ? (
-                    <div className="relative w-full max-w-full h-[488px] rounded-[24px] overflow-hidden">
+                    <div className="relative h-[280px] w-full max-w-full overflow-hidden rounded-[24px] md:h-[488px]">
                       <Image
                         src={urlFor(card.image).url()}
                         alt={card.title || ""}
                         fill
                         className="object-contain rounded-[24px]"
-                        sizes="799px"
+                        sizes="(max-width: 767px) calc(100vw - 3rem), 799px"
                       />
                     </div>
                   ) : (
-                    <div className="w-full h-[488px] rounded-[24px] border border-white/10 bg-white/5" />
+                    <div className="h-[280px] w-full rounded-[24px] border border-white/10 bg-white/5 md:h-[488px]" />
                   )}
 
                   {/* Title + Arrow */}
@@ -124,24 +124,29 @@ export default function SelectedWorksSection({
                   </div>
                 </>
               );
-              const isLast = idx === (selectedWorks.cards?.length ?? 0) - 1;
               return card.href ? (
                 <Link
                   key={idx}
                   href={card.href}
-                  className={`flex flex-col shrink-0 w-[799px] max-w-full${isLast ? " pr-5 md:pr-10" : ""}`}
+                  className="flex w-[min(799px,calc(100vw-3rem))] shrink-0 flex-col md:w-[799px]"
                 >
                   {cardContent}
                 </Link>
               ) : (
                 <div
                   key={idx}
-                  className={`flex flex-col shrink-0 w-[799px] max-w-full${isLast ? " pr-5 md:pr-10" : ""}`}
+                  className="flex w-[min(799px,calc(100vw-3rem))] shrink-0 flex-col md:w-[799px]"
                 >
                   {cardContent}
                 </div>
               );
             })}
+            {/* Scroll tail: widens scrollWidth so the last card can sit off the viewport edge; not part of any card */}
+            <div
+              className="pointer-events-none shrink-0 select-none"
+              style={{ flex: "0 0 clamp(0.75rem, 2.5vw, 1.5rem)" }}
+              aria-hidden
+            />
           </div>
         </div>
       )}
