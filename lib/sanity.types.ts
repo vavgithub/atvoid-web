@@ -123,6 +123,18 @@ export interface HomePage {
         };
       };
     };
+    mobileThumbnail?: {
+      asset?: {
+        _id: string;
+        url: string;
+        metadata?: {
+          dimensions?: {
+            width: number;
+            height: number;
+          };
+        };
+      };
+    };
     video?: {
       asset?: {
         _id: string;
@@ -148,6 +160,7 @@ export interface HomePage {
             };
           };
         };
+        headline?: string;
         paragraph1?: string;
         paragraph2?: string;
         concludingStatement?: string;
@@ -230,6 +243,18 @@ export interface HomePage {
     cards?: Array<{
       title?: string;
       image?: {
+        asset?: {
+          _id: string;
+          url: string;
+          metadata?: {
+            dimensions?: {
+              width: number;
+              height: number;
+            };
+          };
+        };
+      };
+      mobileImage?: {
         asset?: {
           _id: string;
           url: string;

@@ -12,30 +12,44 @@ export default function ROICoherenceSection({
   if (!roiOfCoherence) return null;
 
   return (
-    <section className="w-screen ml-[calc(50%-50vw)] min-h-[600px] md:min-h-[1048px] relative overflow-hidden rounded-3xl md:px-10 lg:px-20 md:pt-[100px] lg:pt-[220px]">
+    <section className="w-screen ml-[calc(50%-50vw)] min-h-[600px] md:min-h-[1048px] relative overflow-hidden rounded-3xl md:px-10 lg:px-20 md:pt-[100px] lg:pt-[220px] pb-[133px] md:pb-0">
       {roiOfCoherence.backgroundImage?.asset?.url && (
-        <div className="absolute inset-0 z-0">
-          <Image
-            src={urlFor(roiOfCoherence.backgroundImage).url()}
-            alt=""
-            fill
-            className="object-cover object-center scale-125 md:scale-100"
-            sizes="100vw"
-          />
-        </div>
+        <>
+          {/* Desktop/tablet: full-bleed bg */}
+          <div className="absolute inset-0 z-0 hidden md:block">
+            <Image
+              src={urlFor(roiOfCoherence.backgroundImage).url()}
+              alt=""
+              fill
+              className="object-cover object-center scale-125 md:scale-100"
+              sizes="100vw"
+            />
+          </div>
+
+          {/* Mobile: fixed-size bg, truly centered even if larger than viewport */}
+          <div className="absolute left-1/2 top-[-2%] -translate-x-1/2 z-0 w-[520px] h-[520px] md:hidden pointer-events-none">
+            <Image
+              src={urlFor(roiOfCoherence.backgroundImage).url()}
+              alt=""
+              fill
+              className="object-cover object-center scale-125"
+              sizes="520px"
+            />
+          </div>
+        </>
       )}
       <div className="relative z-10 min-h-[600px] md:min-h-[1048px] flex flex-col justify-start pt-12 md:pt-10 lg:pt-52">
         {roiOfCoherence.heading && (
-          <h2 className="px-5 md:px-0 text-[#F6F6F6] font-pp-neue-corp-wide text-[28px] sm:text-[34px] md:text-[40px] font-medium leading-[1.1] md:leading-[1.2] tracking-[-0.8px] text-center mb-10 sm:mb-12 md:mb-20">
+          <h2 className="py-[140px] md:py-0 px-5 md:px-0 text-[#F6F6F6] font-pp-neue-corp-wide text-[32px] sm:text-[34px] md:text-[40px] font-medium leading-[1.1] md:leading-[1.2] tracking-[-0.8px] text-center mb-10 sm:mb-12 md:mb-20 max-w-[240px] mx-auto sm:max-w-full">
             {roiOfCoherence.heading}
           </h2>
         )}
         {roiOfCoherence.cards && roiOfCoherence.cards.length > 0 && (
-          <div className="flex flex-row md:justify-start xl:justify-center gap-10 md:gap-4 overflow-x-auto overflow-y-visible scrollbar-hide pt-[40px] snap-x snap-mandatory md:snap-none px-[calc(50vw-135px)] md:px-0 scroll-px-[calc(50vw-135px)] md:scroll-px-0">
+          <div className="flex flex-wrap justify-center md:flex-nowrap md:justify-start xl:justify-center gap-10 md:gap-4 overflow-visible md:overflow-x-auto md:overflow-y-visible md:scrollbar-hide pt-[40px] px-5 md:px-0">
             {roiOfCoherence.cards.map((card, idx) => (
               <div
                 key={idx}
-                className="flex flex-col shrink-0 snap-center md:snap-start rounded-2xl bg-[#141414] p-6 w-[270px] h-[280px] overflow-visible"
+                className="flex flex-col shrink-0 rounded-2xl bg-[#141414] p-6 w-[270px] h-[280px] overflow-visible"
               >
                 {card.image?.asset?.url && (
                   <div className="w-full mb-3 mt-[-100px] overflow-visible">

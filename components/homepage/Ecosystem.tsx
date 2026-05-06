@@ -8,16 +8,38 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/** Outer rim of the inner globe SVG (viewBox `0 0 339 339`) — matches `outerCirclePath` ellipse. */
+const GLOBE_VIEW = 339;
+const GLOBE_CX = 169.5;
+const GLOBE_CY = 169.5;
+const GLOBE_R = 163.65;
+
+function globeRimPct(deg: number) {
+  const rad = (deg * Math.PI) / 180;
+  const xPct = ((GLOBE_CX + GLOBE_R * Math.cos(rad)) / GLOBE_VIEW) * 100;
+  const yPct = ((GLOBE_CY + GLOBE_R * Math.sin(rad)) / GLOBE_VIEW) * 100;
+  return { left: `${xPct}%`, top: `${yPct}%` } as const;
+}
+
 export default function EcosystemSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const outerRingRef = useRef<HTMLDivElement | null>(null);
   const fixedRingRef = useRef<HTMLDivElement | null>(null);
   const innerGlobeRef = useRef<HTMLDivElement | null>(null);
+  /** Same size/position as inner globe; dots live here so they paint above `outerRingRef` (z-20). */
+  const globeMarkersRef = useRef<HTMLDivElement | null>(null);
+  /** Mobile-only: centered BRAND/PRODUCT/ENGINEERING list before animation starts. */
+  const mobilePhaseListRef = useRef<HTMLDivElement | null>(null);
   const orbTextureRef = useRef<HTMLDivElement | null>(null);
 
   const bgBrandRef = useRef<HTMLDivElement | null>(null);
   const bgProductRef = useRef<HTMLDivElement | null>(null);
   const bgEngineeringRef = useRef<HTMLDivElement | null>(null);
+
+  // Mobile-only icon bars (phase-synced)
+  const brandMobileBarRef = useRef<HTMLDivElement | null>(null);
+  const productMobileBarRef = useRef<HTMLDivElement | null>(null);
+  const engMobileBarRef = useRef<HTMLDivElement | null>(null);
 
   // ========================================================
   // REFS
@@ -40,7 +62,29 @@ export default function EcosystemSection() {
       const engEl = engGroup.current;
 
       if (!brandEl || !productEl || !engEl) return;
-      if (!outerRingRef.current || !innerGlobeRef.current) return;
+      if (!sectionRef.current || !outerRingRef.current || !innerGlobeRef.current)
+        return;
+
+      const isMobileGlobeOverlay =
+        typeof window !== "undefined" &&
+        window.matchMedia("(max-width: 767px)").matches;
+
+      const mobileGlobeDotBrand =
+        isMobileGlobeOverlay && globeMarkersRef.current
+          ? globeMarkersRef.current.querySelector('[data-globe-circle="brand"]')
+          : null;
+      const mobileGlobeDotProduct =
+        isMobileGlobeOverlay && globeMarkersRef.current
+          ? globeMarkersRef.current.querySelector(
+              '[data-globe-circle="product"]',
+            )
+          : null;
+      const mobileGlobeDotEng =
+        isMobileGlobeOverlay && globeMarkersRef.current
+          ? globeMarkersRef.current.querySelector(
+              '[data-globe-circle="engineering"]',
+            )
+          : null;
 
       const brandBg = bgBrandRef.current;
       const productBg = bgProductRef.current;
@@ -87,10 +131,33 @@ export default function EcosystemSection() {
       gsap.set(fixedRingRef.current, { autoAlpha: 1 }); // Force it visible for debugging
       gsap.set([brandBg, productBg, engineeringBg], { autoAlpha: 0 });
       gsap.set(orbTextureRef.current, { autoAlpha: 1 });
+      if (isMobileGlobeOverlay) {
+        gsap.set(outerRingRef.current, { autoAlpha: 0 });
+        gsap.set(mobilePhaseListRef.current, { autoAlpha: 1 });
+      } else {
+        gsap.set(mobilePhaseListRef.current, { autoAlpha: 0 });
+      }
       gsap.set([brandIcons, productIcons, engIcons], {
         autoAlpha: 0,
         scale: 0.5,
       });
+      gsap.set(
+        [
+          brandMobileBarRef.current,
+          productMobileBarRef.current,
+          engMobileBarRef.current,
+        ],
+        { autoAlpha: 0, scale: 0.9 },
+      );
+      if (mobileGlobeDotBrand && mobileGlobeDotProduct && mobileGlobeDotEng) {
+        gsap.set(
+          [mobileGlobeDotBrand, mobileGlobeDotProduct, mobileGlobeDotEng],
+          {
+            autoAlpha: 0,
+            scale: 0.5,
+          },
+        );
+      }
       gsap.set([brandDesc, productDesc, engDesc], { autoAlpha: 0, y: 15 });
 
       // Headings: start all-white on entry; phases control active/inactive
@@ -129,12 +196,23 @@ export default function EcosystemSection() {
         },
       });
 
-      // Continuous globe rotation
+      // Continuous globe rotation (mobile overlay duplicates transform only < md)
       tl.to(
         innerGlobeRef.current,
         { rotation: 360, ease: "none", duration: 8 },
         0,
       );
+      if (
+        isMobileGlobeOverlay &&
+        globeMarkersRef.current &&
+        globeMarkersRef.current.isConnected
+      ) {
+        tl.to(
+          globeMarkersRef.current,
+          { rotation: 360, ease: "none", duration: 8 },
+          0,
+        );
+      }
       tl.to({}, { duration: 0.5 }, 0); // Intro pause
       // Fade orb texture away as the system "activates"
       tl.to(
@@ -147,6 +225,16 @@ export default function EcosystemSection() {
       // PHASE 1: BRAND
       // ==========================================
       tl.add("phase1", 0.5)
+        .to(
+          mobilePhaseListRef.current,
+          { autoAlpha: 0, duration: 0.6, ease: "power2.inOut" },
+          "phase1",
+        )
+        .to(
+          outerRingRef.current,
+          { autoAlpha: 1, duration: 0.6, ease: "power2.inOut" },
+          "phase1+=0.05",
+        )
         // Dim the base globe grid + reset all strokes before highlighting
         .to(
           baseGridRef.current,
@@ -202,7 +290,26 @@ export default function EcosystemSection() {
             ease: "back.out(1.5)",
           },
           "phase1+=0.2",
+        )
+        // Mobile bottom bar IN
+        .to(
+          brandMobileBarRef.current,
+          { autoAlpha: 1, scale: 1, duration: 0.5, ease: "power2.out" },
+          "phase1+=0.2",
         );
+
+      if (mobileGlobeDotBrand) {
+        tl.to(
+          mobileGlobeDotBrand,
+          {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out(1.5)",
+          },
+          "phase1+=0.2",
+        );
+      }
 
       // ==========================================
       // PHASE 2: PRODUCT
@@ -277,6 +384,11 @@ export default function EcosystemSection() {
           },
           "phase2",
         )
+        .to(
+          brandMobileBarRef.current,
+          { autoAlpha: 0, scale: 0.95, duration: 0.35, ease: "power2.inOut" },
+          "phase2",
+        )
         .to(brandDesc, { autoAlpha: 0, y: -15, duration: 0.5 }, "phase2")
         .to(productDesc, { autoAlpha: 1, y: 0, duration: 0.8 }, "phase2+=0.8")
         .to(
@@ -289,7 +401,33 @@ export default function EcosystemSection() {
             ease: "back.out(1.5)",
           },
           "phase2+=1.0",
+        )
+        // Mobile bottom bar IN
+        .to(
+          productMobileBarRef.current,
+          { autoAlpha: 1, scale: 1, duration: 0.5, ease: "power2.out" },
+          "phase2+=0.2",
         );
+
+      if (mobileGlobeDotBrand) {
+        tl.to(
+          mobileGlobeDotBrand,
+          { autoAlpha: 0, scale: 0.5, duration: 0.6 },
+          "phase2",
+        );
+      }
+      if (mobileGlobeDotProduct) {
+        tl.to(
+          mobileGlobeDotProduct,
+          {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out(1.5)",
+          },
+          "phase2+=1.0",
+        );
+      }
 
       // ==========================================
       // PHASE 3: ENGINEERING
@@ -364,6 +502,11 @@ export default function EcosystemSection() {
           },
           "phase3",
         )
+        .to(
+          productMobileBarRef.current,
+          { autoAlpha: 0, scale: 0.95, duration: 0.35, ease: "power2.inOut" },
+          "phase3",
+        )
         .to(productDesc, { autoAlpha: 0, y: -15, duration: 0.5 }, "phase3")
         .to(engDesc, { autoAlpha: 1, y: 0, duration: 0.8 }, "phase3+=0.8")
         .to(
@@ -376,7 +519,33 @@ export default function EcosystemSection() {
             ease: "back.out(1.5)",
           },
           "phase3+=1.0",
+        )
+        // Mobile bottom bar IN
+        .to(
+          engMobileBarRef.current,
+          { autoAlpha: 1, scale: 1, duration: 0.5, ease: "power2.out" },
+          "phase3+=0.2",
         );
+
+      if (mobileGlobeDotProduct) {
+        tl.to(
+          mobileGlobeDotProduct,
+          { autoAlpha: 0, scale: 0.5, duration: 0.6 },
+          "phase3",
+        );
+      }
+      if (mobileGlobeDotEng) {
+        tl.to(
+          mobileGlobeDotEng,
+          {
+            autoAlpha: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out(1.5)",
+          },
+          "phase3+=1.0",
+        );
+      }
     },
     { scope: sectionRef },
   );
@@ -391,43 +560,209 @@ export default function EcosystemSection() {
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 rounded-[56px]">
         <div ref={bgBrandRef} className="absolute inset-0" aria-hidden>
           <Image
+            src="/images/brand.svg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center md:hidden"
+            priority
+          />
+          <Image
             src="/images/Brand.png"
             alt=""
             fill
             sizes="100vw"
-            className="object-cover object-center"
+            className="hidden md:block object-cover object-center"
             priority
           />
         </div>
         <div ref={bgProductRef} className="absolute inset-0" aria-hidden>
           <Image
+            src="/images/product.svg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center md:hidden"
+          />
+          <Image
             src="/images/Product.png"
             alt=""
             fill
             sizes="100vw"
-            className="object-cover object-center"
+            className="hidden md:block object-cover object-center"
           />
         </div>
         <div ref={bgEngineeringRef} className="absolute inset-0" aria-hidden>
+          <Image
+            src="/images/engine.svg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center md:hidden"
+          />
           <Image
             src="/images/Engineering.png"
             alt=""
             fill
             sizes="100vw"
-            className="object-cover object-center"
+            className="hidden md:block object-cover object-center"
           />
         </div>
       </div>
 
       {/* 2. STATIC HEADER (In standard document flow with bottom margin) */}
       <div className="w-full text-center z-50 mb-12 lg:mb-30 pointer-events-none">
-        <h2 className="text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[40px] font-medium leading-[120%] tracking-[0.8px] uppercase">
-          A COMPLETE <br /> DIGITAL ECOSYSTEM
+        <h2 className="text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] md:text-[40px] font-medium leading-[120%] tracking-[0.8px] uppercase">
+          A COMPLETE <br /> DIGITAL <br className=" md:hidden" /> ECOSYSTEM
         </h2>
       </div>
 
       {/* 3. RESPONSIVE MAIN STAGE (Scales down so it never cuts off) */}
       <div className="relative w-[515px] h-[515px] flex items-center justify-center z-20 transform scale-[0.5] sm:scale-75 md:scale-90 lg:scale-100">
+        {/* Mobile-only: 3 icons with text at bottom per phase */}
+        <div className="absolute inset-0 z-[30] md:hidden pointer-events-none">
+          <div
+            ref={brandMobileBarRef}
+            className="absolute inset-x-0 bottom-[-2%] flex translate-y-[50px] justify-center gap-10"
+          >
+            <div className="flex w-[92px] flex-col items-center">
+              <Image
+                src="/icons/visual-identity-brand.svg"
+                alt="Visual Identity Systems"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
+              <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[1.15] tracking-[0.24px] text-[#EF4E8E]">
+                Visual Identity
+                <br />
+                Systems
+              </p>
+            </div>
+            <div className="flex w-[92px] flex-col items-center">
+              <Image
+                src="/icons/marketing-brand.svg"
+                alt="Marketing Collateral"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
+              <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[1.15] tracking-[0.24px] text-[#EF4E8E]">
+                Marketing
+                <br />
+                Collateral
+              </p>
+            </div>
+            <div className="flex w-[92px] flex-col items-center">
+              <Image
+                src="/icons/strategy-brand.svg"
+                alt="Strategy & Positioning"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
+              <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[1.15] tracking-[0.24px] text-[#EF4E8E]">
+                Strategy &<br />
+                Positioning
+              </p>
+            </div>
+          </div>
+
+          <div
+            ref={productMobileBarRef}
+            className="absolute inset-x-0 bottom-[-2%] flex translate-y-[50px] justify-center gap-10"
+          >
+            <div className="flex w-[92px] flex-col items-center">
+              <Image
+                src="/icons/ui-ux-product.svg"
+                alt="UI/UX Design"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
+              <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[1.15] tracking-[0.24px] text-[#6459EB]">
+                UI/UX
+                <br />
+                Design
+              </p>
+            </div>
+            <div className="flex w-[92px] flex-col items-center">
+              <Image
+                src="/icons/3d-motion-product.svg"
+                alt="3D & Motion Graphics"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
+              <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[1.15] tracking-[0.24px] text-[#6459EB]">
+                3D & Motion
+                <br />
+                Graphics
+              </p>
+            </div>
+            <div className="flex w-[92px] flex-col items-center">
+              <Image
+                src="/icons/prototyping-product.svg"
+                alt="Prototyping"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
+              <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[1.15] tracking-[0.24px] text-[#6459EB]">
+                Prototyping
+              </p>
+            </div>
+          </div>
+
+          <div
+            ref={engMobileBarRef}
+            className="absolute inset-x-0 bottom-[-2%] flex translate-y-[50px] justify-center gap-10"
+          >
+            <div className="flex w-[92px] flex-col items-center">
+              <Image
+                src="/icons/full-stack-engineering.svg"
+                alt="Full-Stack Dev"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
+              <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[1.15] tracking-[0.24px] text-[#B9E4AE]">
+                Full-Stack
+                <br />
+                Dev
+              </p>
+            </div>
+            <div className="flex w-[92px] flex-col items-center">
+              <Image
+                src="/icons/mobile-apps-engineering.svg"
+                alt="Mobile Apps"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
+              <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[1.15] tracking-[0.24px] text-[#B9E4AE]">
+                Mobile
+                <br />
+                Apps
+              </p>
+            </div>
+            <div className="flex w-[92px] flex-col items-center">
+              <Image
+                src="/icons/ai-llm-engineering.svg"
+                alt="AI & LLM Integration"
+                width={48}
+                height={48}
+                className="h-12 w-12"
+              />
+              <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[1.15] tracking-[0.24px] text-[#FED198]">
+                AI & LLM
+                <br />
+                Integration
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* INNER SVG GLOBE */}
         <div
           ref={innerGlobeRef}
@@ -463,6 +798,7 @@ export default function EcosystemSection() {
             </g>
             <path
               ref={outerCirclePath}
+              className="hidden md:block"
               d="M169.476 333.276C259.93 333.276 333.259 259.948 333.259 169.493C333.259 79.0379 259.93 5.70972 169.476 5.70972C79.0206 5.70972 5.69238 79.0379 5.69238 169.493C5.69238 259.948 79.0206 333.276 169.476 333.276Z"
               stroke="rgba(255,255,255,1)"
               strokeWidth="1.5"
@@ -499,10 +835,29 @@ export default function EcosystemSection() {
           </svg>
         </div>
 
+        {/* Mobile-only: centered labels before scroll animation starts */}
+        <div
+          ref={mobilePhaseListRef}
+          className="absolute left-1/2 top-[calc(72%+100px)] z-[22] -translate-x-1/2 -translate-y-1/2 text-center md:hidden pointer-events-none"
+          aria-hidden
+        >
+          <div className="flex flex-col items-center">
+            <p className="font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[16px] font-medium leading-[120%] tracking-[0.32px] uppercase pb-[20px]">
+              BRAND
+            </p>
+            <p className="font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[16px] font-medium leading-[120%] tracking-[0.32px] uppercase pb-[20px]">
+              PRODUCT
+            </p>
+            <p className="font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[16px] font-medium leading-[120%] tracking-[0.32px] uppercase pb-[20px]">
+              ENGINEERING
+            </p>
+          </div>
+        </div>
+
         {/* Incomplete ring — stays fixed; only phase groups rotate (clockwise) */}
         <div
           ref={fixedRingRef}
-          className="pointer-events-none absolute inset-0 z-[15] top-[-14%]"
+          className="pointer-events-none absolute inset-0 z-[15] top-[-14%] hidden md:block"
           aria-hidden
         >
           <svg
@@ -587,8 +942,8 @@ export default function EcosystemSection() {
               </p>
             </div>
 
-            {/* Top Left Icon */}
-            <div className="icon-group absolute top-[0px] left-[-40px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            {/* Desktop: phase dot on outer ring (mobile: globe overlay only) */}
+            <div className="icon-group absolute top-[0px] left-[-40px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/circle-brand.svg"
                 alt="Brand"
@@ -599,7 +954,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Top Right Icon */}
-            <div className="icon-group absolute top-[0px] right-[-40px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[0px] right-[-40px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/strategy-brand.svg"
                 alt="Strategy & Positioning"
@@ -614,7 +969,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Left Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] left-[-90px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[220px] left-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/visual-identity-brand.svg"
                 alt="Visual Identity Systems"
@@ -630,7 +985,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Right Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] right-[-90px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[220px] right-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/marketing-brand.svg"
                 alt="Marketing Collateral"
@@ -660,7 +1015,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Top Left Icon */}
-            <div className="icon-group absolute top-[0px] left-[-40px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[0px] left-[-40px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/3d-motion-product.svg"
                 alt="3D & Motion Graphics"
@@ -675,8 +1030,8 @@ export default function EcosystemSection() {
               </p>
             </div>
 
-            {/* Top Right Icon */}
-            <div className="icon-group absolute top-[0px] right-[-40px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            {/* Desktop: phase dot on outer ring (mobile: globe overlay only) */}
+            <div className="icon-group absolute top-[0px] right-[-40px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/circle-product.svg"
                 alt="Product"
@@ -687,7 +1042,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Left Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] left-[-90px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[220px] left-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/ui-ux-product.svg"
                 alt="UI/UX Design"
@@ -703,7 +1058,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Right Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] right-[-90px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[220px] right-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/prototyping-product.svg"
                 alt="Prototyping"
@@ -730,8 +1085,8 @@ export default function EcosystemSection() {
               </p>
             </div>
 
-            {/* Top Left Icon */}
-            <div className="icon-group absolute top-[0px] left-[-40px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            {/* Desktop: phase dot on outer ring (mobile: globe overlay only) */}
+            <div className="icon-group absolute top-[0px] left-[-40px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/circle-engineering.svg"
                 alt="Engineering"
@@ -742,7 +1097,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Top Right Icon */}
-            <div className="icon-group absolute top-[0px] right-[-40px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[0px] right-[-40px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/mobile-apps-engineering.svg"
                 alt="Mobile Apps"
@@ -758,7 +1113,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Left Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] left-[-90px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[220px] left-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/full-stack-engineering.svg"
                 alt="Full-Stack Dev"
@@ -774,7 +1129,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Right Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] right-[-90px] flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[220px] right-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/ai-llm-engineering.svg"
                 alt="AI & LLM Integration"
@@ -787,6 +1142,70 @@ export default function EcosystemSection() {
                 <br />
                 Integration
               </p>
+            </div>
+          </div>
+        </div>
+
+        {/*
+          Mobile only: rim dots above outerRingRef (z-20) so they aren’t covered; rotation
+          synced with innerGlobeRef in the timeline when viewport is < md.
+        */}
+        <div
+          ref={globeMarkersRef}
+          className="absolute top-[7%] z-[25] h-[339px] w-[339px] pointer-events-none md:hidden"
+          aria-hidden
+        >
+          <div className="absolute inset-0">
+            <div
+              className="absolute h-14 w-14 -translate-x-1/2 -translate-y-1/2"
+              style={globeRimPct(-150)}
+            >
+              <div
+                data-globe-circle="brand"
+                className="flex h-full w-full items-center justify-center"
+              >
+                <Image
+                  src="/icons/circle-brand.svg"
+                  alt=""
+                  width={56}
+                  height={56}
+                  className="h-14 w-14"
+                />
+              </div>
+            </div>
+            <div
+              className="absolute h-14 w-14 -translate-x-1/2 -translate-y-1/2"
+              style={globeRimPct(-30)}
+            >
+              <div
+                data-globe-circle="product"
+                className="flex h-full w-full items-center justify-center"
+              >
+                <Image
+                  src="/icons/circle-product.svg"
+                  alt=""
+                  width={56}
+                  height={56}
+                  className="h-14 w-14"
+                />
+              </div>
+            </div>
+            <div
+              className="absolute h-14 w-14 -translate-x-1/2 -translate-y-1/2"
+              style={globeRimPct(150)}
+            >
+              <div
+                data-globe-circle="engineering"
+                className="flex h-full w-full items-center justify-center"
+              >
+                <Image
+                  src="/icons/circle-engineering.svg"
+                  alt=""
+                  width={56}
+                  height={56}
+                  className="h-14 w-14"
+                />
+              </div>
             </div>
           </div>
         </div>

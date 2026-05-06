@@ -80,6 +80,15 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
         }
       }
     },
+    mobileThumbnail{
+      asset->{
+        _id,
+        url,
+        metadata{
+          dimensions{ width, height }
+        }
+      }
+    },
     video{
       asset->{
         _id,
@@ -164,6 +173,7 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
             metadata{ dimensions{ width, height } }
           }
         },
+        headline,
         paragraph1,
         paragraph2,
         concludingStatement
@@ -234,6 +244,15 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
     cards[]{
       title,
       image{
+        asset->{
+          _id,
+          url,
+          metadata{
+            dimensions{ width, height }
+          }
+        }
+      },
+      mobileImage{
         asset->{
           _id,
           url,

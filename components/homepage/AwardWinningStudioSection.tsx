@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { PortableText } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity.image";
 import type { HomePage } from "@/lib/sanity.types";
 
@@ -7,10 +6,15 @@ interface AwardWinningStudioSectionProps {
   awardWinningStudio: HomePage["awardWinningStudio"];
 }
 
+const MOBILE_BODY =
+  "font-pp-neue-corp m-0 font-medium leading-[145%] tracking-[0.32px] text-white";
+
 export default function AwardWinningStudioSection({
   awardWinningStudio,
 }: AwardWinningStudioSectionProps) {
   if (!awardWinningStudio) return null;
+
+  const textContent = awardWinningStudio.messageSection?.textContent;
 
   return (
     <section className="@container w-full mt-6 md:mt-5">
@@ -34,75 +38,89 @@ export default function AwardWinningStudioSection({
             </div>
           )}
 
-          {awardWinningStudio.messageSection.textContent && (
-            <div className="relative mt-10 w-full lg:-mt-26 px-4 md:px-10">
-              <div className="relative mx-auto w-full max-w-[820px]">
-                <svg
-                  viewBox="0 0 820 356"
-                  className="w-full h-auto block"
-                  preserveAspectRatio="xMidYMid meet"
-                >
-                  <foreignObject x="0" y="0" width="820" height="356">
-                    <div className="relative w-full h-full text-left">
-                      {awardWinningStudio.messageSection.textContent
-                        .backgroundText?.asset?.url && (
-                        <div className="absolute inset-0 z-0">
-                          <Image
-                            src={urlFor(
-                              awardWinningStudio.messageSection.textContent
-                                .backgroundText,
-                            ).url()}
-                            alt="Background text"
-                            fill
-                            className="object-contain object-left"
-                            sizes="(max-width: 820px) 100vw, 820px"
-                            priority
-                          />
-                        </div>
-                      )}
+          {textContent && (
+            <>
+              {/* Mobile: simple left-aligned stack (< md) */}
+              <div className="relative mt-8 w-full px-4 md:hidden">
+                <div className="mx-auto w-full max-w-[520px] space-y-5 text-left">
+                  {textContent.headline?.trim() ? (
+                    <h2 className="font-pp-neue-corp-extended m-0 whitespace-pre-line text-[20px] font-medium uppercase leading-[120%] tracking-[0.4px] text-[#333333] opacity-100 pb-3">
+                      {textContent.headline}
+                    </h2>
+                  ) : null}
 
-                      <div className="absolute inset-0 z-10 pointer-events-none">
-                        {awardWinningStudio.messageSection.textContent
-                          .paragraph1 && (
-                          <div className="absolute left-[352px] top-[22px] w-[362px] pointer-events-auto">
-                            <p className="font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white m-0">
-                              {
-                                awardWinningStudio.messageSection.textContent
-                                  .paragraph1
-                              }
-                            </p>
-                          </div>
-                        )}
-
-                        {awardWinningStudio.messageSection.textContent
-                          .paragraph2 && (
-                          <div className="absolute left-[352px] top-[171px] w-[362px] pointer-events-auto">
-                            <p className="font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white m-0">
-                              {
-                                awardWinningStudio.messageSection.textContent
-                                  .paragraph2
-                              }
-                            </p>
-                          </div>
-                        )}
-
-                        {awardWinningStudio.messageSection.textContent
-                          .concludingStatement && (
-                          <div className="absolute left-[10px] top-[250px] w-[280px] pointer-events-auto">
-                            <p className="font-pp-neue-corp text-[22px] font-medium leading-[145%] tracking-[0.32px] text-white m-0">
-                              {
-                                awardWinningStudio.messageSection.textContent
-                                  .concludingStatement
-                              }
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </foreignObject>
-                </svg>
+                  {textContent.concludingStatement ? (
+                    <p className={`${MOBILE_BODY} pb-3 text-[16px]`}>
+                      {textContent.concludingStatement}
+                    </p>
+                  ) : null}
+                  {textContent.paragraph1 ? (
+                    <p className={`${MOBILE_BODY} pb-3 text-[14px]`}>
+                      {textContent.paragraph1}
+                    </p>
+                  ) : null}
+                  {textContent.paragraph2 ? (
+                    <p className={`${MOBILE_BODY} pb-3 text-[14px]`}>
+                      {textContent.paragraph2}
+                    </p>
+                  ) : null}
+                </div>
               </div>
-            </div>
+
+              {/* Desktop: SVG-positioned overlay (md+) */}
+              <div className="relative mt-10 hidden w-full lg:-mt-26 md:block md:px-10">
+                <div className="relative mx-auto w-full max-w-[820px]">
+                  <svg
+                    viewBox="0 0 820 356"
+                    className="block h-auto w-full"
+                    preserveAspectRatio="xMidYMid meet"
+                  >
+                    <foreignObject x="0" y="0" width="820" height="356">
+                      <div className="relative h-full w-full text-left">
+                        {textContent.backgroundText?.asset?.url && (
+                          <div className="absolute inset-0 z-0">
+                            <Image
+                              src={urlFor(textContent.backgroundText).url()}
+                              alt="Background text"
+                              fill
+                              className="object-contain object-left"
+                              sizes="(max-width: 820px) 100vw, 820px"
+                              priority
+                            />
+                          </div>
+                        )}
+
+                        <div className="pointer-events-none absolute inset-0 z-10">
+                          {textContent.paragraph1 && (
+                            <div className="pointer-events-auto absolute left-[352px] top-[22px] w-[362px]">
+                              <p className="font-pp-neue-corp m-0 text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">
+                                {textContent.paragraph1}
+                              </p>
+                            </div>
+                          )}
+
+                          {textContent.paragraph2 && (
+                            <div className="pointer-events-auto absolute left-[352px] top-[171px] w-[362px]">
+                              <p className="font-pp-neue-corp m-0 text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">
+                                {textContent.paragraph2}
+                              </p>
+                            </div>
+                          )}
+
+                          {textContent.concludingStatement && (
+                            <div className="pointer-events-auto absolute left-[10px] top-[250px] w-[280px]">
+                              <p className="font-pp-neue-corp m-0 text-[22px] font-medium leading-[145%] tracking-[0.32px] text-white">
+                                {textContent.concludingStatement}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </foreignObject>
+                  </svg>
+                </div>
+              </div>
+            </>
           )}
         </>
       )}
