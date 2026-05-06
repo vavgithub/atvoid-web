@@ -85,7 +85,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
           )}
 
           <div
-            className={`relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-end md:gap-10 shrink-0 mt-auto pb-10`}
+            className={`relative z-10 flex flex-col justify-between gap-6 md:flex-row md:items-end md:gap-10 shrink-0 mt-auto md:pb-10`}
           >
             <div className="md:max-w-[550px]">
               {heroSection.experienceBadge && (
@@ -121,7 +121,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
 
               {heroSection.intro?.heading && (
                 <div className="mt-5 md:mt-8">
-                  <h2 className="font-pp-neue-corp-wide text-[28px] font-medium uppercase leading-[120%] text-white md:text-[40px]">
+                  <h2 className="font-pp-neue-corp-wide text-[32px] font-medium uppercase leading-[120%] text-white md:text-[40px] max-w-[305px] sm:max-w-full">
                     {heroSection.intro.heading}
                   </h2>
                 </div>
@@ -143,7 +143,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
         <div className="relative left-1/2 right-1/2 mt-8 w-screen -translate-x-1/2 px-5 md:mt-8 md:px-10 lg:px-20">
           <div className="flex w-full flex-col gap-4 md:flex-row md:items-end md:justify-start md:gap-10">
             {heroSection.trustedBy.heading && (
-              <h3 className="max-w-[280px] font-pp-neue-corp text-[18px] font-medium uppercase leading-[120%] tracking-[0.32px] text-[#FFFDEB] md:text-[24px]">
+              <h3 className="max-w-[280px] font-pp-neue-corp text-[20px] font-medium uppercase leading-[120%] tracking-[0.32px] text-[#FFF] md:text-[24px]">
                 {heroSection.trustedBy.heading}
               </h3>
             )}

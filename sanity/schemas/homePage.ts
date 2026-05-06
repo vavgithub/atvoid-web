@@ -130,6 +130,14 @@ export default defineType({
           options: { hotspot: true },
         }),
         defineField({
+          name: 'mobileThumbnail',
+          title: 'Mobile thumbnail',
+          description:
+            'Portrait thumbnail for small screens (recommended 320×675px). Used as the video poster below md and as the fallback image on mobile when no video is set.',
+          type: 'image',
+          options: { hotspot: true },
+        }),
+        defineField({
           name: 'video',
           title: 'Showreel video',
           type: 'file',
@@ -160,6 +168,14 @@ export default defineType({
                   description: 'Large faded text image (e.g., "STOP FRAGMENTING YOUR BRAND")',
                   type: 'image',
                   options: { hotspot: true },
+                }),
+                defineField({
+                  name: 'headline',
+                  title: 'Headline (mobile)',
+                  description:
+                    'Plain-text <h2> below md (e.g. STOP FRAGMENTING, line break, YOUR BRAND). Line breaks are preserved. If empty, no mobile headline is shown.',
+                  type: 'text',
+                  rows: 2,
                 }),
                 defineField({
                   name: 'paragraph1',
@@ -392,6 +408,15 @@ export default defineType({
                 defineField({
                   name: 'image',
                   title: 'Image',
+                  description: 'Desktop / default artwork (md and up uses object-contain).',
+                  type: 'image',
+                  options: { hotspot: true },
+                }),
+                defineField({
+                  name: 'mobileImage',
+                  title: 'Mobile image',
+                  description:
+                    'Optional. Shown below the md breakpoint (344×470 slot). Falls back to Image when empty.',
                   type: 'image',
                   options: { hotspot: true },
                 }),
@@ -457,9 +482,9 @@ export default defineType({
                 }),
               ],
               preview: {
-                select: { title: 'title' },
-                prepare({ title }: { title?: string }) {
-                  return { title: title || 'Card' };
+                select: { title: 'title', media: 'image' },
+                prepare({ title, media }) {
+                  return { title: title || 'Card', media };
                 },
               },
             },

@@ -19,7 +19,7 @@ export default function SelectedWorksSection({
       <div className="w-full mx-auto max-w-[1280px]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
           {selectedWorks.heading && (
-            <h2 className="text-[#F6F6F6] font-pp-neue-corp-wide text-[30px] md:text-[60px] font-medium md:leading-[0.9] uppercase">
+            <h2 className="text-[#F6F6F6] font-pp-neue-corp-extended text-[32px] md:text-[60px] font-medium leading-[1.2] md:leading-[0.9] uppercase">
               {selectedWorks.heading}
             </h2>
           )}
@@ -31,21 +31,50 @@ export default function SelectedWorksSection({
         <div className="relative z-10 mt-8 w-screen max-w-[100vw] ml-[calc(50%-50vw)] overflow-x-auto overscroll-x-contain scrollbar-hide pl-5 pr-3 md:mt-12 md:pl-10 md:pr-5 lg:pl-20 lg:pr-8">
           <div className="flex w-max flex-row gap-10">
             {selectedWorks.cards.map((card, idx) => {
+              const desktopSrc = card.image?.asset?.url
+                ? urlFor(card.image).url()
+                : undefined;
+              const mobileSrc = card.mobileImage?.asset?.url
+                ? urlFor(card.mobileImage).width(688).url()
+                : desktopSrc;
+
               const cardContent = (
                 <>
-                  {/* Card image */}
-                  {card.image?.asset?.url ? (
-                    <div className="relative h-[280px] w-full max-w-full overflow-hidden rounded-[24px] md:h-[488px]">
-                      <Image
-                        src={urlFor(card.image).url()}
-                        alt={card.title || ""}
-                        fill
-                        className="object-contain rounded-[24px]"
-                        sizes="(max-width: 767px) calc(100vw - 3rem), 799px"
-                      />
+                  {/* Card image: mobile asset below md when set, else desktop for all */}
+                  {desktopSrc ? (
+                    <div className="h-[470px] max-h-[470px] w-[344px] max-w-[344px] overflow-hidden rounded-[24px] mb-5 md:mb-0 md:h-[488px] md:max-h-none md:w-full md:max-w-full">
+                      {card.mobileImage?.asset?.url && mobileSrc ? (
+                        <>
+                          <Image
+                            src={mobileSrc}
+                            alt={card.title || ""}
+                            width={688}
+                            height={940}
+                            className="w-[344px] h-[470px] object-cover rounded-[24px] md:hidden"
+                            sizes="344px"
+                          />
+                          <Image
+                            src={desktopSrc}
+                            alt={card.title || ""}
+                            width={799}
+                            height={488}
+                            className="hidden md:block w-full h-[488px] object-contain rounded-[24px]"
+                            sizes="799px"
+                          />
+                        </>
+                      ) : (
+                        <Image
+                          src={desktopSrc}
+                          alt={card.title || ""}
+                          width={799}
+                          height={488}
+                          className="w-[344px] h-[470px] md:w-full md:h-[488px] object-cover md:object-contain rounded-[24px]"
+                          sizes="(max-width: 767px) 344px, 799px"
+                        />
+                      )}
                     </div>
                   ) : (
-                    <div className="h-[280px] w-full rounded-[24px] border border-white/10 bg-white/5 md:h-[488px]" />
+                    <div className="h-[470px] max-h-[470px] w-[344px] max-w-[344px] rounded-[24px] border border-white/10 bg-white/5 mb-5 md:mb-0 md:h-[488px] md:max-h-none md:w-full md:max-w-full" />
                   )}
 
                   {/* Title + Arrow */}
@@ -128,14 +157,14 @@ export default function SelectedWorksSection({
                 <Link
                   key={idx}
                   href={card.href}
-                  className="flex w-[min(799px,calc(100vw-3rem))] shrink-0 flex-col md:w-[799px]"
+                  className="flex w-[344px] max-w-[344px] shrink-0 flex-col md:w-[799px] md:max-w-none"
                 >
                   {cardContent}
                 </Link>
               ) : (
                 <div
                   key={idx}
-                  className="flex w-[min(799px,calc(100vw-3rem))] shrink-0 flex-col md:w-[799px]"
+                  className="flex w-[344px] max-w-[344px] shrink-0 flex-col md:w-[799px] md:max-w-none"
                 >
                   {cardContent}
                 </div>

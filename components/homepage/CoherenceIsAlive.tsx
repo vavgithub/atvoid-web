@@ -6,6 +6,13 @@ interface CoherenceIsAliveProps {
   coherenceIsAlive: HomePage["coherenceIsAlive"];
 }
 
+const marqueeStyle = `
+  @keyframes coherence-marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+`;
+
 /**
  * Label centers derived from Figma node 2354:2400 (inset → center %).
  * Order matches the arc left→right; pair CMS items index with slot index.
@@ -55,8 +62,15 @@ export default function CoherenceIsAlive({
 
   const showCenterBlock = hasSubline || hasHeadline || hasLine1;
 
+  const itemsWithLabels = Array.isArray(coherenceIsAlive.items)
+    ? coherenceIsAlive.items
+        .map((it, idx) => ({ it, idx }))
+        .filter(({ it }) => Boolean(it?.label))
+    : [];
+
   return (
     <section className="relative mt-20 md:mt-[150px] w-full max-w-[1280px] mx-auto overflow-hidden rounded-[24px] md:rounded-none">
+      <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
       <div className="relative flex flex-col items-center px-4 py-16 md:block md:h-[852px] md:w-full md:p-0">
         {/* Background image from Sanity (disabled for now) */}
         {/* {hasImage && coherenceIsAlive.image && (
@@ -94,6 +108,58 @@ export default function CoherenceIsAlive({
           aria-hidden
         />
 
+        {/* Mobile: auto-looping icon marquee (desktop unchanged) */}
+        {itemsWithLabels.length > 0 && (
+          <div className="relative z-30 w-screen max-w-[100vw] ml-[calc(50%-50vw)] overflow-hidden pb-[65px] md:hidden">
+            <div
+              className="flex w-[200%]"
+              style={{
+                animation: "coherence-marquee 18s linear infinite",
+              }}
+            >
+              {[...itemsWithLabels, ...itemsWithLabels].map(
+                ({ it, idx }, i) => {
+                  const slot = ITEM_SLOTS[idx] ?? { color: "#f6f6f6" };
+                  const itemImageUrl = it?.image?.asset?.url
+                    ? urlFor(it.image).url()
+                    : null;
+
+                  return (
+                    <div
+                      key={`${it?.label ?? "item"}-${idx}-${i}`}
+                      className="flex w-[140px] shrink-0 flex-col items-center justify-start gap-2 px-4"
+                    >
+                      <div className="relative h-12 w-12 shrink-0">
+                        {itemImageUrl && it?.image ? (
+                          <Image
+                            src={itemImageUrl}
+                            alt={it.label ?? ""}
+                            fill
+                            className="object-contain"
+                            sizes="48px"
+                          />
+                        ) : (
+                          <span
+                            className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
+                            style={{ backgroundColor: slot.color }}
+                            aria-hidden
+                          />
+                        )}
+                      </div>
+                      <p
+                        className="text-center font-pp-neue-corp text-[13px] font-medium leading-[1.2] tracking-[0.32px]"
+                        style={{ color: slot.color }}
+                      >
+                        {it?.label}
+                      </p>
+                    </div>
+                  );
+                },
+              )}
+            </div>
+          </div>
+        )}
+
         {showCenterBlock && (
           <div className="relative z-20 flex w-full flex-col items-center text-center md:absolute md:left-1/2 md:top-[49%] md:w-[min(100%,520px)] md:-translate-x-1/2 md:-translate-y-1/2">
             {hasSubline && (
@@ -102,13 +168,13 @@ export default function CoherenceIsAlive({
               </p>
             )}
             {hasHeadline && (
-              <h2 className="font-pp-neue-corp-wide mb-4 text-[26px] font-medium uppercase leading-[0.8] tracking-[-0.8px] text-[#f6f6f6] md:text-[40px]">
+              <h2 className="font-pp-neue-corp-wide text-[32px] font-medium uppercase leading-[1.2] tracking-[-0.8px] text-[#f6f6f6] md:text-[40px]">
                 {coherenceIsAlive.headline}
               </h2>
             )}
             {hasLine1 && (
               <p
-                className="font-pp-neue-corp mt-5 text-[14px] font-medium leading-[1.45] tracking-[0.32px] text-white md:mt-[37px] md:text-[16px]"
+                className="font-pp-neue-corp mt-5 text-[12px] font-medium leading-[1.45] tracking-[0.32px] text-white md:mt-[37px] md:text-[16px] pb-6 md:pb-0"
                 style={{ letterSpacing: "0.32px" }}
               >
                 {coherenceIsAlive.line1}
@@ -119,7 +185,7 @@ export default function CoherenceIsAlive({
 
         {Array.isArray(coherenceIsAlive.items) &&
           coherenceIsAlive.items.some((it) => it?.label) && (
-            <div className="relative z-10 mt-16 grid w-full grid-cols-2 gap-y-10 md:absolute md:inset-0 md:mt-0 md:block md:translate-y-[16%]">
+            <div className="relative z-10 mt-16 hidden md:absolute md:inset-0 md:mt-0 md:block md:translate-y-[16%]">
               {ITEM_SLOTS.map((slot, idx) => {
                 const item = coherenceIsAlive.items?.[idx];
                 if (!item?.label) return null;
