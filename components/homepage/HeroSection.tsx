@@ -112,7 +112,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
                     )}
                   </div>
                   {heroSection.experienceBadge.description && (
-                    <div className="md:max-w-[305px] text-sm md:text-base not-italic font-pp-neue-corp font-medium leading-[120%] text-white">
+                    <div className="md:max-w-[305px] text-sm md:text-base not-italic font-pp-neue-corp font-medium leading-[145%] text-white">
                       <p>{heroSection.experienceBadge.description}</p>
                     </div>
                   )}
@@ -143,7 +143,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
         <div className="relative left-1/2 right-1/2 mt-8 w-screen -translate-x-1/2 px-5 md:mt-8 md:px-10 lg:px-20">
           <div className="flex w-full flex-col gap-4 md:flex-row md:items-end md:justify-start md:gap-10">
             {heroSection.trustedBy.heading && (
-              <h3 className="max-w-[280px] font-pp-neue-corp text-[20px] font-medium uppercase leading-[120%] tracking-[0.32px] text-[#FFF] md:text-[24px]">
+              <h3 className="max-w-[280px] font-pp-neue-corp text-[20px] font-medium uppercase leading-[145%] tracking-[0.32px] text-[#FFF] md:text-[24px]">
                 {heroSection.trustedBy.heading}
               </h3>
             )}

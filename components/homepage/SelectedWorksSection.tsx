@@ -97,10 +97,10 @@ export default function SelectedWorksSection({
                       {/* Client */}
                       {card.client && (
                         <div>
-                          <p className="text-[#757575] font-pp-neue-corp text-[12px] font-medium leading-[1.2] tracking-[0.24px]">
+                          <p className="text-[#757575] font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px]">
                             Client:
                           </p>
-                          <p className="text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium leading-[1.2] tracking-[0.32px] mt-0.5">
+                          <p className="text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] mt-0.5">
                             {card.client}
                           </p>
                         </div>
@@ -133,12 +133,12 @@ export default function SelectedWorksSection({
                     {/* Narrative: full width below, index on same line right */}
                     {(card.narrative || card.index) && (
                       <div className="mt-5">
-                        <p className="text-[#757575] font-pp-neue-corp text-[12px] font-medium leading-[1.2] tracking-[0.24px]">
+                        <p className="text-[#757575] font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] ">
                           Narrative:
                         </p>
                         <div className="flex flex-row items-baseline justify-between gap-2 mt-0.5">
                           {card.narrative && (
-                            <p className="text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium leading-[1.2] tracking-[0.32px]">
+                            <p className="text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
                               {card.narrative}
                             </p>
                           )}

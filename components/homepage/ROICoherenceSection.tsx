@@ -45,7 +45,7 @@ export default function ROICoherenceSection({
           </h2>
         )}
         {roiOfCoherence.cards && roiOfCoherence.cards.length > 0 && (
-          <div className="flex flex-wrap justify-center md:flex-nowrap md:justify-start xl:justify-center gap-10 md:gap-4 overflow-visible md:overflow-x-auto md:overflow-y-visible md:scrollbar-hide pt-[40px] px-5 md:px-0">
+          <div className="flex flex-wrap justify-center md:justify-center xl:flex-nowrap xl:justify-start 2xl:justify-center gap-10 md:gap-14 xl:gap-4 overflow-visible xl:overflow-x-auto xl:overflow-y-visible xl:scrollbar-hide pt-[40px] px-5 md:px-0">
             {roiOfCoherence.cards.map((card, idx) => (
               <div
                 key={idx}
@@ -70,7 +70,7 @@ export default function ROICoherenceSection({
                   </h3>
                 )}
                 {card.description && (
-                  <p className="font-pp-neue-corp text-white/90 font-extralight text-base leading-[120%]">
+                  <p className="font-pp-neue-corp text-white/90 font-extralight text-base leading-[145%]">
                     {card.description}
                   </p>
                 )}

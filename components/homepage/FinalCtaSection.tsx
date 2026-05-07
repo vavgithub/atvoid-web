@@ -30,7 +30,7 @@ export default function FinalCtaSection({ finalCta }: FinalCtaSectionProps) {
             </h3>
           )}
           {finalCta.description && (
-            <p className="mt-6 max-w-[315px] text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium not-italic leading-[120%] tracking-[0.32px]">
+            <p className="mt-6 max-w-[315px] text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium not-italic leading-[145%] tracking-[0.32px]">
               {finalCta.description}
             </p>
           )}
