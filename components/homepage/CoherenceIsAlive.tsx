@@ -174,7 +174,7 @@ export default function CoherenceIsAlive({
             )}
             {hasLine1 && (
               <p
-                className="font-pp-neue-corp mt-5 text-[12px] font-medium leading-[1.45] tracking-[0.32px] text-white md:mt-[37px] md:text-[16px] pb-6 md:pb-0"
+                className="font-pp-neue-corp mt-5 text-[12px] font-medium leading-[145%] tracking-[0.32px] text-white md:mt-[37px] md:text-[16px] pb-6 md:pb-0"
                 style={{ letterSpacing: "0.32px" }}
               >
                 {coherenceIsAlive.line1}

@@ -65,7 +65,7 @@ export default function DigitalEcosystemSection({
                 </div>
               )}
               {digitalEcosystem.subheading?.line2 && (
-                <div className="mt-2 font-pp-neue-corp text-[#FFF] text-[14px] md:text-base font-light leading-[120%] tracking-[0.32px]">
+                <div className="mt-2 font-pp-neue-corp text-[#FFF] text-[14px] md:text-base font-light leading-[145%] tracking-[0.32px]">
                   {digitalEcosystem.subheading.line2}
                 </div>
               )}

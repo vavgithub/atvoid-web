@@ -82,7 +82,7 @@ const Footer = () => {
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <div className="mt-12 text-base font-medium leading-relaxed min-w-[250px] font-pp-neue-corp">
+                <div className="mt-12 text-base font-medium leading-[145%] min-w-[250px] font-pp-neue-corp">
                   <p>1021 E Lincolnway Suite</p>
                   <p>#8086, Cheyenne, Wyoming</p>
                   <p>82001, United States</p>
@@ -100,10 +100,9 @@ const Footer = () => {
                     className="w-full h-full object-contain"
                   />
                 </div>
-                <div className="mt-12 text-base leading-relaxed min-w-[250px] font-pp-neue-corp">
-                  <p>9, ART XVII,</p>
-                  <p>Business Bay</p>
-                  <p>Dubai, UAE</p>
+                <div className="mt-12 text-base leading-[145%] min-w-[250px] font-pp-neue-corp">
+                  <p>Sharjah Media City</p>
+                  <p>(Shams), Sharjah, UAE</p>
                 </div>
               </div>
             </div>
@@ -118,7 +117,7 @@ const Footer = () => {
         </div>
 
         {/* Right Column - Big Text */}
-        <div className="mt-10 ml-auto w-[clamp(220px,80vw,891px)] pointer-events-none md:absolute md:right-0 md:bottom-0 md:mt-0 md:w-[891px] md:max-[1269px]:w-[clamp(260px,60vw,891px)]">
+        <div className="mt-10 ml-auto w-[clamp(220px,80vw,891px)] pointer-events-none md:absolute md:right-0 md:bottom-0 md:mt-0 md:w-[891px] md:max-[1269px]:w-[clamp(260px,45vw,891px)]">
           <div className="w-full">
             <Image
               src="/images/VAV.svg"

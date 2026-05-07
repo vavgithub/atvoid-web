@@ -935,7 +935,7 @@ export default function EcosystemSection() {
               <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
                 BRAND
               </h3>
-              <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[120%] tracking-[0.32px]">
+              <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
                 We excavate your narrative
                 <br />
                 to build identities that scale
@@ -1007,7 +1007,7 @@ export default function EcosystemSection() {
               <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
                 PRODUCT
               </h3>
-              <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[120%] tracking-[0.32px]">
+              <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
                 We craft high-fidelity interfaces that
                 <br />
                 guide and delight users
@@ -1078,7 +1078,7 @@ export default function EcosystemSection() {
               <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
                 ENGINEERING
               </h3>
-              <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[120%] tracking-[0.32px]">
+              <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
                 We don't outsource the code. We build
                 <br />
                 scalable, pixel-perfect products.
