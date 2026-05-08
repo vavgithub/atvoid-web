@@ -625,6 +625,20 @@ export default defineType({
                   type: 'number',
                 }),
                 defineField({
+                  name: 'mobileArrowPositionX',
+                  title: 'Mobile Arrow Position X (%)',
+                  description:
+                    'Optional. Override arrow X position for mobile view only. Leave empty to use the desktop Arrow Position X.',
+                  type: 'number',
+                }),
+                defineField({
+                  name: 'mobileArrowPositionY',
+                  title: 'Mobile Arrow Position Y (%)',
+                  description:
+                    'Optional. Override arrow Y position for mobile view only. Both Mobile Arrow X and Y must be set to take effect.',
+                  type: 'number',
+                }),
+                defineField({
                   name: 'arrowRotationDeg',
                   title: 'Arrow Rotation (deg)',
                   description:

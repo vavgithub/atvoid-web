@@ -338,6 +338,8 @@ export interface HomePage {
       arrowColor?: string;
       arrowPositionX?: number;
       arrowPositionY?: number;
+      mobileArrowPositionX?: number;
+      mobileArrowPositionY?: number;
       arrowRotationDeg?: number;
     }>;
   };

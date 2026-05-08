@@ -22,7 +22,7 @@ const Footer = () => {
               <span className="font-pp-neue-corp text-base font-medium">
                 Socials
               </span>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-nowrap gap-1.5 md:gap-2">
                 {[
                   {
                     name: "LinkedIn",
@@ -57,11 +57,11 @@ const Footer = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={name}
-                    className="group flex size-12 shrink-0 items-center justify-center rounded-full bg-white text-[#070708] transition-colors duration-200 ease-out hover:bg-[#73F8C3] hover:text-[#070708] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#73F8C3]"
+                    className="group flex size-9 md:size-12 shrink-0 items-center justify-center rounded-full bg-[#2B2B2B] text-white transition-colors duration-200 ease-out hover:bg-[#73F8C3] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#282B35]"
                   >
                     <Icon
                       aria-hidden
-                      className="size-8 shrink-0 transition-transform duration-200 group-hover:scale-105"
+                      className="size-5 md:size-8 shrink-0 transition-transform duration-200 group-hover:scale-105"
                     />
                   </Link>
                 ))}
@@ -108,8 +108,8 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Copyright */}
-          <div className="md:mt-10">
+          {/* Copyright — desktop only (mobile version is below the right column) */}
+          <div className="hidden md:block md:mt-10">
             <p className="text-base text-[#5B5B5B] font-pp-neue-corp">
               © 2026 VAV™
             </p>
@@ -127,6 +127,13 @@ const Footer = () => {
               className="w-full h-auto"
             />
           </div>
+        </div>
+
+        {/* Copyright — mobile only (after right column) */}
+        <div className="mt-6 md:hidden">
+          <p className="text-base text-[#5B5B5B] font-pp-neue-corp">
+            © 2026 VAV™
+          </p>
         </div>
       </div>
     </footer>

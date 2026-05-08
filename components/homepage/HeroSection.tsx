@@ -56,7 +56,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
               aria-hidden
             >
               <div
-                className="relative mt-[-50%] h-[320px] w-[320px] overflow-hidden rounded-2xl sm:h-[400px] sm:w-[400px] md:mt-[-140px] md:h-[480px] md:w-[480px] lg:h-[580px] lg:w-[580px]"
+                className="relative mt-[-90%] h-[320px] w-[320px] overflow-hidden rounded-2xl sm:h-[400px] sm:w-[400px] md:mt-[-140px] md:h-[480px] md:w-[480px] lg:h-[580px] lg:w-[580px]"
                 style={{
                   boxShadow:
                     "0 0 120px 80px rgba(0, 0, 0, 0.18), 0 0 48px 24px rgba(0, 0, 0, 0.12), inset 0 0 100px 45px rgba(0, 0, 0, 0.14), inset 0 0 28px 8px rgba(0, 0, 0, 0.08)",
@@ -112,7 +112,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
                     )}
                   </div>
                   {heroSection.experienceBadge.description && (
-                    <div className="md:max-w-[305px] text-sm md:text-base not-italic font-pp-neue-corp font-medium leading-[145%] text-white">
+                    <div className="md:max-w-[305px] text-sm md:text-base not-italic font-pp-neue-corp font-medium leading-[120%] text-white">
                       <p>{heroSection.experienceBadge.description}</p>
                     </div>
                   )}
