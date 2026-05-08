@@ -379,7 +379,7 @@ export default function EcosystemSection() {
 
         // Content Swap (Product active; nudge Brand+Engineering only)
         .to(productTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase2")
-        .to(brandTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase2")
+        .to(brandTextContainer, { x: 0, y: 30, duration: 0.2 }, "phase2")
         .to(engTextContainer, { x: 32, y: 18, duration: 0.2 }, "phase2")
         .to(
           brandIcons,
@@ -494,7 +494,7 @@ export default function EcosystemSection() {
 
         // Content Swap (Engineering active; nudge Brand+Product only)
         .to(engTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase3")
-        .to(brandTextContainer, { x: 20, y: 10, duration: 0.2 }, "phase3")
+        .to(brandTextContainer, { x: 22, y: 30, duration: 0.2 }, "phase3")
         .to(productTextContainer, { x: -10, y: 15, duration: 0.2 }, "phase3")
         .to(
           productIcons,
@@ -935,7 +935,7 @@ export default function EcosystemSection() {
         >
           {/* ================= GROUP 1: BRAND ================= */}
           <div ref={brandGroup} className="absolute inset-0 w-full h-full">
-            <div className="text-container absolute top-[-40px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
+            <div className="text-container absolute top-[-70px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
               <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
                 BRAND
               </h3>
