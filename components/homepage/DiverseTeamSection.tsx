@@ -1,7 +1,17 @@
-import { Fragment, type CSSProperties } from "react";
+"use client";
+
+import { Fragment, type CSSProperties, useSyncExternalStore } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { urlFor } from "@/lib/sanity.image";
 import type { HomePage } from "@/lib/sanity.types";
+
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: false, amount: 0.3 },
+  transition: { duration: 1.6, ease: [0.22, 1, 0.36, 1] as const, delay },
+});
 
 // Floating animation keyframes
 const floatStyle = `
@@ -78,6 +88,12 @@ function TeamCursorArrow({
 export default function DiverseTeamSection({
   diverseTeam,
 }: DiverseTeamSectionProps) {
+  const isMobile = useSyncExternalStore(
+    (cb) => { const mq = window.matchMedia("(max-width: 767px)"); mq.addEventListener("change", cb); return () => mq.removeEventListener("change", cb); },
+    () => window.matchMedia("(max-width: 767px)").matches,
+    () => false,
+  );
+
   if (!diverseTeam) return null;
 
   const targetX = diverseTeam.arrowTarget?.x ?? 50;
@@ -86,61 +102,67 @@ export default function DiverseTeamSection({
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: floatStyle }} />
-      <section className="w-full mt-[100px] md:mt-[150px] pb-14 md:pb-0">
+      <section className="-mx-5 md:-mx-10 mt-[100px] md:mt-[150px] pb-14 md:pb-0">
         {/* Heading - Above background image */}
         {diverseTeam.heading && (
           <div className="mb-10 px-5 md:px-10 lg:px-20">
             <div className="font-pp-neue-corp w-full max-w-full sm:max-w-[424px] md:max-w-[720px] mx-0 sm:mx-auto">
               {/* Line 1: prefix1 (top-left) */}
               {diverseTeam.heading.prefix1 && (
-                <div className="text-left">
+                <motion.div className="text-left" {...fadeUp(0)}>
                   <span className="text-[#474747] text-[12px] sm:text-[16px] md:text-[20px] font-medium uppercase">
                     {diverseTeam.heading.prefix1}
                   </span>
-                </div>
+                </motion.div>
               )}
 
               {/* Line 2: main1 (left) + prefix2 (right) */}
               <div className="mt-1 flex w-full items-baseline justify-between gap-2">
                 <div className="min-w-0">
                   {diverseTeam.heading.main1 && (
-                    <h2 className="font-pp-neue-corp-wide text-[#F6F6F6] text-[24px] sm:text-[30px] md:text-[46px] lg:text-[60px] font-medium leading-[0.9] md:leading-[80%] tracking-[-1.2px] uppercase">
+                    <motion.h2
+                      className="font-pp-neue-corp-wide text-[#F6F6F6] text-[24px] sm:text-[30px] md:text-[46px] lg:text-[60px] font-medium leading-[0.9] md:leading-[80%] tracking-[-1.2px] uppercase"
+                      {...fadeUp(0.1)}
+                    >
                       {diverseTeam.heading.main1}
-                    </h2>
+                    </motion.h2>
                   )}
                 </div>
                 <div className="min-w-0 text-right hidden sm:block">
                   {diverseTeam.heading.prefix2 && (
-                    <span className="text-[#474747] text-[12px] sm:text-[16px] md:text-[20px] font-medium uppercase">
+                    <motion.span
+                      className="text-[#474747] text-[12px] sm:text-[16px] md:text-[20px] font-medium uppercase"
+                      {...fadeUp(0.2)}
+                    >
                       {diverseTeam.heading.prefix2}
-                    </span>
+                    </motion.span>
                   )}
                 </div>
               </div>
 
               {/* Mobile-only: prefix2 on its own line */}
               {diverseTeam.heading.prefix2 && (
-                <div className="mt-1 text-left sm:hidden">
+                <motion.div className="mt-1 text-left sm:hidden" {...fadeUp(0.2)}>
                   <span className="text-[#474747] text-[12px] font-medium uppercase">
                     {diverseTeam.heading.prefix2}
                   </span>
-                </div>
+                </motion.div>
               )}
 
               {/* Line 3: main2 (centered under the heading) */}
               {diverseTeam.heading.main2 && (
-                <div className="mt-1 text-left sm:text-right">
+                <motion.div className="mt-1 text-left sm:text-right" {...fadeUp(0.3)}>
                   <h2 className="font-pp-neue-corp-wide text-[#F6F6F6] text-[24px] sm:text-[30px] md:text-[46px] lg:text-[60px] font-medium leading-[0.9] md:leading-[80%] tracking-[-1.2px] uppercase">
                     {diverseTeam.heading.main2}
                   </h2>
-                </div>
+                </motion.div>
               )}
             </div>
           </div>
         )}
 
         {/* Background Image Section */}
-        <div className="relative min-h-[600px] md:min-h-[800px] overflow-hidden">
+        <div className="relative min-h-[600px] md:min-h-[900px] overflow-hidden">
           {/* Background Image */}
           {diverseTeam.backgroundImage?.asset?.url && (
             <div className="absolute inset-0 z-0">
@@ -148,7 +170,7 @@ export default function DiverseTeamSection({
                 src={urlFor(diverseTeam.backgroundImage).url()}
                 alt="World map"
                 fill
-                className="object-cover object-center"
+                className="object-cover [object-position:75%_50%] md:[object-position:95%_50%] lg:object-center"
                 sizes="100vw"
                 priority
               />
@@ -176,9 +198,21 @@ export default function DiverseTeamSection({
                   const arrowFill = isHexColor(member.arrowColor)
                     ? member.arrowColor
                     : bgColor;
+                  const hasMobileArrowOverride =
+                    isMobile &&
+                    member.mobileArrowPositionX !== undefined &&
+                    member.mobileArrowPositionY !== undefined;
+
+                  const effectiveArrowX = hasMobileArrowOverride
+                    ? member.mobileArrowPositionX!
+                    : member.arrowPositionX;
+                  const effectiveArrowY = hasMobileArrowOverride
+                    ? member.mobileArrowPositionY!
+                    : member.arrowPositionY;
+
                   const hasMapArrow =
-                    member.arrowPositionX !== undefined &&
-                    member.arrowPositionY !== undefined;
+                    effectiveArrowX !== undefined &&
+                    effectiveArrowY !== undefined;
 
                   const angleToCenterDeg = angleTowardTargetPercent(
                     member.positionX,
@@ -195,10 +229,10 @@ export default function DiverseTeamSection({
                   const angleArrowToCenterDeg =
                     rotationOverrideDeg !== undefined
                       ? rotationOverrideDeg + CURSOR_ROTATION_OFFSET
-                      : hasMapArrow
+                      : member.arrowPositionX !== undefined && member.arrowPositionY !== undefined
                         ? angleTowardTargetPercent(
-                            member.arrowPositionX!,
-                            member.arrowPositionY!,
+                            member.arrowPositionX,
+                            member.arrowPositionY,
                             targetX,
                             targetY,
                           )
@@ -267,8 +301,8 @@ export default function DiverseTeamSection({
                         <div
                           className="absolute z-1 flex h-[30px] w-[30px] items-center justify-center"
                           style={{
-                            left: `${member.arrowPositionX}%`,
-                            top: `${member.arrowPositionY}%`,
+                            left: `${effectiveArrowX}%`,
+                            top: `${effectiveArrowY}%`,
                             transform: "translate(-50%, -50%)",
                             ...floatStyleBlock,
                           }}

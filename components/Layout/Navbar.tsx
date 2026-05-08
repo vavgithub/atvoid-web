@@ -4,9 +4,9 @@ import React from "react";
 
 const Navbar = () => {
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 py-6 px-5 md:px-10 flex justify-between items-center pointer-events-none bg-transparent h-[120px]">
+    <nav className="fixed top-0 left-0 w-full z-50 py-6 px-5 md:px-10 lg:px-20 flex justify-between items-center pointer-events-none bg-transparent h-[120px]">
       {/* Logo */}
-      <div className="pointer-events-auto">
+      <div className="pointer-events-auto md:bg-transparent md:backdrop-blur-none bg-black/60 backdrop-blur-md rounded-xl px-2 py-2">
         <Link href="/" className="block relative w-[125px] h-[44px]">
           <Image
             src="/images/nav-logo.svg"

@@ -2,7 +2,8 @@
 
 import React, { useState, useRef, useLayoutEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
+import SquircleBox from "@/components/ui/SquircleBox";
 
 export default function MorphingForm() {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,19 +62,18 @@ export default function MorphingForm() {
       </AnimatePresence>
 
       <div className="fixed bottom-8 left-0 right-0 z-[110] flex justify-center items-end pointer-events-none">
+        <SquircleBox cornerRadius={isOpen ? 24 : 28} cornerSmoothing={1}>
         <motion.div
           initial={false}
           animate={{
             width: size.w,
             height: size.h,
-            borderRadius: isOpen ? 24 : 9999,
           }}
           transition={{
             width: springTransition,
             height: springTransition,
-            borderRadius: radiusTransition,
           }}
-          className="bg-[#111111] text-white shadow-2xl overflow-hidden pointer-events-auto"
+          className="bg-[#111111] text-white overflow-hidden pointer-events-auto"
         >
           <div ref={measureRef} className="inline-block w-max align-top">
             {!isOpen ? (
@@ -134,24 +134,30 @@ export default function MorphingForm() {
                     <ArrowLeft className="w-5 h-5 text-white/70" />
                   </button>
 
-                  <button
-                    type="button"
-                    className="bg-[#7FFfd4] hover:bg-[#6ee6be] transition-colors text-black font-medium tracking-wide uppercase px-8 py-3.5 rounded-xl text-sm cursor-pointer shadow-[0_0_20px_rgba(127,255,212,0.3)] shrink-0"
-                  >
-                    SEND
-                  </button>
-                </div>
-
-                <div className="absolute bottom-6 right-8 flex items-center justify-center opacity-50 pointer-events-none">
-                  <div className="flex flex-col gap-[5px] w-5">
-                    <div className="h-[2px] w-full bg-white rounded-full" />
-                    <div className="h-[2px] w-full bg-white rounded-full" />
+                  <div className="shrink-0 shadow-[0_0_20px_rgba(127,255,212,0.3)] rounded-xl">
+                    <SquircleBox cornerRadius={12} cornerSmoothing={1}>
+                      <button
+                        type="button"
+                        className="bg-[#7FFfd4] hover:bg-[#6ee6be] transition-colors text-black font-medium tracking-wide uppercase px-8 py-3.5 text-sm cursor-pointer"
+                      >
+                        SEND
+                      </button>
+                    </SquircleBox>
                   </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="absolute bottom-6 right-8 flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
+                >
+                  <X className="w-6 h-6 text-white" />
+                </button>
               </div>
             )}
           </div>
         </motion.div>
+        </SquircleBox>
       </div>
     </>
   );

@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { urlFor } from "@/lib/sanity.image";
 import type { HomePage } from "@/lib/sanity.types";
+import SquircleBox from "@/components/ui/SquircleBox";
 
 interface ShowReelSectionProps {
   showReelsSection: HomePage["showReelsSection"];
@@ -35,8 +36,6 @@ const DEFAULT_MOBILE_SHELL_ASPECT = "320 / 675";
 function mobileShowreelShellAspect(
   section: NonNullable<HomePage["showReelsSection"]>,
 ): string {
-  const m = section.mobileThumbnail?.asset?.metadata?.dimensions;
-  if (m?.width && m?.height) return `${m.width} / ${m.height}`;
   const d = section.image?.asset?.metadata?.dimensions;
   if (d?.width && d?.height) return `${d.width} / ${d.height}`;
   return DEFAULT_MOBILE_SHELL_ASPECT;
@@ -102,8 +101,7 @@ function ShowReelMedia({
     getMobileMqServerSnapshot,
   );
 
-  const posterUrl =
-    (isMobile && mobilePosterUrl) || desktopPosterUrl || mobilePosterUrl;
+  const posterUrl = desktopPosterUrl || mobilePosterUrl;
 
   const playWithSoundAfterUserGesture = () => {
     soundUnlockedWithGestureRef.current = true;
@@ -193,7 +191,7 @@ function ShowReelMedia({
   }, [videoUrl, loadVideo]);
 
   const shellClassName =
-    "relative z-20 mt-8 md:mt-[120px] mx-auto w-full max-w-[1120px] overflow-hidden rounded-[24px] md:rounded-[56px] bg-[#5E5E5E] " +
+    "relative z-20 mt-8 md:mt-[120px] mx-auto w-full max-w-[1120px] " +
     "max-md:aspect-[var(--showreel-mobile-ar)] md:aspect-video";
 
   const shellStyle = {
@@ -201,13 +199,13 @@ function ShowReelMedia({
   } as CSSProperties;
 
   return (
-    <section ref={sectionRef} className="w-full" aria-label="Showreel">
-      <div className={shellClassName} style={shellStyle}>
+    <section ref={sectionRef} className="w-full mt-20 md:mt-0" aria-label="Showreel">
+      <SquircleBox cornerRadius={isMobile ? 24 : 56} cornerSmoothing={1} style={shellStyle} className={shellClassName}>
         {videoUrl ? (
           <>
             <video
               ref={videoRef}
-              className="absolute inset-0 z-0 block h-full w-full object-contain sm:object-cover"
+              className="absolute inset-0 z-0 block h-full w-full object-cover"
               src={loadVideo ? videoUrl : undefined}
               poster={posterUrl}
               controls
@@ -231,7 +229,7 @@ function ShowReelMedia({
                   src={posterUrl}
                   alt=""
                   fill
-                  className="object-contain sm:object-cover"
+                  className="object-cover"
                   sizes="(max-width: 767px) 100vw, (max-width: 1120px) 100vw, 1120px"
                   loading="lazy"
                   decoding="async"
@@ -242,7 +240,7 @@ function ShowReelMedia({
         ) : (
           (desktopPosterUrl || mobilePosterUrl) && (
             <Image
-              src={(isMobile && mobilePosterUrl) || desktopPosterUrl || mobilePosterUrl!}
+              src={desktopPosterUrl || mobilePosterUrl!}
               alt=""
               fill
               className="object-contain sm:object-cover"
@@ -252,7 +250,7 @@ function ShowReelMedia({
             />
           )
         )}
-      </div>
+      </SquircleBox>
     </section>
   );
 }

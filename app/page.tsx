@@ -34,8 +34,8 @@ export default async function Home() {
         <CoherenceIsAlive coherenceIsAlive={data.coherenceIsAlive} />
       </Container>
       <SelectedWorksSection selectedWorks={data.selectedWorks} />
+      <DiverseTeamSection diverseTeam={data.diverseTeam} />
       <Container variant="medium" className="pt-10 pb-16 ">
-        <DiverseTeamSection diverseTeam={data.diverseTeam} />
         <ROICoherenceSection roiOfCoherence={data.roiOfCoherence} />
         <FinalCtaSection finalCta={data.finalCta} />
       </Container>
