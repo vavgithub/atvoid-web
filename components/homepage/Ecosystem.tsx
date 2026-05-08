@@ -62,7 +62,11 @@ export default function EcosystemSection() {
       const engEl = engGroup.current;
 
       if (!brandEl || !productEl || !engEl) return;
-      if (!sectionRef.current || !outerRingRef.current || !innerGlobeRef.current)
+      if (
+        !sectionRef.current ||
+        !outerRingRef.current ||
+        !innerGlobeRef.current
+      )
         return;
 
       const isMobileGlobeOverlay =
@@ -166,9 +170,18 @@ export default function EcosystemSection() {
         opacity: 1,
       });
 
-      // Initial state: push Product and Engineering outward (they start at the bottom)
-      gsap.set([productTextContainer, engTextContainer], { y: 15 });
-      gsap.set(brandTextContainer, { y: 20 }); // Start a bit lower initially
+      // Initial state: neutral; phase timelines control offsets for the other two only.
+      gsap.set([brandTextContainer, productTextContainer, engTextContainer], {
+        x: 0,
+        y: 0,
+      });
+      // Before scroll animation starts (desktop), match the Phase 1 (Brand) layout
+      // so there is no jump when the timeline begins.
+      if (!isMobileGlobeOverlay) {
+        gsap.set(brandTextContainer, { x: 0, y: 0 });
+        gsap.set(productTextContainer, { x: 22, y: 35 });
+        gsap.set(engTextContainer, { x: 0, y: 35 });
+      }
 
       // Set clockwise layout
       gsap.set(brandEl, { rotation: 0 });
@@ -272,13 +285,10 @@ export default function EcosystemSection() {
           { stroke: "#ff4d79", duration: 1 },
           "phase1",
         )
-        // Content IN
-        .to(brandTextContainer, { y: 0, duration: 0.4 }, "phase1")
-        .to(
-          [productTextContainer, engTextContainer],
-          { y: 15, duration: 0.4 },
-          "phase1",
-        )
+        // Content IN (Brand active; nudge Product+Engineering only)
+        .to(brandTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase1")
+        .to(productTextContainer, { x: 22, y: 35, duration: 0.2 }, "phase1")
+        .to(engTextContainer, { x: 0, y: 35, duration: 0.2 }, "phase1")
         .to(brandDesc, { autoAlpha: 1, y: 0, duration: 0.8 }, "phase1")
         .to(
           brandIcons,
@@ -367,13 +377,10 @@ export default function EcosystemSection() {
           "phase2+=0.5",
         )
 
-        // Content Swap
-        .to(productTextContainer, { y: 0, duration: 0.4 }, "phase2")
-        .to(
-          [brandTextContainer, engTextContainer],
-          { y: 15, duration: 0.4 },
-          "phase2",
-        )
+        // Content Swap (Product active; nudge Brand+Engineering only)
+        .to(productTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase2")
+        .to(brandTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase2")
+        .to(engTextContainer, { x: 32, y: 18, duration: 0.2 }, "phase2")
         .to(
           brandIcons,
           {
@@ -485,13 +492,10 @@ export default function EcosystemSection() {
           "phase3+=0.5",
         )
 
-        // Content Swap
-        .to(engTextContainer, { y: 0, duration: 0.4 }, "phase3")
-        .to(
-          [brandTextContainer, productTextContainer],
-          { y: 15, duration: 0.4 },
-          "phase3",
-        )
+        // Content Swap (Engineering active; nudge Brand+Product only)
+        .to(engTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase3")
+        .to(brandTextContainer, { x: 20, y: 10, duration: 0.2 }, "phase3")
+        .to(productTextContainer, { x: -10, y: 15, duration: 0.2 }, "phase3")
         .to(
           productIcons,
           {
@@ -554,7 +558,7 @@ export default function EcosystemSection() {
     // Changed to standard flex column to prevent header overlaps
     <section
       ref={sectionRef}
-      className="relative w-full h-screen min-h-[850px] rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center font-sans py-12"
+      className="relative max-w-[1580px] mx-auto w-full h-screen min-h-[850px] rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center font-sans py-12"
     >
       {/* 1. Phase backgrounds (design assets) — crossfaded via GSAP */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 rounded-[56px]">
@@ -572,7 +576,7 @@ export default function EcosystemSection() {
             alt=""
             fill
             sizes="100vw"
-            className="hidden md:block object-cover object-center"
+            className="hidden md:block object-cover object-[50%_75%]"
             priority
           />
         </div>
@@ -589,7 +593,7 @@ export default function EcosystemSection() {
             alt=""
             fill
             sizes="100vw"
-            className="hidden md:block object-cover object-center"
+            className="hidden md:block object-cover object-[50%_75%]"
           />
         </div>
         <div ref={bgEngineeringRef} className="absolute inset-0" aria-hidden>
@@ -605,7 +609,7 @@ export default function EcosystemSection() {
             alt=""
             fill
             sizes="100vw"
-            className="hidden md:block object-cover object-center"
+            className="hidden md:block object-cover object-[50%_75%]"
           />
         </div>
       </div>
@@ -931,7 +935,7 @@ export default function EcosystemSection() {
         >
           {/* ================= GROUP 1: BRAND ================= */}
           <div ref={brandGroup} className="absolute inset-0 w-full h-full">
-            <div className="text-container absolute top-[-70px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
+            <div className="text-container absolute top-[-40px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
               <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
                 BRAND
               </h3>
@@ -969,7 +973,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Left Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] left-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[205px] left-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/visual-identity-brand.svg"
                 alt="Visual Identity Systems"
@@ -985,7 +989,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Right Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] right-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[205px] right-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/marketing-brand.svg"
                 alt="Marketing Collateral"
@@ -1042,7 +1046,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Left Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] left-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[205px] left-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/ui-ux-product.svg"
                 alt="UI/UX Design"
@@ -1058,7 +1062,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Right Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] right-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[205px] right-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/prototyping-product.svg"
                 alt="Prototyping"
@@ -1113,7 +1117,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Left Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] left-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[205px] left-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/full-stack-engineering.svg"
                 alt="Full-Stack Dev"
@@ -1129,7 +1133,7 @@ export default function EcosystemSection() {
             </div>
 
             {/* Bottom Right Icon (Moved higher and wider) */}
-            <div className="icon-group absolute top-[220px] right-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
+            <div className="icon-group absolute top-[205px] right-[-90px] hidden md:flex flex-col items-center justify-center text-center w-[120px] counter-rotate">
               <Image
                 src="/icons/ai-llm-engineering.svg"
                 alt="AI & LLM Integration"

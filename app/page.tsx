@@ -29,8 +29,10 @@ export default async function Home() {
         <AwardWinningStudioSection
           awardWinningStudio={data.awardWinningStudio}
         />
-        {/* <DigitalEcosystemSection digitalEcosystem={data.digitalEcosystem} /> */}
-        <Ecosystem />
+      </Container>
+      {/* <DigitalEcosystemSection digitalEcosystem={data.digitalEcosystem} /> */}
+      <Ecosystem />
+      <Container variant="medium">
         <CoherenceIsAlive coherenceIsAlive={data.coherenceIsAlive} />
       </Container>
       <SelectedWorksSection selectedWorks={data.selectedWorks} />
