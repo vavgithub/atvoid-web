@@ -11,37 +11,9 @@ import AwardWinningRiveAnimation from "./AwardWinningRiveAnimation";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/** Minimum wall‑clock time the section stays pinned at the start of the pin range before scroll can advance (Ecosystem‑style pin + dwell). */
-const MIN_PIN_MS = 8000;
-
-/** Short tail after dwell so the pin releases with ~one scroll (no long multi‑gesture scrub). */
-const PIN_SCROLL_PX = 200;
-
-const SCROLL_KEYS = new Set([
-  "ArrowUp",
-  "ArrowDown",
-  "ArrowLeft",
-  "ArrowRight",
-  "PageUp",
-  "PageDown",
-  "Home",
-  "End",
-  " ",
-]);
-
-function isEditableEventTarget(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) return false;
-  return Boolean(
-    target.closest("input, textarea, select, [contenteditable=true]"),
-  );
-}
-
 interface AwardWinningStudioSectionProps {
   awardWinningStudio: HomePage["awardWinningStudio"];
 }
-
-const MOBILE_BODY =
-  "font-pp-neue-corp m-0 font-medium leading-[145%] tracking-[0.32px] text-white";
 
 /** Space above fixed MorphingForm pill (fixed px; tune if the CTA overlaps). */
 const FLOATING_CTA_SAFE_BOTTOM = "pb-[100px]";
@@ -50,114 +22,54 @@ export default function AwardWinningStudioSection({
   awardWinningStudio,
 }: AwardWinningStudioSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  /** >0 only after the section overlaps the viewport; increments on each re-entry → remount Rive. */
+  const textBlockRef = useRef<HTMLDivElement>(null);
+  const riveWrapperRef = useRef<HTMLDivElement>(null);
+  /** 1 once the section has intersected the viewport (either direction); avoids remount/restart when scrolling back up. */
   const [riveVisitKey, setRiveVisitKey] = useState(0);
 
+  /** All breakpoints: pin, text center → bottom, Rive fades in, then tail scroll. */
   useGSAP(
     () => {
       const el = sectionRef.current;
-      if (!el || !awardWinningStudio?.messageSection) return;
+      const textBlock = textBlockRef.current;
+      const riveWrapper = riveWrapperRef.current;
+      if (!el || !textBlock || !riveWrapper || !awardWinningStudio?.messageSection) return;
 
-      const scrollBlockOpts: AddEventListenerOptions = {
-        passive: false,
-        capture: true,
+      /** Vertical offset (px) from viewport-center to bottom-aligned resting position (includes bottom padding). */
+      const getCenterToBottomY = () => {
+        const H = el.offsetHeight;
+        const h = textBlock.offsetHeight;
+        const pad = parseFloat(getComputedStyle(textBlock).paddingBottom) || 0;
+        return Math.round(H / 2 - pad - h / 2);
       };
 
-      let detachScrollBlock: (() => void) | null = null;
-      let dwellTimer: number | null = null;
-      let lockedUntil = 0;
-
-      const clearDwell = () => {
-        if (dwellTimer !== null) {
-          clearTimeout(dwellTimer);
-          dwellTimer = null;
-        }
-        detachScrollBlock?.();
-        detachScrollBlock = null;
-        lockedUntil = 0;
-      };
-
-      const isDwellLocked = () => Date.now() < lockedUntil;
-
-      const blockWheel: EventListener = (e) => {
-        if (!isDwellLocked()) return;
-        e.preventDefault();
-      };
-
-      const blockTouchMove: EventListener = (e) => {
-        if (!isDwellLocked()) return;
-        e.preventDefault();
-      };
-
-      const blockScrollKeys: EventListener = (e) => {
-        if (!isDwellLocked()) return;
-        if (!(e instanceof KeyboardEvent)) return;
-        if (!SCROLL_KEYS.has(e.key)) return;
-        if (isEditableEventTarget(e.target)) return;
-        e.preventDefault();
-      };
-
-      const attachDwellBlockers = () => {
-        if (detachScrollBlock) return;
-        window.addEventListener("wheel", blockWheel, scrollBlockOpts);
-        window.addEventListener("touchmove", blockTouchMove, scrollBlockOpts);
-        window.addEventListener("keydown", blockScrollKeys, scrollBlockOpts);
-        detachScrollBlock = () => {
-          window.removeEventListener("wheel", blockWheel, scrollBlockOpts);
-          window.removeEventListener(
-            "touchmove",
-            blockTouchMove,
-            scrollBlockOpts,
-          );
-          window.removeEventListener(
-            "keydown",
-            blockScrollKeys,
-            scrollBlockOpts,
-          );
-        };
-      };
-
-      const startDwell = () => {
-        clearDwell();
-        lockedUntil = Date.now() + MIN_PIN_MS;
-        attachDwellBlockers();
-        dwellTimer = window.setTimeout(() => {
-          dwellTimer = null;
-          detachScrollBlock?.();
-          detachScrollBlock = null;
-          lockedUntil = 0;
-        }, MIN_PIN_MS);
-      };
+      gsap.set(riveWrapper, { opacity: 0 });
+      gsap.set(textBlock, { top: "50%", bottom: "auto", yPercent: -50, y: 0 });
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: el,
           start: "top top",
-          end: `+=${PIN_SCROLL_PX}`,
+          end: "+=2100",
           pin: true,
-          scrub: true,
+          scrub: 0.65,
           invalidateOnRefresh: true,
-          id: "award-winning-studio-pin",
-          /** Dwell only when crossing `start` forward (flush top). Re‑entering from below hits `end` first — do not lock there. */
-          onEnter: startDwell,
-          onEnterBack: startDwell,
-          onLeave: clearDwell,
-          onLeaveBack: clearDwell,
         },
       });
 
-      tl.to({}, { duration: 1 });
-
-      const rafId = requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-        requestAnimationFrame(() => ScrollTrigger.refresh());
+      tl.to(textBlock, {
+        y: () => getCenterToBottomY(),
+        duration: 0.65,
+        ease: "power2.inOut",
       });
+      tl.to(riveWrapper, { opacity: 1, duration: 0.6, ease: "power2.inOut" }, 0.45);
+      tl.to(riveWrapper, { opacity: 1, duration: 0.85, ease: "none" });
 
       return () => {
-        cancelAnimationFrame(rafId);
-        clearDwell();
         tl.scrollTrigger?.kill();
         tl.kill();
+        gsap.set(textBlock, { clearProps: "transform,top,bottom,yPercent" });
+        gsap.set(riveWrapper, { clearProps: "opacity" });
       };
     },
     {
@@ -166,12 +78,11 @@ export default function AwardWinningStudioSection({
     },
   );
 
+  /** Mount Rive as soon as the section overlaps the viewport so it's ready behind the fade. */
   useGSAP(
     () => {
       const el = sectionRef.current;
       if (!el || !awardWinningStudio?.messageSection) return;
-
-      let wasInOverlap = false;
 
       const visitSt = ScrollTrigger.create({
         trigger: el,
@@ -179,13 +90,8 @@ export default function AwardWinningStudioSection({
         end: "bottom top",
         invalidateOnRefresh: true,
         id: "award-winning-rive-visit-gate",
-        onUpdate(self) {
-          const inOverlap = self.isActive;
-          if (inOverlap && !wasInOverlap) {
-            setRiveVisitKey((k) => k + 1);
-          }
-          wasInOverlap = inOverlap;
-        },
+        onEnter: () => setRiveVisitKey((k) => k + 1),
+        onEnterBack: () => setRiveVisitKey((k) => k + 1),
       });
 
       const rafId = requestAnimationFrame(() => {
@@ -214,46 +120,30 @@ export default function AwardWinningStudioSection({
     >
       {awardWinningStudio.messageSection && (
         <>
-          {riveVisitKey > 0 ? (
-            <AwardWinningRiveAnimation key={riveVisitKey} />
-          ) : null}
+          {/* Rive wrapper: always in DOM for GSAP opacity; Rive mounts once section first intersects (no remount on scroll-back). */}
+          <div ref={riveWrapperRef} className="w-full">
+            {riveVisitKey > 0 ? (
+              <AwardWinningRiveAnimation key={riveVisitKey} />
+            ) : null}
+          </div>
 
           {textContent && (
             <>
               {/* Fills space under Rive so bottom content sits low; does not wrap Rive or change its layout. */}
               <div className="min-h-0 w-full flex-1" aria-hidden="true" />
 
-              {/* Mobile: bottom-aligned stack (< md) */}
+              {/* Same scroll-driven motion on all breakpoints (GSAP). Headline only on small screens — not in desktop SVG artboard. */}
               <div
-                className={`relative z-20 w-full shrink-0 px-4 md:hidden ${FLOATING_CTA_SAFE_BOTTOM}`}
+                ref={textBlockRef}
+                className={`pointer-events-none absolute inset-x-0 top-1/2 z-10 w-full -translate-y-1/2 px-4 ${FLOATING_CTA_SAFE_BOTTOM} md:px-10 md:pb-25 lg:pb-25`}
               >
-                <div className="mx-auto w-full max-w-[520px] space-y-5 text-left">
-                  {textContent.headline?.trim() ? (
-                    <h2 className="font-pp-neue-corp-extended m-0 whitespace-pre-line text-[20px] font-medium uppercase leading-[120%] tracking-[0.4px] text-[#333333] opacity-100 pb-3">
+                {textContent.headline?.trim() ? (
+                  <div className="pointer-events-auto mx-auto mb-4 max-w-[520px] text-left md:hidden">
+                    <h2 className="font-pp-neue-corp-extended m-0 whitespace-pre-line text-[20px] font-medium uppercase leading-[120%] tracking-[0.4px] text-[#333333]">
                       {textContent.headline}
                     </h2>
-                  ) : null}
-
-                  {textContent.concludingStatement ? (
-                    <p className={`${MOBILE_BODY} pb-3 text-[16px]`}>
-                      {textContent.concludingStatement}
-                    </p>
-                  ) : null}
-                  {textContent.paragraph1 ? (
-                    <p className={`${MOBILE_BODY} pb-3 text-[14px]`}>
-                      {textContent.paragraph1}
-                    </p>
-                  ) : null}
-                  {textContent.paragraph2 ? (
-                    <p className={`${MOBILE_BODY} pb-3 text-[14px]`}>
-                      {textContent.paragraph2}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-
-              {/* md+: docked to viewport bottom of this section; out of flow so Rive is unchanged. */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 hidden w-full md:block md:px-10 md:pb-[100px] lg:pb-0">
+                  </div>
+                ) : null}
                 <div className="relative mx-auto w-full max-w-[820px]">
                   <svg
                     viewBox="0 0 820 356"
