@@ -16,7 +16,7 @@ interface AwardWinningStudioSectionProps {
 }
 
 /** Space above fixed MorphingForm pill (fixed px; tune if the CTA overlaps). */
-const FLOATING_CTA_SAFE_BOTTOM = "pb-[100px]";
+const FLOATING_CTA_SAFE_BOTTOM = "pb-[50px]";
 
 export default function AwardWinningStudioSection({
   awardWinningStudio,
@@ -47,16 +47,19 @@ export default function AwardWinningStudioSection({
       const riveWrapper = riveWrapperRef.current;
       if (!el || !textBlock || !riveWrapper || !awardWinningStudio?.messageSection) return;
 
-      /** Vertical offset (px) from viewport-center to bottom-aligned resting position (includes bottom padding). */
+      const isMobile = window.innerWidth < 768;
+      const topFraction = isMobile ? 0.72 : 0.5;
+
+      /** Vertical offset (px) from initial top position to bottom-aligned resting position. */
       const getCenterToBottomY = () => {
         const H = el.offsetHeight;
         const h = textBlock.offsetHeight;
         const pad = parseFloat(getComputedStyle(textBlock).paddingBottom) || 0;
-        return Math.round(H / 2 - pad - h / 2);
+        return Math.round(H * (1 - topFraction) - pad - h / 2);
       };
 
       gsap.set(riveWrapper, { opacity: 0 });
-      gsap.set(textBlock, { top: "50%", bottom: "auto", yPercent: -50, y: 0 });
+      gsap.set(textBlock, { top: `${topFraction * 100}%`, bottom: "auto", yPercent: -50, y: 0 });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -150,7 +153,7 @@ export default function AwardWinningStudioSection({
                 className={`pointer-events-none absolute inset-x-0 top-1/2 z-10 w-full -translate-y-1/2 px-4 ${FLOATING_CTA_SAFE_BOTTOM} md:px-10 md:pb-25 lg:pb-10`}
               >
                 {textContent.headline?.trim() ? (
-                  <div className="pointer-events-auto mx-auto mb-4 max-w-[520px] text-left md:hidden">
+                  <div className="pointer-events-auto mx-auto mb-4 max-w-[520px] text-left hidden">
                     <h2 className="font-pp-neue-corp-extended m-0 whitespace-pre-line text-[20px] font-medium uppercase leading-[120%] tracking-[0.4px] text-[#333333]">
                       {textContent.headline}
                     </h2>
