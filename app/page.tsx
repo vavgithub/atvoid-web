@@ -31,7 +31,9 @@ export default async function Home() {
         />
       </Container>
       {/* <DigitalEcosystemSection digitalEcosystem={data.digitalEcosystem} /> */}
-      <Ecosystem />
+      <div className="-mx-5 md:-mx-10 lg:-mx-5">
+        <Ecosystem />
+      </div>
       <Container variant="medium">
         <CoherenceIsAlive coherenceIsAlive={data.coherenceIsAlive} />
       </Container>
