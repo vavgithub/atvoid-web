@@ -43,6 +43,9 @@ interface AwardWinningStudioSectionProps {
 const MOBILE_BODY =
   "font-pp-neue-corp m-0 font-medium leading-[145%] tracking-[0.32px] text-white";
 
+/** Space above fixed MorphingForm pill (fixed px; tune if the CTA overlaps). */
+const FLOATING_CTA_SAFE_BOTTOM = "pb-[100px]";
+
 export default function AwardWinningStudioSection({
   awardWinningStudio,
 }: AwardWinningStudioSectionProps) {
@@ -207,7 +210,7 @@ export default function AwardWinningStudioSection({
   return (
     <section
       ref={sectionRef}
-      className="@container w-full h-svh overflow-hidden flex flex-col items-center justify-start md:h-svh md:overflow-hidden md:flex md:flex-col md:items-center md:justify-start"
+      className="@container relative flex h-svh w-full flex-col items-center overflow-hidden md:h-svh md:overflow-hidden"
     >
       {awardWinningStudio.messageSection && (
         <>
@@ -217,8 +220,13 @@ export default function AwardWinningStudioSection({
 
           {textContent && (
             <>
-              {/* Mobile: simple left-aligned stack (< md) */}
-              <div className="relative w-full px-4 md:hidden">
+              {/* Fills space under Rive so bottom content sits low; does not wrap Rive or change its layout. */}
+              <div className="min-h-0 w-full flex-1" aria-hidden="true" />
+
+              {/* Mobile: bottom-aligned stack (< md) */}
+              <div
+                className={`relative z-20 w-full shrink-0 px-4 md:hidden ${FLOATING_CTA_SAFE_BOTTOM}`}
+              >
                 <div className="mx-auto w-full max-w-[520px] space-y-5 text-left">
                   {textContent.headline?.trim() ? (
                     <h2 className="font-pp-neue-corp-extended m-0 whitespace-pre-line text-[20px] font-medium uppercase leading-[120%] tracking-[0.4px] text-[#333333] opacity-100 pb-3">
@@ -244,8 +252,8 @@ export default function AwardWinningStudioSection({
                 </div>
               </div>
 
-              {/* Desktop: SVG-positioned overlay (md+) */}
-              <div className="relative mt-6 hidden w-full md:-mt-6 lg:-mt-14 md:block md:px-10">
+              {/* md+: docked to viewport bottom of this section; out of flow so Rive is unchanged. */}
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 hidden w-full md:block md:px-10 md:pb-[100px] lg:pb-0">
                 <div className="relative mx-auto w-full max-w-[820px]">
                   <svg
                     viewBox="0 0 820 356"
