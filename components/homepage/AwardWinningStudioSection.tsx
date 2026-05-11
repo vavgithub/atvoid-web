@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -24,8 +24,20 @@ export default function AwardWinningStudioSection({
   const sectionRef = useRef<HTMLElement>(null);
   const textBlockRef = useRef<HTMLDivElement>(null);
   const riveWrapperRef = useRef<HTMLDivElement>(null);
+  const mobileScaleRef = useRef<HTMLDivElement>(null);
   /** 1 once the section has intersected the viewport (either direction); avoids remount/restart when scrolling back up. */
   const [riveVisitKey, setRiveVisitKey] = useState(0);
+
+  useEffect(() => {
+    const inner = mobileScaleRef.current;
+    if (!inner) return;
+    const outer = inner.parentElement;
+    if (!outer) return;
+    const apply = () => { inner.style.transform = `scale(${outer.offsetWidth / 820})`; };
+    apply();
+    window.addEventListener("resize", apply);
+    return () => window.removeEventListener("resize", apply);
+  }, []);
 
   /** All breakpoints: pin, text center → bottom, Rive fades in, then tail scroll. */
   useGSAP(
@@ -144,7 +156,43 @@ export default function AwardWinningStudioSection({
                     </h2>
                   </div>
                 ) : null}
-                <div className="relative mx-auto w-full max-w-[820px]">
+                {/* Mobile only — JS scale replicates SVG transform, bypasses iOS min-font-size */}
+                <div className="relative mx-auto w-full overflow-hidden md:hidden" style={{ aspectRatio: "820 / 356" }}>
+                  <div ref={mobileScaleRef} style={{ position: "absolute", top: 0, left: 0, width: "820px", height: "356px", transformOrigin: "top left" }}>
+                    {textContent.backgroundText?.asset?.url && (
+                      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+                        <Image
+                          src={urlFor(textContent.backgroundText).url()}
+                          alt="Background text"
+                          fill
+                          className="object-contain object-left"
+                          sizes="820px"
+                          priority
+                        />
+                      </div>
+                    )}
+                    <div style={{ position: "absolute", inset: 0, zIndex: 10, pointerEvents: "none" }}>
+                      {textContent.paragraph1 && (
+                        <div style={{ position: "absolute", left: "352px", top: "22px", width: "362px", pointerEvents: "auto" }}>
+                          <p className="font-pp-neue-corp m-0 text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">{textContent.paragraph1}</p>
+                        </div>
+                      )}
+                      {textContent.paragraph2 && (
+                        <div style={{ position: "absolute", left: "352px", top: "171px", width: "362px", pointerEvents: "auto" }}>
+                          <p className="font-pp-neue-corp m-0 text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">{textContent.paragraph2}</p>
+                        </div>
+                      )}
+                      {textContent.concludingStatement && (
+                        <div style={{ position: "absolute", left: "10px", top: "250px", width: "280px", pointerEvents: "auto" }}>
+                          <p className="font-pp-neue-corp m-0 text-[22px] font-medium leading-[145%] tracking-[0.32px] text-white">{textContent.concludingStatement}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tab / Desktop — original SVG + foreignObject, untouched */}
+                <div className="relative mx-auto w-full max-w-[820px] hidden md:block">
                   <svg
                     viewBox="0 0 820 356"
                     className="block h-auto w-full"
@@ -164,7 +212,6 @@ export default function AwardWinningStudioSection({
                             />
                           </div>
                         )}
-
                         <div className="pointer-events-none absolute inset-0 z-10">
                           {textContent.paragraph1 && (
                             <div className="pointer-events-auto absolute left-[352px] top-[22px] w-[362px]">
@@ -173,7 +220,6 @@ export default function AwardWinningStudioSection({
                               </p>
                             </div>
                           )}
-
                           {textContent.paragraph2 && (
                             <div className="pointer-events-auto absolute left-[352px] top-[171px] w-[362px]">
                               <p className="font-pp-neue-corp m-0 text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">
@@ -181,7 +227,6 @@ export default function AwardWinningStudioSection({
                               </p>
                             </div>
                           )}
-
                           {textContent.concludingStatement && (
                             <div className="pointer-events-auto absolute left-[10px] top-[250px] w-[280px]">
                               <p className="font-pp-neue-corp m-0 text-[22px] font-medium leading-[145%] tracking-[0.32px] text-white">
