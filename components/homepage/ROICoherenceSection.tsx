@@ -21,7 +21,7 @@ export default function ROICoherenceSection({
               src={urlFor(roiOfCoherence.backgroundImage).url()}
               alt=""
               fill
-              className="object-cover object-center scale-125 md:scale-100"
+              className="md:object-cover lg:object-contain object-center scale-125 md:scale-100"
               sizes="100vw"
             />
           </div>

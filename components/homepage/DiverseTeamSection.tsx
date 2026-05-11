@@ -170,7 +170,7 @@ export default function DiverseTeamSection({
                 src={urlFor(diverseTeam.backgroundImage).url()}
                 alt="World map"
                 fill
-                className="object-cover [object-position:75%_50%] md:[object-position:95%_50%] lg:object-center"
+                className="object-cover lg:object-contain [object-position:75%_50%] md:[object-position:95%_50%] lg:object-center"
                 sizes="100vw"
                 priority
               />
