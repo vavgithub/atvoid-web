@@ -563,7 +563,7 @@ export default function EcosystemSection() {
     <div ref={pinWrapRef} className="w-full lg:py-[50px]">
       <section
         ref={sectionRef}
-        className="relative max-w-[1580px] mx-auto w-full h-screen min-h-[850px] lg:h-[calc(100vh-100px)] lg:min-h-[850px] lg:rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-start md:justify-center font-sans py-12"
+        className="relative max-w-[1580px] mx-auto w-full h-screen min-h-[850px] lg:h-[calc(100vh-100px)] lg:min-h-[850px] lg:rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center font-sans py-12"
       >
         {/* 1. Phase backgrounds (design assets) — crossfaded via GSAP */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 lg:rounded-[56px]">
@@ -628,11 +628,12 @@ export default function EcosystemSection() {
 
         {/* 3. RESPONSIVE MAIN STAGE (Scales down so it never cuts off) */}
         <div className="relative z-20 flex h-[515px] w-[515px] max-md:-mt-8 items-center justify-center transform scale-[0.5] sm:scale-75 md:mt-0 md:scale-90 lg:scale-100">
-          {/* Mobile-only: 3 icons with text at bottom per phase */}
-          <div className="absolute inset-0 z-[30] md:hidden pointer-events-none">
+          {/* Mobile-only: 3 icons with text at bottom per phase.
+              Stage uses scale-[0.5] / sm:scale-75 — counter-scale so 48px icons read as 48px on screen. */}
+          <div className="pointer-events-none absolute inset-0 z-[30] origin-center max-sm:scale-[2] sm:max-md:scale-[1.333333] md:hidden">
             <div
               ref={brandMobileBarRef}
-              className="absolute inset-x-0 bottom-[-2%] flex translate-y-[50px] justify-center gap-10"
+              className="absolute inset-x-0 bottom-[5%] flex w-full translate-y-[50px] flex-row items-center justify-center gap-[20px]"
             >
               <div className="flex w-[92px] flex-col items-center">
                 <Image
@@ -679,7 +680,7 @@ export default function EcosystemSection() {
 
             <div
               ref={productMobileBarRef}
-              className="absolute inset-x-0 bottom-[-2%] flex translate-y-[50px] justify-center gap-10"
+              className="absolute inset-x-0 bottom-[5%] flex w-full translate-y-[50px] flex-row items-center justify-center gap-[20px]"
             >
               <div className="flex w-[92px] flex-col items-center">
                 <Image
@@ -725,7 +726,7 @@ export default function EcosystemSection() {
 
             <div
               ref={engMobileBarRef}
-              className="absolute inset-x-0 bottom-[-2%] flex translate-y-[50px] justify-center gap-10"
+              className="absolute inset-x-0 bottom-[5%] flex w-full translate-y-[50px] flex-row items-center justify-center gap-[20px]"
             >
               <div className="flex w-[92px] flex-col items-center">
                 <Image
@@ -843,20 +844,21 @@ export default function EcosystemSection() {
             </svg>
           </div>
 
-          {/* Mobile-only: centered labels before scroll animation starts */}
+          {/* Mobile-only: BRAND / PRODUCT / ENGINEERING below globe (lower third), design ref — not on globe center.
+              Counter-scale matches icon row so type/gaps read at intended px. */}
           <div
             ref={mobilePhaseListRef}
-            className="absolute left-1/2 top-[calc(42%+48px)] z-[22] -translate-x-1/2 -translate-y-1/2 text-center md:hidden pointer-events-none"
+            className="pointer-events-none absolute bottom-[-25%] left-1/2 z-[22] -translate-x-1/2 text-center origin-center max-sm:scale-[2] sm:max-md:scale-[1.333333] md:hidden"
             aria-hidden
           >
-            <div className="flex flex-col items-center">
-              <p className="font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[16px] font-medium leading-[145%] tracking-[0.32px] uppercase pb-[20px]">
+            <div className="flex flex-col items-center gap-[28px]">
+              <p className="font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[16px] font-medium leading-[145%] tracking-[0.32px] uppercase">
                 BRAND
               </p>
-              <p className="font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[16px] font-medium leading-[145%] tracking-[0.32px] uppercase pb-[20px]">
+              <p className="font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[16px] font-medium leading-[145%] tracking-[0.32px] uppercase">
                 PRODUCT
               </p>
-              <p className="font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[16px] font-medium leading-[145%] tracking-[0.32px] uppercase pb-[20px]">
+              <p className="font-pp-neue-corp-extended text-[#F5FAF8] text-center text-[16px] font-medium leading-[145%] tracking-[0.32px] uppercase">
                 ENGINEERING
               </p>
             </div>
