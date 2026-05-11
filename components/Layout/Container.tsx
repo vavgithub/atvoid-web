@@ -10,7 +10,7 @@ type ContainerProps = {
 
 function Container({children,variant = 'large', className = '', hideFooter = false,...props }: ContainerProps & React.HTMLAttributes<HTMLDivElement>) {
 
-    const baseClasses = 'w-full mx-auto min-h-screen flex flex-col justify-between'
+    const baseClasses = 'w-full mx-auto flex flex-col justify-between'
 
     const variants = {
         xtraLarge: 'max-w-[1920px]',

@@ -15,7 +15,7 @@ const Footer = () => {
     <footer className="w-full mx-auto bg-black text-white pt-0 md:pt-20 pb-20 px-5 md:px-10 lg:px-20 overflow-hidden">
       <div className="relative w-full max-w-[1440px] mx-auto min-h-[500px]">
         {/* Left Column */}
-        <div className="flex flex-col justify-between h-full space-y-10 md:space-y-0 relative">
+        <div className="relative z-10 flex flex-col justify-between h-full space-y-10 md:space-y-0">
           <div className="mt-10 space-y-12">
             {/* Socials */}
             <div className="flex items-center gap-4">
@@ -28,6 +28,8 @@ const Footer = () => {
                     name: "LinkedIn",
                     href: "https://www.linkedin.com/company/atvoid/",
                     Icon: LinkedInIcon,
+                    iconClassName:
+                      "size-4 md:size-6 shrink-0 transition-transform duration-200 group-hover:scale-105",
                   },
                   {
                     name: "Instagram",
@@ -50,18 +52,21 @@ const Footer = () => {
                     href: "https://in.pinterest.com/valueatvoid/vav-design-tips/",
                     Icon: PinterestIcon,
                   },
-                ].map(({ name, href, Icon }) => (
+                ].map(({ name, href, Icon, iconClassName }) => (
                   <Link
                     key={name}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={name}
-                    className="group flex size-9 md:size-12 shrink-0 items-center justify-center rounded-full bg-[#2B2B2B] text-white transition-colors duration-200 ease-out hover:bg-[#73F8C3] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#282B35]"
+                    className="group flex size-9 md:size-12 shrink-0 items-center justify-center rounded-full bg-[#2B2B2B] text-white transition-colors duration-200 ease-out hover:bg-[#73F8C3] hover:text-[#070708] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#282B35]"
                   >
                     <Icon
                       aria-hidden
-                      className="size-5 md:size-8 shrink-0 transition-transform duration-200 group-hover:scale-105"
+                      className={
+                        iconClassName ??
+                        "size-5 md:size-8 shrink-0 transition-transform duration-200 group-hover:scale-105"
+                      }
                     />
                   </Link>
                 ))}
@@ -72,17 +77,16 @@ const Footer = () => {
             <div className="space-y-8">
               {/* USA */}
               <div className="flex items-center gap-8">
-                <div className="w-[140px] h-[130px] flex items-center justify-center relative">
-                  {" "}
+                <div className="relative flex h-[130px] w-[140px] shrink-0 items-center justify-center">
                   <Image
                     src="/images/usa.svg"
                     alt="USA Location"
                     width={116}
                     height={130}
-                    className="w-full h-full object-contain"
+                    className="h-[130px] w-[116px] max-h-[130px] max-w-[116px] object-contain"
                   />
                 </div>
-                <div className="mt-12 text-base font-medium leading-[145%] min-w-[250px] font-pp-neue-corp">
+                <div className="mt-12 min-w-0 flex-1 text-base font-medium leading-[145%] font-pp-neue-corp">
                   <p>1021 E Lincolnway Suite</p>
                   <p>#8086, Cheyenne, Wyoming</p>
                   <p>82001, United States</p>
@@ -91,16 +95,16 @@ const Footer = () => {
 
               {/* Dubai */}
               <div className="flex items-center gap-8">
-                <div className="w-[140px] h-[130px] flex items-center justify-center relative">
+                <div className="relative flex h-[130px] w-[140px] shrink-0 items-center justify-center">
                   <Image
                     src="/images/dubai.svg"
                     alt="Dubai Location"
                     width={140}
                     height={130}
-                    className="w-full h-full object-contain"
+                    className="h-[130px] w-[140px] max-h-[130px] max-w-[140px] object-contain"
                   />
                 </div>
-                <div className="mt-12 text-base leading-[145%] min-w-[250px] font-pp-neue-corp">
+                <div className="mt-12 min-w-0 flex-1 text-base leading-[145%] font-pp-neue-corp">
                   <p>Sharjah Media City</p>
                   <p>(Shams), Sharjah, UAE</p>
                 </div>
@@ -117,14 +121,14 @@ const Footer = () => {
         </div>
 
         {/* Right Column - Big Text */}
-        <div className="mt-10 ml-auto w-[clamp(220px,80vw,891px)] pointer-events-none md:absolute md:right-0 md:bottom-0 md:mt-0 md:w-[891px] md:max-[1269px]:w-[clamp(260px,45vw,891px)]">
-          <div className="w-full">
+        <div className="relative z-0 mt-10 ml-auto w-[clamp(220px,80vw,891px)] pointer-events-none md:absolute md:right-0 md:bottom-0 md:mt-0 md:w-[891px] md:max-[1357px]:w-[min(891px,calc(100vw-32rem))]">
+          <div className="w-full max-w-full">
             <Image
               src="/images/VAV.svg"
               alt="VALUE AT VOID"
               width={891}
               height={486}
-              className="w-full h-auto"
+              className="h-auto w-full max-w-full object-contain"
             />
           </div>
         </div>

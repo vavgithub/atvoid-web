@@ -103,9 +103,11 @@ function ShowReelMedia({
 
   const posterUrl = desktopPosterUrl || mobilePosterUrl;
 
-  const playWithSoundAfterUserGesture = () => {
-    soundUnlockedWithGestureRef.current = true;
+  /** First user gesture only: unmute + play. Later taps must not call play() or they race native controls (pause/play). */
+  const unlockSoundOnFirstUserGesture = () => {
     setLoadVideo(true);
+    if (soundUnlockedWithGestureRef.current) return;
+    soundUnlockedWithGestureRef.current = true;
     setMuted(false);
 
     const apply = () => {
@@ -156,7 +158,14 @@ function ShowReelMedia({
             video.muted = !preferSound;
             setMuted(!preferSound);
             void video.play().catch(() => {
-              /* ignore */
+              // Unmuted autoplay is often blocked without a gesture; fall back to muted play.
+              if (!video.muted) {
+                video.muted = true;
+                setMuted(true);
+                void video.play().catch(() => {
+                  /* ignore */
+                });
+              }
             });
           }, AUTOPLAY_DELAY_MS);
         } else {
@@ -191,7 +200,7 @@ function ShowReelMedia({
   }, [videoUrl, loadVideo]);
 
   const shellClassName =
-    "relative z-20 mt-8 md:mt-[120px] mx-auto w-full max-w-[1120px] " +
+    "relative z-20 mt-0 mb-0 md:mt-[120px] md:mb-0 mx-auto w-full max-w-[1120px] " +
     "max-md:aspect-[var(--showreel-mobile-ar)] md:aspect-video";
 
   const shellStyle = {
@@ -199,7 +208,11 @@ function ShowReelMedia({
   } as CSSProperties;
 
   return (
-    <section ref={sectionRef} className="w-full mt-20 md:mt-0" aria-label="Showreel">
+    <section
+      ref={sectionRef}
+      className="w-full mt-20 md:mt-0 mb-0 pb-0"
+      aria-label="Showreel"
+    >
       <SquircleBox cornerRadius={isMobile ? 24 : 56} cornerSmoothing={1} style={shellStyle} className={shellClassName}>
         {videoUrl ? (
           <>
@@ -210,7 +223,7 @@ function ShowReelMedia({
               poster={posterUrl}
               controls
               muted={muted}
-              onPointerDown={playWithSoundAfterUserGesture}
+              onPointerDown={unlockSoundOnFirstUserGesture}
               onVolumeChange={() => {
                 const video = videoRef.current;
                 if (!video) return;
@@ -222,7 +235,7 @@ function ShowReelMedia({
             />
             {posterUrl && !isVideoPlaying ? (
               <div
-                className="pointer-events-none absolute inset-0 z-[1]"
+                className="pointer-events-none absolute inset-0 z-1"
                 aria-hidden
               >
                 <Image
