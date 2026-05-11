@@ -181,7 +181,7 @@ export default function DiverseTeamSection({
           <div className="relative z-10 min-h-[600px] md:min-h-[800px] flex flex-col justify-center items-center px-10 sm:px-14 md:px-20 py-12 md:py-16">
             {/* Team Members positioned on map */}
             {diverseTeam.teamMembers && diverseTeam.teamMembers.length > 0 && (
-              <div className="relative w-full h-full min-h-[400px] md:min-h-[500px]">
+              <div className="relative w-full h-full min-h-[400px] md:min-h-[500px] lg:max-w-[1400px] lg:mx-auto">
                 {diverseTeam.teamMembers.map((member, idx) => {
                   if (
                     !member.name ||
