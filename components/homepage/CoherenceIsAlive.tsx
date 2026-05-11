@@ -69,9 +69,9 @@ export default function CoherenceIsAlive({
     : [];
 
   return (
-    <section className="relative mt-20 md:mt-[150px] w-full max-w-[1280px] mx-auto overflow-hidden rounded-[24px] md:rounded-none">
+    <section className="relative mt-20 lg:mt-[150px] ml-[calc(50%-50vw)] w-screen lg:ml-auto lg:w-full lg:max-w-[1280px] overflow-hidden rounded-[24px] lg:rounded-none">
       <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
-      <div className="relative flex flex-col items-center px-4 py-16 md:block md:h-[852px] md:w-full md:p-0">
+      <div className="relative flex flex-col items-center px-4 py-16 lg:block lg:h-[852px] lg:w-full lg:p-0">
         {/* Background image from Sanity (disabled for now) */}
         {/* {hasImage && coherenceIsAlive.image && (
           <div className="pointer-events-none absolute inset-0 z-0 select-none">
@@ -87,10 +87,10 @@ export default function CoherenceIsAlive({
 
         {/* Bottom orbit: show only top half; rotate endlessly */}
         <div
-          className="pointer-events-none absolute bottom-0  left-1/2 z-[1] w-[520px] -translate-x-1/2 overflow-hidden h-[260px] md:w-[920px] md:h-[460px] select-none"
+          className="pointer-events-none absolute bottom-0  left-1/2 z-[1] w-[520px] -translate-x-1/2 overflow-hidden h-[260px] lg:w-[920px] lg:h-[460px] select-none"
           aria-hidden
         >
-          <div className="relative h-[520px] w-[520px] md:h-[960px] md:w-[960px] motion-safe:[animation:spin_70s_linear_infinite] motion-reduce:animate-none">
+          <div className="relative h-[520px] w-[520px] lg:h-[960px] lg:w-[960px] motion-safe:[animation:spin_70s_linear_infinite] motion-reduce:animate-none">
             <Image
               src="/images/coherence-is-alive/orbit-rays.svg"
               alt=""
@@ -102,15 +102,10 @@ export default function CoherenceIsAlive({
           </div>
         </div>
 
-        {/* Fade into page background */}
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 right-0 z-[2] h-[97px] bg-gradient-to-b from-transparent to-[#070708]"
-          aria-hidden
-        />
 
         {/* Mobile: auto-looping icon marquee (desktop unchanged) */}
         {itemsWithLabels.length > 0 && (
-          <div className="relative z-30 w-screen max-w-[100vw] ml-[calc(50%-50vw)] overflow-hidden pb-[65px] md:hidden">
+          <div className="relative z-30 w-screen max-w-[100vw] ml-[calc(50%-50vw)] overflow-hidden pb-[65px] lg:hidden">
             <div
               className="flex w-[200%]"
               style={{
@@ -161,20 +156,20 @@ export default function CoherenceIsAlive({
         )}
 
         {showCenterBlock && (
-          <div className="relative z-20 flex w-full flex-col items-center text-center md:absolute md:left-1/2 md:top-[49%] md:w-[min(100%,520px)] md:-translate-x-1/2 md:-translate-y-1/2">
+          <div className="relative z-20 flex w-full flex-col items-center text-center lg:absolute lg:left-1/2 lg:top-[49%] lg:w-[min(100%,520px)] lg:-translate-x-1/2 lg:-translate-y-1/2">
             {hasSubline && (
-              <p className="font-pp-neue-corp mb-2 text-[16px] font-medium uppercase leading-normal tracking-normal text-[#43454d] md:text-[24px]">
+              <p className="font-pp-neue-corp mb-2 text-[16px] font-medium uppercase leading-normal tracking-normal text-[#43454d] lg:text-[24px]">
                 {coherenceIsAlive.subline}
               </p>
             )}
             {hasHeadline && (
-              <h2 className="font-pp-neue-corp-wide text-[32px] font-medium uppercase leading-[1.2] tracking-[-0.8px] text-[#f6f6f6] md:text-[40px]">
+              <h2 className="font-pp-neue-corp-wide text-[32px] font-medium uppercase leading-[1.2] tracking-[-0.8px] text-[#f6f6f6] lg:text-[40px]">
                 {coherenceIsAlive.headline}
               </h2>
             )}
             {hasLine1 && (
               <p
-                className="font-pp-neue-corp mt-5 text-[12px] font-medium leading-[145%] tracking-[0.32px] text-white md:mt-[37px] md:text-[16px] pb-6 md:pb-0"
+                className="font-pp-neue-corp mt-5 text-[12px] md:text-[14px] font-medium leading-[145%] tracking-[0.32px] text-white lg:mt-[37px] lg:text-[16px] pb-6 lg:pb-0"
                 style={{ letterSpacing: "0.32px" }}
               >
                 {coherenceIsAlive.line1}
@@ -185,7 +180,7 @@ export default function CoherenceIsAlive({
 
         {Array.isArray(coherenceIsAlive.items) &&
           coherenceIsAlive.items.some((it) => it?.label) && (
-            <div className="relative z-10 mt-16 hidden md:absolute md:inset-0 md:mt-0 md:block md:translate-y-[16%]">
+            <div className="relative z-10 mt-16 hidden lg:absolute lg:inset-0 lg:mt-0 lg:block lg:translate-y-[16%]">
               {ITEM_SLOTS.map((slot, idx) => {
                 const item = coherenceIsAlive.items?.[idx];
                 if (!item?.label) return null;
@@ -199,7 +194,7 @@ export default function CoherenceIsAlive({
                 return (
                   <div
                     key={`${item.label}-${idx}`}
-                    className={`relative flex flex-col items-center gap-2 md:absolute md:-translate-x-1/2 md:-translate-y-1/2 md:gap-2.5 md:left-[var(--md-left)] md:top-[var(--md-top)] ${
+                    className={`relative flex flex-col items-center gap-2 lg:absolute lg:-translate-x-1/2 lg:-translate-y-1/2 lg:gap-2.5 lg:left-[var(--md-left)] lg:top-[var(--md-top)] ${
                       isLastItem ? "col-span-2" : ""
                     }`}
                     style={
@@ -209,7 +204,7 @@ export default function CoherenceIsAlive({
                       } as React.CSSProperties
                     }
                   >
-                    <div className="relative h-12 w-12 shrink-0 md:h-[47px] md:w-[47px]">
+                    <div className="relative h-12 w-12 shrink-0 lg:h-[47px] lg:w-[47px]">
                       {itemImageUrl && item.image ? (
                         <Image
                           src={itemImageUrl}
@@ -220,14 +215,14 @@ export default function CoherenceIsAlive({
                         />
                       ) : (
                         <span
-                          className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full md:h-3 md:w-3"
+                          className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full lg:h-3 lg:w-3"
                           style={{ backgroundColor: slot.color }}
                           aria-hidden
                         />
                       )}
                     </div>
                     <p
-                      className="px-2 text-center font-pp-neue-corp text-[13px] font-medium leading-[1.45] tracking-[0.32px] md:max-w-[140px] md:px-0 md:text-[16px]"
+                      className="px-2 text-center font-pp-neue-corp text-[13px] font-medium leading-[1.45] tracking-[0.32px] lg:max-w-[140px] lg:px-0 lg:text-[16px]"
                       style={{ color: slot.color }}
                     >
                       {item.label}

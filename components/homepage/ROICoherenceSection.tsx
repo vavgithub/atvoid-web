@@ -45,21 +45,21 @@ export default function ROICoherenceSection({
           </h2>
         )}
         {roiOfCoherence.cards && roiOfCoherence.cards.length > 0 && (
-          <div className="flex flex-wrap justify-center md:justify-center xl:flex-nowrap xl:justify-start 2xl:justify-center gap-10 md:gap-14 xl:gap-4 overflow-visible xl:overflow-x-auto xl:overflow-y-visible xl:scrollbar-hide pt-[90px] px-5 md:px-0">
+          <div className="flex flex-wrap justify-center gap-10 pt-[90px] px-5 md:justify-center md:gap-14 md:px-0 md:max-xl:mx-auto md:max-xl:grid md:max-xl:w-full md:max-xl:max-w-[600px] md:max-xl:grid-cols-2 md:max-xl:justify-items-center md:max-xl:gap-x-10 md:max-xl:gap-y-14 xl:flex xl:flex-nowrap xl:justify-start xl:gap-4 2xl:justify-center overflow-visible xl:overflow-x-auto xl:overflow-y-visible xl:scrollbar-hide">
             {roiOfCoherence.cards.map((card, idx) => (
               <div
                 key={idx}
-                className="flex flex-col shrink-0 rounded-2xl bg-[#141414] p-6 w-[270px] h-[280px] overflow-visible"
+                className="flex w-[270px] flex-col shrink-0 overflow-visible rounded-2xl bg-[#141414] p-6 h-[280px] md:max-xl:w-full md:max-xl:max-w-[280px] xl:w-[270px]"
               >
                 {card.image?.asset?.url && (
                   <div className="w-full mb-3 mt-[-100px] overflow-visible">
-                    <div className="relative w-[180px] h-[200px] mx-auto">
+                    <div className="relative mx-auto h-[200px] w-[180px] md:max-xl:h-[228px] md:max-xl:w-[204px] xl:h-[200px] xl:w-[180px]">
                       <Image
                         src={urlFor(card.image).url()}
                         alt={card.heading || ""}
                         fill
                         className="object-contain"
-                        sizes="140px"
+                        sizes="(max-width: 767px) 140px, (max-width: 1279px) 204px, 180px"
                       />
                     </div>
                   </div>

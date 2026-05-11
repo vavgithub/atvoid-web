@@ -24,7 +24,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
 
   return (
     <section className="w-full">
-      <div className="relative left-1/2 right-1/2 flex min-h-screen w-screen -translate-x-1/2 flex-col overflow-hidden">
+      <div className="relative left-1/2 right-1/2 flex h-svh w-screen -translate-x-1/2 flex-col overflow-hidden md:h-auto md:min-h-screen">
         {/* Background — stretches to full section height (grows with content) */}
         <div className="pointer-events-none absolute inset-0 z-0">
           <Image
@@ -39,7 +39,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
         </div>
 
         <div
-          className={`relative z-10 flex flex-1 flex-col px-5 pt-4 md:px-10 md:pt-0 lg:px-20 ${
+          className={`relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-4 md:px-10 md:pt-0 lg:px-20 ${
             hasHeroVideo ? "pb-6 md:pb-10" : "md:min-h-[813px]"
           }`}
         >
@@ -90,7 +90,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
             <div className="md:max-w-[550px]">
               {heroSection.experienceBadge && (
                 <div
-                  className={`flex items-start gap-3 md:items-center ${
+                  className={`flex items-center gap-3 ${
                     hasHeroVideo ? "mt-0" : "mt-8 md:mt-16"
                   }`}
                 >
@@ -112,8 +112,8 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
                     )}
                   </div>
                   {heroSection.experienceBadge.description && (
-                    <div className="md:max-w-[305px] text-sm md:text-base not-italic font-pp-neue-corp font-medium leading-[120%] text-white">
-                      <p>{heroSection.experienceBadge.description}</p>
+                    <div className="min-w-0 md:max-w-[305px] text-sm md:text-base not-italic font-pp-neue-corp font-medium leading-[120%] text-white">
+                      <p className="m-0">{heroSection.experienceBadge.description}</p>
                     </div>
                   )}
                 </div>
@@ -129,7 +129,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
             </div>
 
             {heroSection.intro?.description && (
-              <div className="w-full md:flex md:justify-end md:self-end">
+              <div className="hidden w-full md:flex md:justify-end md:self-end">
                 <div className="max-w-full text-left font-pp-neue-corp text-base font-medium leading-[145%] tracking-[0.32px] text-white md:max-w-[226px] md:text-right">
                   <PortableText value={heroSection.intro.description} />
                 </div>
@@ -138,6 +138,14 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
           </div>
         </div>
       </div>
+
+      {heroSection.intro?.description && (
+        <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-black px-5 pt-6 pb-2 md:hidden">
+          <div className="max-w-full text-left font-pp-neue-corp text-base font-medium leading-[145%] tracking-[0.32px] text-white">
+            <PortableText value={heroSection.intro.description} />
+          </div>
+        </div>
+      )}
 
       {heroSection.trustedBy && (
         <div className="relative left-1/2 right-1/2 mt-8 w-screen -translate-x-1/2 px-5 md:mt-8 md:px-10 lg:px-20">

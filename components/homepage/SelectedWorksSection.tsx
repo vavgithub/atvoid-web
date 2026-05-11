@@ -73,7 +73,7 @@ export default function SelectedWorksSection({
             onClick={() => scroll("left")}
             aria-label="Previous"
             disabled={!canScrollLeft}
-            className="absolute left-2 top-[235px] md:top-[160px] z-20 -translate-y-1/2 flex items-center justify-center w-10 h-10 md:w-14 md:h-14 rounded-full bg-black/50 border border-white/20 text-white enabled:hover:bg-black/80 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-default disabled:hover:bg-black/50"
+            className="absolute left-2 top-[235px] md:top-[160px] z-20 -translate-y-1/2 flex items-center justify-center w-10 h-10 md:w-14 md:h-14 rounded-full border border-black/10 bg-white/85 text-[#070708] opacity-85 shadow-sm transition-all duration-200 cursor-pointer enabled:hover:opacity-100 enabled:hover:bg-white enabled:hover:shadow-md enabled:hover:border-black/15 disabled:opacity-25 disabled:cursor-default disabled:hover:bg-white/85 disabled:hover:opacity-25 disabled:hover:shadow-sm"
           >
             <ChevronLeft className="w-5 h-5 md:w-8 md:h-8" />
           </button>
@@ -84,7 +84,7 @@ export default function SelectedWorksSection({
             onClick={() => scroll("right")}
             aria-label="Next"
             disabled={!canScrollRight}
-            className="absolute right-2 top-[235px] md:top-[160px] z-20 -translate-y-1/2 flex items-center justify-center w-10 h-10 md:w-14 md:h-14 rounded-full bg-black/50 border border-white/20 text-white enabled:hover:bg-black/80 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-default disabled:hover:bg-black/50"
+            className="absolute right-2 top-[235px] md:top-[160px] z-20 -translate-y-1/2 flex items-center justify-center w-10 h-10 md:w-14 md:h-14 rounded-full border border-black/10 bg-white/85 text-[#070708] opacity-85 shadow-sm transition-all duration-200 cursor-pointer enabled:hover:opacity-100 enabled:hover:bg-white enabled:hover:shadow-md enabled:hover:border-black/15 disabled:opacity-25 disabled:cursor-default disabled:hover:bg-white/85 disabled:hover:opacity-25 disabled:hover:shadow-sm"
           >
             <ChevronRight className="w-5 h-5 md:w-8 md:h-8" />
           </button>
@@ -194,13 +194,13 @@ export default function SelectedWorksSection({
                           <div className="flex flex-row items-baseline justify-between gap-2 mt-0.5">
                             {card.narrative && (
                               <div>
-                                <p className={`text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] ${expandedNarratives.has(idx) ? "" : "line-clamp-3"} md:line-clamp-none`}>
+                                <p className={`text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] ${expandedNarratives.has(idx) ? "" : "line-clamp-3"} lg:line-clamp-none`}>
                                   {card.narrative}
                                 </p>
                                 <button
                                   type="button"
                                   onClick={(e) => { e.preventDefault(); toggleNarrative(idx); }}
-                                  className="mt-1 text-[#757575] font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] md:hidden"
+                                  className="mt-1 text-[#757575] font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] lg:hidden"
                                 >
                                   {expandedNarratives.has(idx) ? "Read less" : "Read more"}
                                 </button>
