@@ -135,7 +135,7 @@ export default function AwardWinningStudioSection({
               {/* Same scroll-driven motion on all breakpoints (GSAP). Headline only on small screens — not in desktop SVG artboard. */}
               <div
                 ref={textBlockRef}
-                className={`pointer-events-none absolute inset-x-0 top-1/2 z-10 w-full -translate-y-1/2 px-4 ${FLOATING_CTA_SAFE_BOTTOM} md:px-10 md:pb-25 lg:pb-25`}
+                className={`pointer-events-none absolute inset-x-0 top-1/2 z-10 w-full -translate-y-1/2 px-4 ${FLOATING_CTA_SAFE_BOTTOM} md:px-10 md:pb-25 lg:pb-10`}
               >
                 {textContent.headline?.trim() ? (
                   <div className="pointer-events-auto mx-auto mb-4 max-w-[520px] text-left md:hidden">
