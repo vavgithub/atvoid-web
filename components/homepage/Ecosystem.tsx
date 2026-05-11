@@ -563,7 +563,7 @@ export default function EcosystemSection() {
     <div ref={pinWrapRef} className="w-full lg:py-[50px]">
       <section
         ref={sectionRef}
-        className="relative max-w-[1580px] mx-auto w-full h-screen min-h-[850px] lg:h-[calc(100vh-100px)] lg:min-h-[850px] lg:rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center font-sans py-12"
+        className="relative max-w-[1580px] mx-auto w-full h-screen min-h-[850px] lg:h-[calc(100vh-100px)] lg:min-h-[850px] lg:rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-start md:justify-center font-sans py-12"
       >
         {/* 1. Phase backgrounds (design assets) — crossfaded via GSAP */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 lg:rounded-[56px]">
@@ -602,13 +602,13 @@ export default function EcosystemSection() {
             />
           </div>
           <div ref={bgEngineeringRef} className="absolute inset-0" aria-hidden>
-          <Image
-            src="/images/engine_mobile.png"
-            alt=""
-            fill
-            sizes="100vw"
-            className="object-cover object-center md:hidden"
-          />
+            <Image
+              src="/images/engine_mobile.png"
+              alt=""
+              fill
+              sizes="100vw"
+              className="object-cover object-center md:hidden"
+            />
             <Image
               src="/images/Engineering.png"
               alt=""
@@ -620,14 +620,14 @@ export default function EcosystemSection() {
         </div>
 
         {/* 2. STATIC HEADER (In standard document flow with bottom margin) */}
-        <div className="w-full text-center z-50 mb-12 lg:mb-30 pointer-events-none">
-          <h2 className="text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] sm:text-[32px] lg:text-[40px] font-medium leading-[120%] tracking-[0.8px] uppercase pb-5">
+        <div className="w-full text-center z-50 mb-2 md:mb-12 lg:mb-30 pointer-events-none">
+          <h2 className="text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] sm:text-[32px] lg:text-[40px] font-medium leading-[120%] tracking-[0.8px] uppercase pb-2 md:pb-5">
             A COMPLETE <br /> DIGITAL <br className=" md:hidden" /> ECOSYSTEM
           </h2>
         </div>
 
         {/* 3. RESPONSIVE MAIN STAGE (Scales down so it never cuts off) */}
-        <div className="relative w-[515px] h-[515px] flex items-center justify-center z-20 transform scale-[0.5] sm:scale-75 md:scale-90 lg:scale-100">
+        <div className="relative z-20 flex h-[515px] w-[515px] max-md:-mt-8 items-center justify-center transform scale-[0.5] sm:scale-75 md:mt-0 md:scale-90 lg:scale-100">
           {/* Mobile-only: 3 icons with text at bottom per phase */}
           <div className="absolute inset-0 z-[30] md:hidden pointer-events-none">
             <div
@@ -642,7 +642,7 @@ export default function EcosystemSection() {
                   height={48}
                   className="h-12 w-12"
                 />
-                <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] text-[#EF4E8E]">
+                <p className="mt-2 text-center font-pp-neue-corp text-[14px] font-medium leading-[145%] tracking-[0.24px] text-[#EF4E8E]">
                   Visual Identity
                   <br />
                   Systems
@@ -656,7 +656,7 @@ export default function EcosystemSection() {
                   height={48}
                   className="h-12 w-12"
                 />
-                <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] text-[#EF4E8E]">
+                <p className="mt-2 text-center font-pp-neue-corp text-[14px] font-medium leading-[145%] tracking-[0.24px] text-[#EF4E8E]">
                   Marketing
                   <br />
                   Collateral
@@ -670,7 +670,7 @@ export default function EcosystemSection() {
                   height={48}
                   className="h-12 w-12"
                 />
-                <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] text-[#EF4E8E]">
+                <p className="mt-2 text-center font-pp-neue-corp text-[14px] font-medium leading-[145%] tracking-[0.24px] text-[#EF4E8E]">
                   Strategy &<br />
                   Positioning
                 </p>
@@ -689,7 +689,7 @@ export default function EcosystemSection() {
                   height={48}
                   className="h-12 w-12"
                 />
-                <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] text-[#6459EB]">
+                <p className="mt-2 text-center font-pp-neue-corp text-[14px] font-medium leading-[145%] tracking-[0.24px] text-[#6459EB]">
                   UI/UX
                   <br />
                   Design
@@ -703,7 +703,7 @@ export default function EcosystemSection() {
                   height={48}
                   className="h-12 w-12"
                 />
-                <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] text-[#6459EB]">
+                <p className="mt-2 text-center font-pp-neue-corp text-[14px] font-medium leading-[145%] tracking-[0.24px] text-[#6459EB]">
                   3D & Motion
                   <br />
                   Graphics
@@ -717,7 +717,7 @@ export default function EcosystemSection() {
                   height={48}
                   className="h-12 w-12"
                 />
-                <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] text-[#6459EB]">
+                <p className="mt-2 text-center font-pp-neue-corp text-[14px] font-medium leading-[145%] tracking-[0.24px] text-[#6459EB]">
                   Prototyping
                 </p>
               </div>
@@ -735,7 +735,7 @@ export default function EcosystemSection() {
                   height={48}
                   className="h-12 w-12"
                 />
-                <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] text-[#B9E4AE]">
+                <p className="mt-2 text-center font-pp-neue-corp text-[14px] font-medium leading-[145%] tracking-[0.24px] text-[#B9E4AE]">
                   Full-Stack
                   <br />
                   Dev
@@ -749,7 +749,7 @@ export default function EcosystemSection() {
                   height={48}
                   className="h-12 w-12"
                 />
-                <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] text-[#B9E4AE]">
+                <p className="mt-2 text-center font-pp-neue-corp text-[14px] font-medium leading-[145%] tracking-[0.24px] text-[#B9E4AE]">
                   Mobile
                   <br />
                   Apps
@@ -763,7 +763,7 @@ export default function EcosystemSection() {
                   height={48}
                   className="h-12 w-12"
                 />
-                <p className="mt-2 text-center font-pp-neue-corp text-[12px] font-medium leading-[145%] tracking-[0.24px] text-[#FED198]">
+                <p className="mt-2 text-center font-pp-neue-corp text-[14px] font-medium leading-[145%] tracking-[0.24px] text-[#FED198]">
                   AI & LLM
                   <br />
                   Integration
@@ -846,7 +846,7 @@ export default function EcosystemSection() {
           {/* Mobile-only: centered labels before scroll animation starts */}
           <div
             ref={mobilePhaseListRef}
-            className="absolute left-1/2 top-[calc(72%+100px)] z-[22] -translate-x-1/2 -translate-y-1/2 text-center md:hidden pointer-events-none"
+            className="absolute left-1/2 top-[calc(42%+48px)] z-[22] -translate-x-1/2 -translate-y-1/2 text-center md:hidden pointer-events-none"
             aria-hidden
           >
             <div className="flex flex-col items-center">
@@ -940,7 +940,7 @@ export default function EcosystemSection() {
             {/* ================= GROUP 1: BRAND ================= */}
             <div ref={brandGroup} className="absolute inset-0 w-full h-full">
               <div className="text-container absolute top-[-70px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
-                <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
+                <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[16px] md:text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
                   BRAND
                 </h3>
                 <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
@@ -1012,7 +1012,7 @@ export default function EcosystemSection() {
             {/* ================= GROUP 2: PRODUCT ================= */}
             <div ref={productGroup} className="absolute inset-0 w-full h-full">
               <div className="text-container absolute top-[-70px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
-                <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
+                <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[16px] md:text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
                   PRODUCT
                 </h3>
                 <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
@@ -1083,7 +1083,7 @@ export default function EcosystemSection() {
             {/* ================= GROUP 3: ENGINEERING ================= */}
             <div ref={engGroup} className="absolute inset-0 w-full h-full">
               <div className="text-container absolute top-[-70px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
-                <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
+                <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[16px] md:text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
                   ENGINEERING
                 </h3>
                 <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
