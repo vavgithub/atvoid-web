@@ -884,9 +884,9 @@ export default function EcosystemSection() {
           <div className="pointer-events-none absolute inset-0 z-[30] origin-center max-sm:scale-[2] sm:max-md:scale-[1.333333] md:hidden">
             <div
               ref={brandMobileBarRef}
-              className="absolute inset-x-0 bottom-[12%] flex w-full flex-row items-center justify-center gap-[20px]"
+              className="absolute inset-x-0 bottom-[3%] flex w-full flex-row items-start justify-center"
             >
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/visual-identity-brand.svg"
                   alt="Visual Identity Systems"
@@ -900,7 +900,7 @@ export default function EcosystemSection() {
                   Systems
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/marketing-brand.svg"
                   alt="Marketing Collateral"
@@ -914,7 +914,7 @@ export default function EcosystemSection() {
                   Collateral
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/strategy-brand.svg"
                   alt="Strategy & Positioning"
@@ -931,9 +931,9 @@ export default function EcosystemSection() {
 
             <div
               ref={productMobileBarRef}
-              className="absolute inset-x-0 bottom-[12%] flex w-full flex-row items-center justify-center gap-[20px]"
+              className="absolute inset-x-0 bottom-[3%] flex w-full flex-row items-start justify-center"
             >
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/ui-ux-product.svg"
                   alt="UI/UX Design"
@@ -947,7 +947,7 @@ export default function EcosystemSection() {
                   Design
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/3d-motion-product.svg"
                   alt="3D & Motion Graphics"
@@ -961,7 +961,7 @@ export default function EcosystemSection() {
                   Graphics
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/prototyping-product.svg"
                   alt="Prototyping"
@@ -977,9 +977,9 @@ export default function EcosystemSection() {
 
             <div
               ref={engMobileBarRef}
-              className="absolute inset-x-0 bottom-[12%] flex w-full flex-row items-center justify-center gap-[20px]"
+              className="absolute inset-x-0 bottom-[3%] flex w-full flex-row items-start justify-center"
             >
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/full-stack-engineering.svg"
                   alt="Full-Stack Dev"
@@ -993,7 +993,7 @@ export default function EcosystemSection() {
                   Dev
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/mobile-apps-engineering.svg"
                   alt="Mobile Apps"
@@ -1007,7 +1007,7 @@ export default function EcosystemSection() {
                   Apps
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/ai-llm-engineering.svg"
                   alt="AI & LLM Integration"
