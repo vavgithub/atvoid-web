@@ -814,7 +814,7 @@ export default function EcosystemSection() {
     <div ref={pinWrapRef} className="w-full lg:py-[50px]">
       <section
         ref={sectionRef}
-        className="relative w-full h-screen min-h-[850px] lg:h-[calc(100vh-100px)] lg:min-h-[850px] lg:rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center font-sans py-12"
+        className="relative w-full h-screen min-h-[850px] lg:h-[calc(100vh-100px)] lg:min-h-[850px] lg:rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center font-sans py-12 max-md:pb-28"
       >
         {/* 1. Phase backgrounds (design assets) — crossfaded via GSAP */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 lg:rounded-[56px]">
@@ -878,13 +878,13 @@ export default function EcosystemSection() {
         </div>
 
         {/* 3. RESPONSIVE MAIN STAGE (Scales down so it never cuts off) */}
-        <div className="relative z-20 flex h-[515px] w-[515px] max-md:-mt-8 items-center justify-center transform scale-[0.5] sm:scale-75 md:mt-0 md:scale-90 lg:scale-100">
+        <div className="relative z-20 flex h-[515px] w-[515px] max-md:-mt-14 items-center justify-center transform scale-[0.5] sm:scale-75 md:mt-0 md:scale-90 lg:scale-100">
           {/* Mobile-only: 3 icons with text at bottom per phase.
               Stage uses scale-[0.5] / sm:scale-75 — counter-scale so 48px icons read as 48px on screen. */}
           <div className="pointer-events-none absolute inset-0 z-[30] origin-center max-sm:scale-[2] sm:max-md:scale-[1.333333] md:hidden">
             <div
               ref={brandMobileBarRef}
-              className="absolute inset-x-0 bottom-[12%] flex w-full translate-y-[50px] flex-row items-center justify-center gap-[20px]"
+              className="absolute inset-x-0 bottom-[12%] flex w-full flex-row items-center justify-center gap-[20px]"
             >
               <div className="flex w-[92px] flex-col items-center">
                 <Image
@@ -931,7 +931,7 @@ export default function EcosystemSection() {
 
             <div
               ref={productMobileBarRef}
-              className="absolute inset-x-0 bottom-[12%] flex w-full translate-y-[50px] flex-row items-center justify-center gap-[20px]"
+              className="absolute inset-x-0 bottom-[12%] flex w-full flex-row items-center justify-center gap-[20px]"
             >
               <div className="flex w-[92px] flex-col items-center">
                 <Image
@@ -977,7 +977,7 @@ export default function EcosystemSection() {
 
             <div
               ref={engMobileBarRef}
-              className="absolute inset-x-0 bottom-[12%] flex w-full translate-y-[50px] flex-row items-center justify-center gap-[20px]"
+              className="absolute inset-x-0 bottom-[12%] flex w-full flex-row items-center justify-center gap-[20px]"
             >
               <div className="flex w-[92px] flex-col items-center">
                 <Image
