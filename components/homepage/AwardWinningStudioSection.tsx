@@ -57,7 +57,13 @@ export default function AwardWinningStudioSection({
           // Mirror AwardWinningRiveAnimation's CSS: md:h-[min(55svh,600px)].
           // Avoids riveWrapper.offsetHeight timing issue (it's 0 before Rive mounts).
           const riveH = Math.min(H * 0.55, 600);
-          return Math.round(riveH + 8 - H * topFraction + h / 2);
+          return Math.round(riveH - H * topFraction + h / 2);
+        }
+        if (window.innerWidth < 768) {
+          // Mirror mobile CSS: scale-[2.6] origin-top on w-screen (=el.offsetWidth),
+          // pb-[56.25%] aspect-ratio height, -mt-4 (-16px) top offset.
+          const riveVisualBottom = -32 + 2.6 * 0.5625 * el.offsetWidth;
+          return Math.round(riveVisualBottom - H * topFraction + h / 2);
         }
         const pad = parseFloat(getComputedStyle(textBlock).paddingBottom) || 0;
         return Math.round(H * (1 - topFraction) - pad - h / 2);
@@ -136,12 +142,12 @@ export default function AwardWinningStudioSection({
   return (
     <section
       ref={sectionRef}
-      className="@container relative flex h-svh w-full flex-col items-center overflow-y-hidden overflow-x-visible md:h-svh md:overflow-hidden"
+      className="@container relative flex h-svh w-full flex-col items-center overflow-hidden md:h-svh"
     >
       {awardWinningStudio.messageSection && (
         <>
           {/* Rive wrapper: always in DOM for GSAP opacity; Rive mounts once section first intersects (no remount on scroll-back). */}
-          <div ref={riveWrapperRef} className="w-screen md:w-full origin-top scale-[2.6] md:scale-100 -mt-4 md:mt-0">
+          <div ref={riveWrapperRef} className="w-screen md:w-full origin-top scale-[2.6] md:scale-100 -mt-8 md:mt-0">
             {riveVisitKey > 0 ? (
               <AwardWinningRiveAnimation key={riveVisitKey} />
             ) : null}
