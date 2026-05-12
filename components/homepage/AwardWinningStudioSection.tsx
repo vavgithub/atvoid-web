@@ -16,7 +16,7 @@ interface AwardWinningStudioSectionProps {
 }
 
 /** Space above fixed MorphingForm pill (fixed px; tune if the CTA overlaps). */
-const FLOATING_CTA_SAFE_BOTTOM = "pb-[50px]";
+const FLOATING_CTA_SAFE_BOTTOM = "pb-[70px]";
 
 export default function AwardWinningStudioSection({
   awardWinningStudio,
@@ -47,13 +47,18 @@ export default function AwardWinningStudioSection({
       const riveWrapper = riveWrapperRef.current;
       if (!el || !textBlock || !riveWrapper || !awardWinningStudio?.messageSection) return;
 
-      const isMobile = window.innerWidth < 768;
-      const topFraction = isMobile ? 0.72 : 0.5;
+      const topFraction = 0.5;
 
-      /** Vertical offset (px) from initial top position to bottom-aligned resting position. */
+      /** Vertical offset (px) from initial top position to resting position. */
       const getCenterToBottomY = () => {
         const H = el.offsetHeight;
         const h = textBlock.offsetHeight;
+        if (window.innerWidth >= 1024) {
+          // Mirror AwardWinningRiveAnimation's CSS: md:h-[min(55svh,600px)].
+          // Avoids riveWrapper.offsetHeight timing issue (it's 0 before Rive mounts).
+          const riveH = Math.min(H * 0.55, 600);
+          return Math.round(riveH + 8 - H * topFraction + h / 2);
+        }
         const pad = parseFloat(getComputedStyle(textBlock).paddingBottom) || 0;
         return Math.round(H * (1 - topFraction) - pad - h / 2);
       };
@@ -131,12 +136,12 @@ export default function AwardWinningStudioSection({
   return (
     <section
       ref={sectionRef}
-      className="@container relative flex h-svh w-full flex-col items-center overflow-hidden md:h-svh md:overflow-hidden"
+      className="@container relative flex h-svh w-full flex-col items-center overflow-y-hidden overflow-x-visible md:h-svh md:overflow-hidden"
     >
       {awardWinningStudio.messageSection && (
         <>
           {/* Rive wrapper: always in DOM for GSAP opacity; Rive mounts once section first intersects (no remount on scroll-back). */}
-          <div ref={riveWrapperRef} className="w-full">
+          <div ref={riveWrapperRef} className="w-screen md:w-full origin-top scale-[2.6] md:scale-100 -mt-4 md:mt-0">
             {riveVisitKey > 0 ? (
               <AwardWinningRiveAnimation key={riveVisitKey} />
             ) : null}
@@ -150,7 +155,7 @@ export default function AwardWinningStudioSection({
               {/* Same scroll-driven motion on all breakpoints (GSAP). Headline only on small screens — not in desktop SVG artboard. */}
               <div
                 ref={textBlockRef}
-                className={`pointer-events-none absolute inset-x-0 top-1/2 z-10 w-full -translate-y-1/2 px-4 ${FLOATING_CTA_SAFE_BOTTOM} md:px-10 md:pb-25 lg:pb-10`}
+                className={`pointer-events-none absolute inset-x-0 top-1/2 z-10 w-full -translate-y-1/2 px-4 ${FLOATING_CTA_SAFE_BOTTOM} md:px-10 md:pb-25 lg:pb-0`}
               >
                 {textContent.headline?.trim() ? (
                   <div className="pointer-events-auto mx-auto mb-4 max-w-[520px] text-left hidden">

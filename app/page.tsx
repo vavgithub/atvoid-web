@@ -23,13 +23,18 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-black px-5 md:px-10 lg:px-20 overflow-x-hidden">
-      <Container variant="medium" className="pb-16 ">
+      <Container variant="medium" className="pb-16">
         <HeroSection heroSection={data.heroSection} />
         <ShowReelSection showReelsSection={data.showReelsSection} />
-        <AwardWinningStudioSection
-          awardWinningStudio={data.awardWinningStudio}
-        />
       </Container>
+      {/* -mx-5 on mobile cancels the outer px-5 so the animation is edge-to-edge; md+ stays normal */}
+      <div className="-mx-5 md:mx-0">
+        <Container variant="medium">
+          <AwardWinningStudioSection
+            awardWinningStudio={data.awardWinningStudio}
+          />
+        </Container>
+      </div>
       {/* <DigitalEcosystemSection digitalEcosystem={data.digitalEcosystem} /> */}
       <div className="-mx-5 md:-mx-10 lg:-mx-5">
         <Ecosystem />
