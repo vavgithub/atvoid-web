@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 import Image from "next/image";
 import { urlFor } from "@/lib/sanity.image";
 import type { HomePage } from "@/lib/sanity.types";
@@ -37,8 +38,9 @@ export default function FinalCtaSection({ finalCta }: FinalCtaSectionProps) {
         </div>
 
         <div className="mt-8 flex md:ml-auto md:mt-0 md:shrink-0 md:justify-end md:pb-4">
-          <Link
-            href={DEFAULT_DISCOVERY_CALL_HREF}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("open-contact-form"))}
             className="group relative flex h-32 w-32 md:h-[230px] md:w-[230px] shrink-0 items-center justify-center rounded-full bg-black transition-transform hover:scale-105"
           >
             {finalCta.image?.asset?.url ? (
@@ -52,7 +54,7 @@ export default function FinalCtaSection({ finalCta }: FinalCtaSectionProps) {
                 />
               </div>
             ) : null}
-          </Link>
+          </button>
         </div>
       </div>
     </section>

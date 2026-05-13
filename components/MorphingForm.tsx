@@ -1,12 +1,45 @@
 "use client";
 
-import React, { useState, useRef, useLayoutEffect, useCallback } from "react";
+import React, { useState, useRef, useLayoutEffect, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, X } from "lucide-react";
 import SquircleBox from "@/components/ui/SquircleBox";
 
 export default function MorphingForm() {
   const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  useEffect(() => {
+    const open = () => setIsOpen(true);
+    window.addEventListener("open-contact-form", open);
+    return () => window.removeEventListener("open-contact-form", open);
+  }, []);
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setName("");
+    setEmail("");
+    setMessage("");
+    setStatus("idle");
+  };
+
+  const handleSubmit = async () => {
+    if (!name.trim() || !email.trim() || !message.trim()) return;
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+      setStatus(res.ok ? "sent" : "error");
+    } catch {
+      setStatus("error");
+    }
+  };
   const measureRef = useRef<HTMLDivElement>(null);
   /** Target box driven by real content size — avoids `layout` (scale-based FLIP), which reads as a circular zoom. */
   const [size, setSize] = useState({ w: 280, h: 56 });
@@ -101,54 +134,74 @@ export default function MorphingForm() {
                   LETS TALK
                 </div>
 
-                <div className="flex flex-col gap-6">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Your name"
-                      className="w-full bg-transparent border-b border-white/10 pb-3 outline-none focus:border-white/40 transition-colors placeholder:text-white/40 text-sm"
-                    />
+                {status === "sent" ? (
+                  <div className="flex flex-col gap-3 py-4">
+                    <p className="text-[#7FFfd4] font-medium">Message sent!</p>
+                    <p className="text-white/50 text-sm">We'll get back to you soon.</p>
                   </div>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      placeholder="Your email address"
-                      className="w-full bg-transparent border-b border-white/10 pb-3 outline-none focus:border-white/40 transition-colors placeholder:text-white/40 text-sm"
-                    />
-                  </div>
-                  <div className="relative">
-                    <textarea
-                      placeholder="Tell us about your project"
-                      rows={2}
-                      className="w-full bg-transparent border-b border-white/10 pb-3 outline-none focus:border-white/40 transition-colors placeholder:text-white/40 text-sm resize-none"
-                    />
-                  </div>
-                </div>
+                ) : (
+                  <>
+                    <div className="flex flex-col gap-6">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="Your name"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="w-full bg-transparent border-b border-white/10 pb-3 outline-none focus:border-white/40 transition-colors placeholder:text-white/40 text-sm"
+                        />
+                      </div>
+                      <div className="relative">
+                        <input
+                          type="email"
+                          placeholder="Your email address"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-transparent border-b border-white/10 pb-3 outline-none focus:border-white/40 transition-colors placeholder:text-white/40 text-sm"
+                        />
+                      </div>
+                      <div className="relative">
+                        <textarea
+                          placeholder="Tell us about your project"
+                          rows={2}
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                          className="w-full bg-transparent border-b border-white/10 pb-3 outline-none focus:border-white/40 transition-colors placeholder:text-white/40 text-sm resize-none"
+                        />
+                      </div>
+                      {status === "error" && (
+                        <p className="text-red-400 text-xs">Something went wrong. Please try again.</p>
+                      )}
+                    </div>
 
-                <div className="flex items-center justify-between mt-4">
-                  <button
-                    type="button"
-                    onClick={() => setIsOpen(false)}
-                    className="bg-[#0a0a0a] hover:bg-black transition-colors w-12 h-12 rounded-2xl flex items-center justify-center cursor-pointer shrink-0"
-                  >
-                    <ArrowLeft className="w-5 h-5 text-white/70" />
-                  </button>
-
-                  <div className="shrink-0 shadow-[0_0_20px_rgba(127,255,212,0.3)] rounded-xl">
-                    <SquircleBox cornerRadius={12} cornerSmoothing={1}>
+                    <div className="flex items-center justify-between mt-4">
                       <button
                         type="button"
-                        className="bg-[#7FFfd4] hover:bg-[#6ee6be] transition-colors text-black font-medium tracking-wide uppercase px-8 py-3.5 text-sm cursor-pointer"
+                        onClick={handleClose}
+                        className="bg-[#0a0a0a] hover:bg-black transition-colors w-12 h-12 rounded-2xl flex items-center justify-center cursor-pointer shrink-0"
                       >
-                        SEND
+                        <ArrowLeft className="w-5 h-5 text-white/70" />
                       </button>
-                    </SquircleBox>
-                  </div>
-                </div>
+
+                      <div className="shrink-0 shadow-[0_0_20px_rgba(127,255,212,0.3)] rounded-xl">
+                        <SquircleBox cornerRadius={12} cornerSmoothing={1}>
+                          <button
+                            type="button"
+                            onClick={handleSubmit}
+                            disabled={status === "sending"}
+                            className="bg-[#7FFfd4] hover:bg-[#6ee6be] disabled:opacity-60 transition-colors text-black font-medium tracking-wide uppercase px-8 py-3.5 text-sm cursor-pointer"
+                          >
+                            {status === "sending" ? "SENDING…" : "SEND"}
+                          </button>
+                        </SquircleBox>
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 <button
                   type="button"
-                  onClick={() => setIsOpen(false)}
+                  onClick={handleClose}
                   className="absolute bottom-6 right-8 flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
                 >
                   <X className="w-6 h-6 text-white" />
