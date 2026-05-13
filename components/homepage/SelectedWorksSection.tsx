@@ -147,7 +147,7 @@ export default function SelectedWorksSection({
                         </h3>
                       )}
                       <ArrowUpRight
-                        className="size-16 shrink-0 md:size-28 text-[#F6F6F6] hover:text-[#73F8C3]"
+                        className="size-16 shrink-0 md:size-28 text-[#F6F6F6] hover:text-[#73F8C3] opacity-0"
                         strokeWidth={0.7}
                         aria-hidden
                       />
