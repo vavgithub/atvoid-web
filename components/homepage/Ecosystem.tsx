@@ -828,7 +828,7 @@ export default function EcosystemSection() {
               priority
             />
             <Image
-              src="/images/Brand.png"
+              src="/images/brand-desktop.svg"
               alt=""
               fill
               sizes="100vw"
@@ -845,7 +845,7 @@ export default function EcosystemSection() {
               className="object-cover object-center md:hidden"
             />
             <Image
-              src="/images/Product.png"
+              src="/images/product-desktop.svg"
               alt=""
               fill
               sizes="100vw"
@@ -861,7 +861,7 @@ export default function EcosystemSection() {
               className="object-cover object-center md:hidden"
             />
             <Image
-              src="/images/Engineering.png"
+              src="/images/Engineering-desktop.svg"
               alt=""
               fill
               sizes="100vw"
