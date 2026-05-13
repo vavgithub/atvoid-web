@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     from: `"VAV Contact Form" <${process.env.SMTP_USER}>`,
     to: process.env.CONTACT_TO_EMAIL,
     replyTo: email,
-    subject: `New message from ${name}`,
+    subject: `New VAV Contact Form Submission from ${name}`,
     text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
     html: `
       <p><strong>Name:</strong> ${name}</p>
