@@ -845,7 +845,7 @@ export default function EcosystemSection() {
               className="object-cover object-center md:hidden"
             />
             <Image
-              src="/images/Product.png"
+              src="/images/product-desktop.svg"
               alt=""
               fill
               sizes="100vw"
