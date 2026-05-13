@@ -115,7 +115,7 @@ export default function MorphingForm() {
                 onClick={() => setIsOpen(true)}
                 className="flex items-center gap-4 py-3 pl-8 pr-3 cursor-pointer hover:bg-[#1a1a1a] transition-colors text-left"
               >
-                <span className="text-sm font-medium tracking-wide uppercase whitespace-nowrap">
+                <span className="text-sm font-pp-neue-corp-wide font-medium tracking-wide uppercase whitespace-nowrap">
                   LETS TALK
                 </span>
                 <div className="bg-[#1c1c1c] p-3 rounded-full flex items-center justify-center shrink-0">
