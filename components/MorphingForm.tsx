@@ -127,7 +127,7 @@ export default function MorphingForm() {
               </button>
             ) : (
               <div
-                className="p-8 pb-16 flex flex-col gap-8 w-[min(90vw,500px)] box-border relative"
+                className="font-pp-neue-corp p-8 pb-16 flex flex-col gap-8 w-[min(90vw,500px)] box-border relative"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="text-xl font-medium tracking-wide uppercase">
@@ -135,7 +135,7 @@ export default function MorphingForm() {
                 </div>
 
                 {status === "sent" ? (
-                  <div className="flex flex-col gap-3 py-4">
+                  <div className="flex flex-col gap-3 -mt-2">
                     <p className="text-[#7FFfd4] font-medium">Message sent!</p>
                     <p className="text-white/50 text-sm">We'll get back to you soon.</p>
                   </div>
