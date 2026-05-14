@@ -15,8 +15,8 @@ export default function FinalCtaSection({ finalCta }: FinalCtaSectionProps) {
 
   return (
       <section className="w-full ">
-      <div className="flex flex-col md:h-[305px] md:flex-row md:items-end">
-        <div className="max-w-[380px] md:self-start md:text-left">
+      <div className="flex flex-col lg:h-76.25 lg:flex-row lg:items-end">
+        <div className="max-w-[380px] md:max-w-full lg:max-w-95 lg:self-start lg:text-left">
           {finalCta.heading && (
             <h2 className="text-[#F6F6F6] font-pp-neue-corp-wide text-[24px] md:text-[40px] font-medium leading-[120%] tracking-[-0.8px] uppercase">
               {finalCta.heading}
@@ -24,20 +24,20 @@ export default function FinalCtaSection({ finalCta }: FinalCtaSectionProps) {
           )}
         </div>
 
-        <div className="max-w-[380px] text-left md:pb-4">
+        <div className="max-w-[380px] md:max-w-full lg:max-w-95 text-left lg:pb-4">
           {finalCta.subheading && (
             <h3 className="text-[#F6F6F6] font-pp-neue-corp text-[18px] md:text-[24px] font-medium leading-[120%] tracking-[-0.8px] uppercase">
               {finalCta.subheading}
             </h3>
           )}
           {finalCta.description && (
-            <p className="mt-6 max-w-[315px] text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium not-italic leading-[145%] tracking-[0.32px]">
+            <p className="mt-6 max-w-[315px] md:max-w-full lg:max-w-78.75 text-[#F6F6F6] font-pp-neue-corp text-[16px] font-medium not-italic leading-[145%] tracking-[0.32px]">
               {finalCta.description}
             </p>
           )}
         </div>
 
-        <div className="mt-8 flex md:ml-auto md:mt-0 md:shrink-0 md:justify-end md:pb-4">
+        <div className="mt-8 flex lg:ml-auto lg:mt-0 lg:shrink-0 lg:justify-end lg:pb-4">
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("open-contact-form"))}

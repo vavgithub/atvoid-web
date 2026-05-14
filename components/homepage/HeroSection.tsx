@@ -40,7 +40,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
 
         <div
           className={`relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-4 md:px-10 md:pt-0 lg:px-20 ${
-            hasHeroVideo ? "pb-6 md:pb-10" : "md:min-h-[813px]"
+            hasHeroVideo ? "pb-6 min-[480px]:pb-36 md:pb-10" : "md:min-h-[813px]"
           }`}
         >
           <div className="flex items-center justify-between pt-1 md:pt-20">
@@ -56,7 +56,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
               aria-hidden
             >
               <div
-                className="relative mt-[-90%] h-[320px] w-[320px] overflow-hidden rounded-2xl sm:h-[400px] sm:w-[400px] md:mt-[-140px] md:h-[480px] md:w-[480px] lg:h-[580px] lg:w-[580px]"
+                className="relative mt-[-70%] min-[480px]:mt-[-220px] h-[320px] w-[320px] overflow-hidden rounded-2xl sm:h-[400px] sm:w-[400px] md:mt-[-140px] md:h-[480px] md:w-[480px] lg:h-[580px] lg:w-[580px]"
                 style={{
                   boxShadow:
                     "0 0 120px 80px rgba(0, 0, 0, 0.18), 0 0 48px 24px rgba(0, 0, 0, 0.12), inset 0 0 100px 45px rgba(0, 0, 0, 0.14), inset 0 0 28px 8px rgba(0, 0, 0, 0.08)",
@@ -121,7 +121,7 @@ export default function HeroSection({ heroSection }: HeroSectionProps) {
 
               {heroSection.intro?.heading && (
                 <div className="mt-5 md:mt-8">
-                  <h2 className="font-pp-neue-corp-wide text-[32px] font-medium uppercase leading-[120%] text-white md:text-[40px] max-w-[305px] sm:max-w-full">
+                  <h2 className="font-pp-neue-corp-wide text-[32px] font-medium uppercase leading-[120%] text-white md:text-[40px] max-w-[305px] min-[480px]:max-w-full">
                     {heroSection.intro.heading}
                   </h2>
                 </div>

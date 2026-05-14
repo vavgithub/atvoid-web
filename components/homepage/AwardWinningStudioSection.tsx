@@ -16,7 +16,7 @@ interface AwardWinningStudioSectionProps {
 }
 
 /** Space above fixed MorphingForm pill (fixed px; tune if the CTA overlaps). */
-const FLOATING_CTA_SAFE_BOTTOM = "pb-[70px]";
+const FLOATING_CTA_SAFE_BOTTOM = "pb-[100px]";
 
 export default function AwardWinningStudioSection({
   awardWinningStudio,
@@ -60,10 +60,13 @@ export default function AwardWinningStudioSection({
           return Math.round(riveH - H * topFraction + h / 2);
         }
         if (window.innerWidth < 768) {
-          // Mirror mobile CSS: scale-[2.6] origin-top on w-screen (=el.offsetWidth),
-          // pb-[56.25%] aspect-ratio height, -mt-4 (-16px) top offset.
-          const riveVisualBottom = -32 + 2.6 * 0.5625 * el.offsetWidth;
-          return Math.round(riveVisualBottom - H * topFraction + h / 2);
+          const safeBottom = 100;
+          const riveBottom = 0.15 * H + 1.1 * 0.5625 * el.offsetWidth;
+          // Constraint 1: text top must be >= animation bottom + 16px gap.
+          const byAnimation = riveBottom + 16 - (H * topFraction - h / 2);
+          // Constraint 2: text bottom must be >= safeBottom from section bottom.
+          const byBottom = H * (1 - topFraction) - safeBottom - h / 2;
+          return Math.round(Math.max(byAnimation, byBottom));
         }
         const pad = parseFloat(getComputedStyle(textBlock).paddingBottom) || 0;
         return Math.round(H * (1 - topFraction) - pad - h / 2);
@@ -147,7 +150,7 @@ export default function AwardWinningStudioSection({
       {awardWinningStudio.messageSection && (
         <>
           {/* Rive wrapper: always in DOM for GSAP opacity; Rive mounts once section first intersects (no remount on scroll-back). */}
-          <div ref={riveWrapperRef} className="w-screen md:w-full origin-top scale-[2.6] md:scale-100 -mt-8 md:mt-0">
+          <div ref={riveWrapperRef} className="rive-mobile-fade absolute top-[15svh] w-screen origin-top scale-[1.1] md:static md:top-auto md:w-full md:scale-100 md:mt-0">
             {riveVisitKey > 0 ? (
               <AwardWinningRiveAnimation key={riveVisitKey} />
             ) : null}
@@ -258,6 +261,7 @@ export default function AwardWinningStudioSection({
           )}
         </>
       )}
+
     </section>
   );
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useLayoutEffect, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, X } from "lucide-react";
+import { X } from "lucide-react";
 import SquircleBox from "@/components/ui/SquircleBox";
 
 export default function MorphingForm() {
@@ -11,6 +11,7 @@ export default function MorphingForm() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errors, setErrors] = useState<{ name?: string; email?: string; message?: string }>({});
 
   useEffect(() => {
     const open = () => setIsOpen(true);
@@ -24,10 +25,24 @@ export default function MorphingForm() {
     setEmail("");
     setMessage("");
     setStatus("idle");
+    setErrors({});
+  };
+
+  const validate = () => {
+    const newErrors: { name?: string; email?: string; message?: string } = {};
+    if (!name.trim()) newErrors.name = "Name is required";
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+    if (!message.trim()) newErrors.message = "Message is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async () => {
-    if (!name.trim() || !email.trim() || !message.trim()) return;
+    if (!validate()) return;
     setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
@@ -127,62 +142,53 @@ export default function MorphingForm() {
               </button>
             ) : (
               <div
-                className="font-pp-neue-corp p-8 pb-16 flex flex-col gap-8 w-[min(90vw,500px)] box-border relative"
+                className="font-pp-neue-corp p-8 flex flex-col gap-8 w-[min(90vw,500px)] box-border"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="font-pp-neue-corp-wide font-medium text-xl uppercase">
-                  LETS TALK
-                </div>
-
                 {status === "sent" ? (
-                  <div className="flex flex-col gap-3 -mt-2">
+                  <div className="flex flex-col gap-3">
                     <p className="text-[#7FFfd4] font-medium">Message sent!</p>
                     <p className="text-white/50 text-sm">We'll get back to you soon.</p>
                   </div>
                 ) : (
                   <>
                     <div className="flex flex-col gap-6">
-                      <div className="relative">
+                      <div className="flex flex-col gap-1">
                         <input
                           type="text"
                           placeholder="Your name"
                           value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          className="w-full bg-transparent border-b border-white/10 pb-3 outline-none focus:border-white/40 transition-colors placeholder:text-white/40 text-sm"
+                          onChange={(e) => { setName(e.target.value); if (errors.name) setErrors((p) => ({ ...p, name: undefined })); }}
+                          className={`w-full bg-transparent border-b pb-3 outline-none transition-colors placeholder:text-white/40 text-sm ${errors.name ? "border-red-400/60 focus:border-red-400" : "border-white/10 focus:border-white/40"}`}
                         />
+                        {errors.name && <p className="text-red-400 text-xs">{errors.name}</p>}
                       </div>
-                      <div className="relative">
+                      <div className="flex flex-col gap-1">
                         <input
                           type="email"
                           placeholder="Your email address"
                           value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-transparent border-b border-white/10 pb-3 outline-none focus:border-white/40 transition-colors placeholder:text-white/40 text-sm"
+                          onChange={(e) => { setEmail(e.target.value); if (errors.email) setErrors((p) => ({ ...p, email: undefined })); }}
+                          className={`w-full bg-transparent border-b pb-3 outline-none transition-colors placeholder:text-white/40 text-sm ${errors.email ? "border-red-400/60 focus:border-red-400" : "border-white/10 focus:border-white/40"}`}
                         />
+                        {errors.email && <p className="text-red-400 text-xs">{errors.email}</p>}
                       </div>
-                      <div className="relative">
+                      <div className="flex flex-col gap-1">
                         <textarea
                           placeholder="Tell us about your project"
                           rows={2}
                           value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                          className="w-full bg-transparent border-b border-white/10 pb-3 outline-none focus:border-white/40 transition-colors placeholder:text-white/40 text-sm resize-none"
+                          onChange={(e) => { setMessage(e.target.value); if (errors.message) setErrors((p) => ({ ...p, message: undefined })); }}
+                          className={`w-full bg-transparent border-b pb-3 outline-none transition-colors placeholder:text-white/40 text-sm resize-none ${errors.message ? "border-red-400/60 focus:border-red-400" : "border-white/10 focus:border-white/40"}`}
                         />
+                        {errors.message && <p className="text-red-400 text-xs">{errors.message}</p>}
                       </div>
                       {status === "error" && (
                         <p className="text-red-400 text-xs">Something went wrong. Please try again.</p>
                       )}
                     </div>
 
-                    <div className="flex items-center justify-between mt-4">
-                      <button
-                        type="button"
-                        onClick={handleClose}
-                        className="bg-[#0a0a0a] hover:bg-black transition-colors w-12 h-12 rounded-2xl flex items-center justify-center cursor-pointer shrink-0"
-                      >
-                        <ArrowLeft className="w-5 h-5 text-white/70" />
-                      </button>
-
+                    <div className="flex items-center justify-end mt-4">
                       <div className="shrink-0 shadow-[0_0_20px_rgba(127,255,212,0.3)] rounded-xl">
                         <SquircleBox cornerRadius={12} cornerSmoothing={1}>
                           <button
@@ -199,13 +205,18 @@ export default function MorphingForm() {
                   </>
                 )}
 
-                <button
-                  type="button"
-                  onClick={handleClose}
-                  className="absolute bottom-6 right-8 flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
-                >
-                  <X className="w-6 h-6 text-white" />
-                </button>
+                <div className="flex items-center justify-between mt-auto">
+                  <div className="font-pp-neue-corp-wide font-medium text-xl uppercase">
+                    LETS TALK
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer"
+                  >
+                    <X className="w-6 h-6 text-white" />
+                  </button>
+                </div>
               </div>
             )}
           </div>
