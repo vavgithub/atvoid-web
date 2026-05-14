@@ -105,7 +105,7 @@ export default function SelectedWorksSection({
                 const cardContent = (
                   <>
                     {desktopSrc ? (
-                      <div className="w-full overflow-hidden rounded-[12px] mb-[26px] aspect-[688/940] md:aspect-auto md:mb-[16px] md:h-[320px]">
+                      <div className="w-full overflow-hidden mb-[26px] aspect-[688/940] md:aspect-[799/488] md:mb-[16px]">
                         {card.mobileImage?.asset?.url && mobileSrc ? (
                           <>
                             <Image
@@ -113,7 +113,7 @@ export default function SelectedWorksSection({
                               alt={card.title || ""}
                               width={688}
                               height={940}
-                              className="w-full h-full object-cover md:hidden"
+                              className="w-full h-full object-contain md:hidden"
                               sizes="344px"
                             />
                             <Image
@@ -121,7 +121,7 @@ export default function SelectedWorksSection({
                               alt={card.title || ""}
                               width={799}
                               height={488}
-                              className="hidden md:block w-full h-full object-cover"
+                              className="hidden md:block w-full h-full object-contain"
                               sizes="799px"
                             />
                           </>
@@ -131,13 +131,13 @@ export default function SelectedWorksSection({
                             alt={card.title || ""}
                             width={799}
                             height={488}
-                            className="w-full h-full object-cover md:object-cover"
+                            className="w-full h-full object-contain"
                             sizes="(max-width: 767px) 344px, 799px"
                           />
                         )}
                       </div>
                     ) : (
-                      <div className="h-[470px] max-h-[470px] w-[344px] max-w-[344px] rounded-[24px] border border-white/10 bg-white/5 mb-[26px] md:mb-[26px] md:h-[380px] md:max-h-none md:w-full md:max-w-full" />
+                      <div className="h-[470px] max-h-[470px] w-[344px] max-w-[344px] border border-white/10 bg-white/5 mb-[26px] md:mb-[26px] md:h-[380px] md:max-h-none md:w-full md:max-w-full" />
                     )}
 
                     <div className="flex items-center justify-between -mt-6">
