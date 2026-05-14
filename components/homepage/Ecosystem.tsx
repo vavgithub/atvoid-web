@@ -21,6 +21,32 @@ function globeRimPct(deg: number) {
   return { left: `${xPct}%`, top: `${yPct}%` } as const;
 }
 
+/**
+ * Mobile globe overlay: GSAP `x` / `y` (px) on `.phase-heading` for inactive corners.
+ * Mirrors desktop `ringTextPos` on `.text-container` for the same phase (active corner = 0,0 here).
+ */
+const MOBILE_PHASE_HEADING_POS = {
+  phase1: {
+    product: { x: 100, y: 35 },
+    engineering: { x: -120, y: 35 },
+  },
+  phase2: {
+    brand: { x: -60, y: 30 },
+    engineering: { x: 122, y: 30 },
+  },
+  phase3: {
+    brand: { x: 82, y: 30 },
+    product: { x: -90, y: 35 },
+  },
+} as const;
+
+/** Outer: position + centering (never GSAP `transform`, so `translate` is safe). */
+const PHASE_TEXT_OUTER_CLASS =
+  "absolute left-1/2 top-[-140px] sm:top-[-100px] z-[21] w-[300px] -translate-x-1/2 md:top-[-70px]";
+/** Inner: desktop inverse of stage `md:90` / `lg:100`; mobile active shell uses GSAP `scale`. */
+const PHASE_TEXT_INNER_CLASS =
+  "origin-[50%_0%] max-md:will-change-transform md:max-lg:scale-[1.111111] lg:scale-100";
+
 export default function EcosystemSection() {
   /** Pin this wrapper (not the section) so `lg:py-*` stays visible above/below the card while pinned. */
   const pinWrapRef = useRef<HTMLDivElement | null>(null);
@@ -57,6 +83,11 @@ export default function EcosystemSection() {
   const productGroup = useRef<HTMLDivElement | null>(null);
   const engGroup = useRef<HTMLDivElement | null>(null);
 
+  /** Mobile: active phase — counter-scale whole title+desc block vs stage. */
+  const brandPhaseTextShellRef = useRef<HTMLDivElement | null>(null);
+  const productPhaseTextShellRef = useRef<HTMLDivElement | null>(null);
+  const engPhaseTextShellRef = useRef<HTMLDivElement | null>(null);
+
   useGSAP(
     () => {
       const brandEl = brandGroup.current;
@@ -75,6 +106,9 @@ export default function EcosystemSection() {
       const isMobileGlobeOverlay =
         typeof window !== "undefined" &&
         window.matchMedia("(max-width: 767px)").matches;
+
+      const ringTextPos = (x: number, y: number) =>
+        isMobileGlobeOverlay ? { x: 0, y: 0 } : { x, y };
 
       const mobileGlobeDotBrand =
         isMobileGlobeOverlay && globeMarkersRef.current
@@ -202,6 +236,9 @@ export default function EcosystemSection() {
         rotation: -120,
       });
 
+      /** Reverts mobile-only tweens when viewport leaves `(max-width: 767px)` so scrub does not keep scaled text. */
+      const mobileGlobeMatchMedia = gsap.matchMedia();
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinWrapRef.current,
@@ -218,17 +255,6 @@ export default function EcosystemSection() {
         { rotation: 360, ease: "none", duration: 8 },
         0,
       );
-      if (
-        isMobileGlobeOverlay &&
-        globeMarkersRef.current &&
-        globeMarkersRef.current.isConnected
-      ) {
-        tl.to(
-          globeMarkersRef.current,
-          { rotation: 360, ease: "none", duration: 8 },
-          0,
-        );
-      }
       tl.to({}, { duration: 0.5 }, 0); // Intro pause
       // Fade orb texture away as the system "activates"
       tl.to(
@@ -288,10 +314,22 @@ export default function EcosystemSection() {
           { stroke: "#ff4d79", duration: 1 },
           "phase1",
         )
-        // Content IN (Brand active; nudge Product+Engineering only)
-        .to(brandTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase1")
-        .to(productTextContainer, { x: 22, y: 35, duration: 0.2 }, "phase1")
-        .to(engTextContainer, { x: 0, y: 35, duration: 0.2 }, "phase1")
+        // Content IN (Brand active; nudge Product+Engineering only on desktop ring)
+        .to(
+          brandTextContainer,
+          { ...ringTextPos(0, 0), duration: 0.2 },
+          "phase1",
+        )
+        .to(
+          productTextContainer,
+          { ...ringTextPos(22, 35), duration: 0.2 },
+          "phase1",
+        )
+        .to(
+          engTextContainer,
+          { ...ringTextPos(0, 35), duration: 0.2 },
+          "phase1",
+        )
         .to(brandDesc, { autoAlpha: 1, y: 0, duration: 0.8 }, "phase1")
         .to(
           brandIcons,
@@ -380,10 +418,22 @@ export default function EcosystemSection() {
           "phase2+=0.5",
         )
 
-        // Content Swap (Product active; nudge Brand+Engineering only)
-        .to(productTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase2")
-        .to(brandTextContainer, { x: 0, y: 30, duration: 0.2 }, "phase2")
-        .to(engTextContainer, { x: 32, y: 18, duration: 0.2 }, "phase2")
+        // Content Swap (Product active; nudge Brand+Engineering only on desktop)
+        .to(
+          productTextContainer,
+          { ...ringTextPos(0, 0), duration: 0.2 },
+          "phase2",
+        )
+        .to(
+          brandTextContainer,
+          { ...ringTextPos(0, 30), duration: 0.2 },
+          "phase2",
+        )
+        .to(
+          engTextContainer,
+          { ...ringTextPos(32, 18), duration: 0.2 },
+          "phase2",
+        )
         .to(
           brandIcons,
           {
@@ -495,10 +545,18 @@ export default function EcosystemSection() {
           "phase3+=0.5",
         )
 
-        // Content Swap (Engineering active; nudge Brand+Product only)
-        .to(engTextContainer, { x: 0, y: 0, duration: 0.2 }, "phase3")
-        .to(brandTextContainer, { x: 22, y: 30, duration: 0.2 }, "phase3")
-        .to(productTextContainer, { x: -10, y: 15, duration: 0.2 }, "phase3")
+        // Content Swap (Engineering active; nudge Brand+Product only on desktop)
+        .to(engTextContainer, { ...ringTextPos(0, 0), duration: 0.2 }, "phase3")
+        .to(
+          brandTextContainer,
+          { ...ringTextPos(22, 30), duration: 0.2 },
+          "phase3",
+        )
+        .to(
+          productTextContainer,
+          { ...ringTextPos(-10, 15), duration: 0.2 },
+          "phase3",
+        )
         .to(
           productIcons,
           {
@@ -553,6 +611,199 @@ export default function EcosystemSection() {
           "phase3+=1.0",
         );
       }
+
+      // Mobile (< md): text-shell scale + inactive heading scale/xy — scoped with matchMedia so
+      // leaving the breakpoint reverts tweens (avoids stuck scale when resizing to desktop).
+      mobileGlobeMatchMedia.add("(max-width: 767px)", () => {
+        const markers = globeMarkersRef.current;
+        if (markers?.isConnected) {
+          tl.to(markers, { rotation: 360, ease: "none", duration: 8 }, 0);
+        }
+
+        const brandTextShell = brandPhaseTextShellRef.current;
+        const productTextShell = productPhaseTextShellRef.current;
+        const engTextShell = engPhaseTextShellRef.current;
+        if (!brandTextShell || !productTextShell || !engTextShell) {
+          return () => {
+            if (markers?.isConnected) {
+              gsap.set(markers, { clearProps: "rotation" });
+            }
+            ScrollTrigger.refresh();
+          };
+        }
+
+        const activeShellScale = window.matchMedia("(max-width: 639px)").matches
+          ? 2
+          : 4 / 3;
+        const inactiveHeadingScale = window.matchMedia("(max-width: 639px)")
+          .matches
+          ? 1.82
+          : 1.48;
+
+        gsap.set([brandTextShell, productTextShell, engTextShell], {
+          scale: 1,
+          transformOrigin: "50% 0%",
+        });
+        gsap.set([brandHeading, productHeading, engHeading], {
+          scale: 1,
+          x: 0,
+          y: 0,
+          transformOrigin: "50% 50%",
+        });
+
+        tl.to(
+          brandTextShell,
+          {
+            scale: activeShellScale,
+            duration: 0.55,
+            ease: "power2.out",
+          },
+          "phase1",
+        );
+        tl.to(
+          brandHeading,
+          {
+            scale: 1,
+            x: 0,
+            y: 0,
+            duration: 0.45,
+            ease: "power2.out",
+          },
+          "phase1",
+        );
+        tl.to(
+          productHeading,
+          {
+            scale: inactiveHeadingScale,
+            ...MOBILE_PHASE_HEADING_POS.phase1.product,
+            duration: 0.45,
+            ease: "power2.out",
+          },
+          "phase1",
+        );
+        tl.to(
+          engHeading,
+          {
+            scale: inactiveHeadingScale,
+            ...MOBILE_PHASE_HEADING_POS.phase1.engineering,
+            duration: 0.45,
+            ease: "power2.out",
+          },
+          "phase1",
+        );
+
+        tl.to(
+          brandTextShell,
+          { scale: 1, duration: 0.45, ease: "power2.inOut" },
+          "phase2",
+        );
+        tl.to(
+          productTextShell,
+          {
+            scale: activeShellScale,
+            duration: 0.45,
+            ease: "power2.inOut",
+          },
+          "phase2",
+        );
+        tl.to(
+          brandHeading,
+          {
+            scale: inactiveHeadingScale,
+            ...MOBILE_PHASE_HEADING_POS.phase2.brand,
+            duration: 0.4,
+            ease: "power2.inOut",
+          },
+          "phase2",
+        );
+        tl.to(
+          productHeading,
+          {
+            scale: 1,
+            x: 0,
+            y: 0,
+            duration: 0.4,
+            ease: "power2.inOut",
+          },
+          "phase2",
+        );
+        tl.to(
+          engHeading,
+          {
+            scale: inactiveHeadingScale,
+            ...MOBILE_PHASE_HEADING_POS.phase2.engineering,
+            duration: 0.4,
+            ease: "power2.inOut",
+          },
+          "phase2",
+        );
+
+        tl.to(
+          productTextShell,
+          { scale: 1, duration: 0.45, ease: "power2.inOut" },
+          "phase3",
+        );
+        tl.to(
+          engTextShell,
+          {
+            scale: activeShellScale,
+            duration: 0.45,
+            ease: "power2.inOut",
+          },
+          "phase3+=0.12",
+        );
+        tl.to(
+          productHeading,
+          {
+            scale: inactiveHeadingScale,
+            ...MOBILE_PHASE_HEADING_POS.phase3.product,
+            duration: 0.4,
+            ease: "power2.inOut",
+          },
+          "phase3",
+        );
+        tl.to(
+          engHeading,
+          {
+            scale: 1,
+            x: 0,
+            y: 0,
+            duration: 0.4,
+            ease: "power2.inOut",
+          },
+          "phase3+=0.12",
+        );
+        tl.to(
+          brandHeading,
+          {
+            scale: inactiveHeadingScale,
+            ...MOBILE_PHASE_HEADING_POS.phase3.brand,
+            duration: 0.35,
+            ease: "power2.inOut",
+          },
+          "phase3",
+        );
+
+        return () => {
+          gsap.set([brandTextShell, productTextShell, engTextShell], {
+            scale: 1,
+            transformOrigin: "50% 0%",
+          });
+          gsap.set([brandHeading, productHeading, engHeading], {
+            scale: 1,
+            x: 0,
+            y: 0,
+            transformOrigin: "50% 50%",
+          });
+          if (markers?.isConnected)
+            gsap.set(markers, { clearProps: "rotation" });
+          ScrollTrigger.refresh();
+        };
+      });
+
+      return () => {
+        mobileGlobeMatchMedia.revert();
+      };
     },
     { scope: sectionRef },
   );
@@ -563,7 +814,7 @@ export default function EcosystemSection() {
     <div ref={pinWrapRef} className="w-full lg:py-[50px]">
       <section
         ref={sectionRef}
-        className="relative max-w-[1580px] mx-auto w-full h-screen min-h-[850px] lg:h-[calc(100vh-100px)] lg:min-h-[850px] lg:rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center font-sans py-12"
+        className="relative w-full h-screen min-h-[850px] lg:h-[calc(100vh-100px)] lg:min-h-[850px] lg:rounded-[56px] bg-[#0a0a0a] text-white overflow-hidden flex flex-col items-center justify-center font-sans py-12 max-md:pb-28"
       >
         {/* 1. Phase backgrounds (design assets) — crossfaded via GSAP */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 lg:rounded-[56px]">
@@ -620,22 +871,22 @@ export default function EcosystemSection() {
         </div>
 
         {/* 2. STATIC HEADER (In standard document flow with bottom margin) */}
-        <div className="w-full text-center z-50 mb-2 md:mb-12 lg:mb-30 pointer-events-none">
+        <div className="w-full text-center z-50 mb-2 sm:mb-8 md:mb-12 lg:mb-30 pointer-events-none">
           <h2 className="text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] sm:text-[32px] lg:text-[40px] font-medium leading-[120%] tracking-[0.8px] uppercase pb-2 md:pb-5">
             A COMPLETE <br /> DIGITAL <br className=" md:hidden" /> ECOSYSTEM
           </h2>
         </div>
 
         {/* 3. RESPONSIVE MAIN STAGE (Scales down so it never cuts off) */}
-        <div className="relative z-20 flex h-[515px] w-[515px] max-md:-mt-8 items-center justify-center transform scale-[0.5] sm:scale-75 md:mt-0 md:scale-90 lg:scale-100">
+        <div className="relative z-20 flex h-[515px] w-[515px] max-sm:-mt-14 items-center justify-center transform scale-[0.5] sm:scale-75 md:mt-0 md:scale-90 lg:scale-100">
           {/* Mobile-only: 3 icons with text at bottom per phase.
               Stage uses scale-[0.5] / sm:scale-75 — counter-scale so 48px icons read as 48px on screen. */}
           <div className="pointer-events-none absolute inset-0 z-[30] origin-center max-sm:scale-[2] sm:max-md:scale-[1.333333] md:hidden">
             <div
               ref={brandMobileBarRef}
-              className="absolute inset-x-0 bottom-[5%] flex w-full translate-y-[50px] flex-row items-center justify-center gap-[20px]"
+              className="absolute inset-x-0 bottom-[3%] flex w-full flex-row items-start justify-center"
             >
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/visual-identity-brand.svg"
                   alt="Visual Identity Systems"
@@ -649,7 +900,7 @@ export default function EcosystemSection() {
                   Systems
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/marketing-brand.svg"
                   alt="Marketing Collateral"
@@ -663,7 +914,7 @@ export default function EcosystemSection() {
                   Collateral
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/strategy-brand.svg"
                   alt="Strategy & Positioning"
@@ -680,9 +931,9 @@ export default function EcosystemSection() {
 
             <div
               ref={productMobileBarRef}
-              className="absolute inset-x-0 bottom-[5%] flex w-full translate-y-[50px] flex-row items-center justify-center gap-[20px]"
+              className="absolute inset-x-0 bottom-[3%] flex w-full flex-row items-start justify-center"
             >
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/ui-ux-product.svg"
                   alt="UI/UX Design"
@@ -696,7 +947,7 @@ export default function EcosystemSection() {
                   Design
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/3d-motion-product.svg"
                   alt="3D & Motion Graphics"
@@ -710,7 +961,7 @@ export default function EcosystemSection() {
                   Graphics
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/prototyping-product.svg"
                   alt="Prototyping"
@@ -726,9 +977,9 @@ export default function EcosystemSection() {
 
             <div
               ref={engMobileBarRef}
-              className="absolute inset-x-0 bottom-[5%] flex w-full translate-y-[50px] flex-row items-center justify-center gap-[20px]"
+              className="absolute inset-x-0 bottom-[3%] flex w-full flex-row items-start justify-center"
             >
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/full-stack-engineering.svg"
                   alt="Full-Stack Dev"
@@ -742,7 +993,7 @@ export default function EcosystemSection() {
                   Dev
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/mobile-apps-engineering.svg"
                   alt="Mobile Apps"
@@ -756,7 +1007,7 @@ export default function EcosystemSection() {
                   Apps
                 </p>
               </div>
-              <div className="flex w-[92px] flex-col items-center">
+              <div className="flex w-[120px] flex-col items-center">
                 <Image
                   src="/icons/ai-llm-engineering.svg"
                   alt="AI & LLM Integration"
@@ -941,15 +1192,22 @@ export default function EcosystemSection() {
           >
             {/* ================= GROUP 1: BRAND ================= */}
             <div ref={brandGroup} className="absolute inset-0 w-full h-full">
-              <div className="text-container absolute top-[-70px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
-                <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[16px] md:text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
-                  BRAND
-                </h3>
-                <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
-                  We excavate your narrative
-                  <br />
-                  to build identities that scale
-                </p>
+              <div className={PHASE_TEXT_OUTER_CLASS}>
+                <div
+                  ref={brandPhaseTextShellRef}
+                  className={PHASE_TEXT_INNER_CLASS}
+                >
+                  <div className="text-container flex w-full flex-col items-center counter-rotate">
+                    <h3 className="phase-heading text-center font-pp-neue-corp-extended text-[16px] font-medium uppercase leading-[120%] tracking-[0.4px] text-[#F5FAF8] md:text-[20px]">
+                      BRAND
+                    </h3>
+                    <p className="main-desc mt-2 text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">
+                      We excavate your narrative
+                      <br />
+                      to build identities that scale
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Desktop: phase dot on outer ring (mobile: globe overlay only) */}
@@ -1013,15 +1271,22 @@ export default function EcosystemSection() {
 
             {/* ================= GROUP 2: PRODUCT ================= */}
             <div ref={productGroup} className="absolute inset-0 w-full h-full">
-              <div className="text-container absolute top-[-70px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
-                <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[16px] md:text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
-                  PRODUCT
-                </h3>
-                <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
-                  We craft high-fidelity interfaces that
-                  <br />
-                  guide and delight users
-                </p>
+              <div className={PHASE_TEXT_OUTER_CLASS}>
+                <div
+                  ref={productPhaseTextShellRef}
+                  className={PHASE_TEXT_INNER_CLASS}
+                >
+                  <div className="text-container flex w-full flex-col items-center counter-rotate">
+                    <h3 className="phase-heading text-center font-pp-neue-corp-extended text-[16px] font-medium uppercase leading-[120%] tracking-[0.4px] text-[#F5FAF8] md:text-[20px]">
+                      PRODUCT
+                    </h3>
+                    <p className="main-desc mt-2 text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">
+                      We craft high-fidelity interfaces that
+                      <br />
+                      guide and delight users
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Top Left Icon */}
@@ -1084,15 +1349,22 @@ export default function EcosystemSection() {
 
             {/* ================= GROUP 3: ENGINEERING ================= */}
             <div ref={engGroup} className="absolute inset-0 w-full h-full">
-              <div className="text-container absolute top-[-70px] left-1/2 -translate-x-1/2 flex flex-col items-center w-[300px] counter-rotate">
-                <h3 className="phase-heading text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[16px] md:text-[20px] font-medium leading-[120%] tracking-[0.4px] uppercase">
-                  ENGINEERING
-                </h3>
-                <p className="main-desc mt-2 text-white text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px]">
-                  We don't outsource the code. We build
-                  <br />
-                  scalable, pixel-perfect products.
-                </p>
+              <div className={PHASE_TEXT_OUTER_CLASS}>
+                <div
+                  ref={engPhaseTextShellRef}
+                  className={PHASE_TEXT_INNER_CLASS}
+                >
+                  <div className="text-container flex w-full flex-col items-center counter-rotate">
+                    <h3 className="phase-heading text-center font-pp-neue-corp-extended text-[16px] font-medium uppercase leading-[120%] tracking-[0.4px] text-[#F5FAF8] md:text-[20px]">
+                      ENGINEERING
+                    </h3>
+                    <p className="main-desc mt-2 text-center font-pp-neue-corp text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">
+                      We don't outsource the code. We build
+                      <br />
+                      scalable, pixel-perfect products.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               {/* Desktop: phase dot on outer ring (mobile: globe overlay only) */}
