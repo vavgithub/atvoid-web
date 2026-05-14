@@ -42,7 +42,7 @@ const MOBILE_PHASE_HEADING_POS = {
 
 /** Outer: position + centering (never GSAP `transform`, so `translate` is safe). */
 const PHASE_TEXT_OUTER_CLASS =
-  "absolute left-1/2 top-[-140px] z-[21] w-[300px] -translate-x-1/2 md:top-[-70px]";
+  "absolute left-1/2 top-[-140px] sm:top-[-100px] z-[21] w-[300px] -translate-x-1/2 md:top-[-70px]";
 /** Inner: desktop inverse of stage `md:90` / `lg:100`; mobile active shell uses GSAP `scale`. */
 const PHASE_TEXT_INNER_CLASS =
   "origin-[50%_0%] max-md:will-change-transform md:max-lg:scale-[1.111111] lg:scale-100";
@@ -871,14 +871,14 @@ export default function EcosystemSection() {
         </div>
 
         {/* 2. STATIC HEADER (In standard document flow with bottom margin) */}
-        <div className="w-full text-center z-50 mb-2 md:mb-12 lg:mb-30 pointer-events-none">
+        <div className="w-full text-center z-50 mb-2 sm:mb-8 md:mb-12 lg:mb-30 pointer-events-none">
           <h2 className="text-[#F5FAF8] text-center font-pp-neue-corp-extended text-[20px] sm:text-[32px] lg:text-[40px] font-medium leading-[120%] tracking-[0.8px] uppercase pb-2 md:pb-5">
             A COMPLETE <br /> DIGITAL <br className=" md:hidden" /> ECOSYSTEM
           </h2>
         </div>
 
         {/* 3. RESPONSIVE MAIN STAGE (Scales down so it never cuts off) */}
-        <div className="relative z-20 flex h-[515px] w-[515px] max-md:-mt-14 items-center justify-center transform scale-[0.5] sm:scale-75 md:mt-0 md:scale-90 lg:scale-100">
+        <div className="relative z-20 flex h-[515px] w-[515px] max-sm:-mt-14 items-center justify-center transform scale-[0.5] sm:scale-75 md:mt-0 md:scale-90 lg:scale-100">
           {/* Mobile-only: 3 icons with text at bottom per phase.
               Stage uses scale-[0.5] / sm:scale-75 — counter-scale so 48px icons read as 48px on screen. */}
           <div className="pointer-events-none absolute inset-0 z-[30] origin-center max-sm:scale-[2] sm:max-md:scale-[1.333333] md:hidden">

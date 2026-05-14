@@ -53,7 +53,7 @@ export default function AwardWinningStudioSection({
       const getCenterToBottomY = () => {
         const H = el.offsetHeight;
         const h = textBlock.offsetHeight;
-        if (window.innerWidth >= 1024) {
+        if (window.innerWidth >= 768) {
           // Mirror AwardWinningRiveAnimation's CSS: md:h-[min(55svh,600px)].
           // Avoids riveWrapper.offsetHeight timing issue (it's 0 before Rive mounts).
           const riveH = Math.min(H * 0.55, 600);
