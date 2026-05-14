@@ -89,8 +89,8 @@ export default function DiverseTeamSection({
   diverseTeam,
 }: DiverseTeamSectionProps) {
   const isMobile = useSyncExternalStore(
-    (cb) => { const mq = window.matchMedia("(max-width: 767px)"); mq.addEventListener("change", cb); return () => mq.removeEventListener("change", cb); },
-    () => window.matchMedia("(max-width: 767px)").matches,
+    (cb) => { const mq = window.matchMedia("(max-width: 675px)"); mq.addEventListener("change", cb); return () => mq.removeEventListener("change", cb); },
+    () => window.matchMedia("(max-width: 675px)").matches,
     () => false,
   );
 

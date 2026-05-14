@@ -166,6 +166,13 @@ body {
   display: none;
 }
 
+@media (max-width: 767px) {
+  .rive-mobile-fade {
+    -webkit-mask-image: linear-gradient(225deg, transparent 0%, transparent 10%, black 32%);
+    mask-image: linear-gradient(225deg, transparent 0%, transparent 10%, black 32%);
+  }
+}
+
 @layer base {
   h1 {
     font-size: var(--font-size-7xl);
