@@ -340,6 +340,8 @@ export interface HomePage {
       arrowPositionY?: number;
       mobileArrowPositionX?: number;
       mobileArrowPositionY?: number;
+      tabletArrowPositionX?: number;
+      tabletArrowPositionY?: number;
       arrowRotationDeg?: number;
     }>;
   };

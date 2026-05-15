@@ -40,6 +40,22 @@ function isHexColor(value: string | undefined): value is string {
 /** SVG default points down-right; subtract 45° so 0° aligns with +X. */
 const CURSOR_ROTATION_OFFSET = 45;
 
+/**
+ * Arrow bands (inclusive, by viewport width in px):
+ * mobile < 659 | tablet 659–1159 | desktop ≥ 1160
+ */
+const MAP_TABLET_MIN_WIDTH_PX = 659;
+const MAP_DESKTOP_MIN_WIDTH_PX = 1160;
+
+type MapArrowMode = "mobile" | "tablet" | "desktop";
+
+function getMapArrowMode(width: number): MapArrowMode {
+  if (width >= MAP_DESKTOP_MIN_WIDTH_PX) return "desktop";
+  if (width >= MAP_TABLET_MIN_WIDTH_PX) return "tablet";
+  return "mobile";
+}
+
+
 /** Angle (deg) from (x, y) toward a target point (percent coords). */
 function angleTowardTargetPercent(
   x: number,
@@ -88,10 +104,14 @@ function TeamCursorArrow({
 export default function DiverseTeamSection({
   diverseTeam,
 }: DiverseTeamSectionProps) {
-  const isMobile = useSyncExternalStore(
-    (cb) => { const mq = window.matchMedia("(max-width: 675px)"); mq.addEventListener("change", cb); return () => mq.removeEventListener("change", cb); },
-    () => window.matchMedia("(max-width: 675px)").matches,
-    () => false,
+  const mapArrowMode = useSyncExternalStore(
+    (cb) => {
+      const onResize = () => cb();
+      window.addEventListener("resize", onResize);
+      return () => window.removeEventListener("resize", onResize);
+    },
+    () => getMapArrowMode(window.innerWidth),
+    (): MapArrowMode => "desktop",
   );
 
   if (!diverseTeam) return null;
@@ -198,17 +218,24 @@ export default function DiverseTeamSection({
                   const arrowFill = isHexColor(member.arrowColor)
                     ? member.arrowColor
                     : bgColor;
-                  const hasMobileArrowOverride =
-                    isMobile &&
-                    member.mobileArrowPositionX !== undefined &&
-                    member.mobileArrowPositionY !== undefined;
+                  let effectiveArrowX = member.arrowPositionX;
+                  let effectiveArrowY = member.arrowPositionY;
 
-                  const effectiveArrowX = hasMobileArrowOverride
-                    ? member.mobileArrowPositionX!
-                    : member.arrowPositionX;
-                  const effectiveArrowY = hasMobileArrowOverride
-                    ? member.mobileArrowPositionY!
-                    : member.arrowPositionY;
+                  if (
+                    mapArrowMode === "tablet" &&
+                    member.tabletArrowPositionX !== undefined &&
+                    member.tabletArrowPositionY !== undefined
+                  ) {
+                    effectiveArrowX = member.tabletArrowPositionX;
+                    effectiveArrowY = member.tabletArrowPositionY;
+                  } else if (
+                    mapArrowMode === "mobile" &&
+                    member.mobileArrowPositionX !== undefined &&
+                    member.mobileArrowPositionY !== undefined
+                  ) {
+                    effectiveArrowX = member.mobileArrowPositionX;
+                    effectiveArrowY = member.mobileArrowPositionY;
+                  }
 
                   const hasMapArrow =
                     effectiveArrowX !== undefined &&
@@ -229,10 +256,10 @@ export default function DiverseTeamSection({
                   const angleArrowToCenterDeg =
                     rotationOverrideDeg !== undefined
                       ? rotationOverrideDeg + CURSOR_ROTATION_OFFSET
-                      : member.arrowPositionX !== undefined && member.arrowPositionY !== undefined
+                      : effectiveArrowX !== undefined && effectiveArrowY !== undefined
                         ? angleTowardTargetPercent(
-                            member.arrowPositionX,
-                            member.arrowPositionY,
+                            effectiveArrowX,
+                            effectiveArrowY,
                             targetX,
                             targetY,
                           )
