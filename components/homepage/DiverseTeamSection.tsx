@@ -110,7 +110,7 @@ export default function DiverseTeamSection({
               {/* Line 1: prefix1 (top-left) */}
               {diverseTeam.heading.prefix1 && (
                 <motion.div className="text-left" {...fadeUp(0)}>
-                  <span className="text-[#474747] text-[12px] sm:text-[16px] md:text-[20px] font-medium uppercase">
+                  <span className="text-[#474747] text-[16px] sm:text-[16px] md:text-[20px] font-medium uppercase">
                     {diverseTeam.heading.prefix1}
                   </span>
                 </motion.div>
@@ -121,7 +121,7 @@ export default function DiverseTeamSection({
                 <div className="min-w-0">
                   {diverseTeam.heading.main1 && (
                     <motion.h2
-                      className="font-pp-neue-corp-wide text-[#F6F6F6] text-[24px] sm:text-[30px] md:text-[46px] lg:text-[60px] font-medium leading-[0.9] md:leading-[80%] tracking-[-1.2px] uppercase"
+                      className="font-pp-neue-corp-wide text-[#F6F6F6] text-[32px] sm:text-[30px] md:text-[46px] lg:text-[60px] font-medium leading-[0.9] md:leading-[80%] tracking-[-1.2px] uppercase"
                       {...fadeUp(0.1)}
                     >
                       {diverseTeam.heading.main1}
@@ -143,7 +143,7 @@ export default function DiverseTeamSection({
               {/* Mobile-only: prefix2 on its own line */}
               {diverseTeam.heading.prefix2 && (
                 <motion.div className="mt-1 text-left sm:hidden" {...fadeUp(0.2)}>
-                  <span className="text-[#474747] text-[12px] font-medium uppercase">
+                  <span className="text-[#474747] text-[16px] font-medium uppercase">
                     {diverseTeam.heading.prefix2}
                   </span>
                 </motion.div>
@@ -152,7 +152,7 @@ export default function DiverseTeamSection({
               {/* Line 3: main2 (centered under the heading) */}
               {diverseTeam.heading.main2 && (
                 <motion.div className="mt-1 text-left sm:text-right" {...fadeUp(0.3)}>
-                  <h2 className="font-pp-neue-corp-wide text-[#F6F6F6] text-[24px] sm:text-[30px] md:text-[46px] lg:text-[60px] font-medium leading-[0.9] md:leading-[80%] tracking-[-1.2px] uppercase">
+                  <h2 className="font-pp-neue-corp-wide text-[#F6F6F6] text-[32px] sm:text-[30px] md:text-[46px] lg:text-[60px] font-medium leading-[0.9] md:leading-[80%] tracking-[-1.2px] uppercase">
                     {diverseTeam.heading.main2}
                   </h2>
                 </motion.div>

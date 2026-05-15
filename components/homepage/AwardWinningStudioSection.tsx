@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -16,7 +16,7 @@ interface AwardWinningStudioSectionProps {
 }
 
 /** Space above fixed MorphingForm pill (fixed px; tune if the CTA overlaps). */
-const FLOATING_CTA_SAFE_BOTTOM = "pb-[100px]";
+const FLOATING_CTA_SAFE_BOTTOM = "pb-[70px]";
 
 export default function AwardWinningStudioSection({
   awardWinningStudio,
@@ -24,20 +24,8 @@ export default function AwardWinningStudioSection({
   const sectionRef = useRef<HTMLElement>(null);
   const textBlockRef = useRef<HTMLDivElement>(null);
   const riveWrapperRef = useRef<HTMLDivElement>(null);
-  const mobileScaleRef = useRef<HTMLDivElement>(null);
   /** 1 once the section has intersected the viewport (either direction); avoids remount/restart when scrolling back up. */
   const [riveVisitKey, setRiveVisitKey] = useState(0);
-
-  useEffect(() => {
-    const inner = mobileScaleRef.current;
-    if (!inner) return;
-    const outer = inner.parentElement;
-    if (!outer) return;
-    const apply = () => { inner.style.transform = `scale(${outer.offsetWidth / 820})`; };
-    apply();
-    window.addEventListener("resize", apply);
-    return () => window.removeEventListener("resize", apply);
-  }, []);
 
   /** All breakpoints: pin, text center → bottom, Rive fades in, then tail scroll. */
   useGSAP(
@@ -61,7 +49,7 @@ export default function AwardWinningStudioSection({
         }
         if (window.innerWidth < 768) {
           const safeBottom = 100;
-          const riveBottom = 0.15 * H + 1.1 * 0.5625 * el.offsetWidth;
+          const riveBottom = 0.15 * H + 0.9 * 0.5625 * el.offsetWidth;
           // Constraint 1: text top must be >= animation bottom + 16px gap.
           const byAnimation = riveBottom + 16 - (H * topFraction - h / 2);
           // Constraint 2: text bottom must be >= safeBottom from section bottom.
@@ -150,7 +138,7 @@ export default function AwardWinningStudioSection({
       {awardWinningStudio.messageSection && (
         <>
           {/* Rive wrapper: always in DOM for GSAP opacity; Rive mounts once section first intersects (no remount on scroll-back). */}
-          <div ref={riveWrapperRef} className="rive-mobile-fade absolute top-[15svh] w-screen origin-top scale-[1.1] md:static md:top-auto md:w-full md:scale-100 md:mt-0">
+          <div ref={riveWrapperRef} className="rive-mobile-fade absolute top-[15svh] left-0 right-0 mx-auto w-[90vw] md:static md:top-auto md:w-full md:mx-0">
             {riveVisitKey > 0 ? (
               <AwardWinningRiveAnimation key={riveVisitKey} />
             ) : null}
@@ -173,39 +161,28 @@ export default function AwardWinningStudioSection({
                     </h2>
                   </div>
                 ) : null}
-                {/* Mobile only — JS scale replicates SVG transform, bypasses iOS min-font-size */}
-                <div className="relative mx-auto w-full overflow-hidden md:hidden" style={{ aspectRatio: "820 / 356" }}>
-                  <div ref={mobileScaleRef} style={{ position: "absolute", top: 0, left: 0, width: "820px", height: "356px", transformOrigin: "top left" }}>
-                    {textContent.backgroundText?.asset?.url && (
-                      <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-                        <Image
-                          src={urlFor(textContent.backgroundText).url()}
-                          alt="Background text"
-                          fill
-                          className="object-contain object-left"
-                          sizes="820px"
-                          priority
-                        />
-                      </div>
-                    )}
-                    <div style={{ position: "absolute", inset: 0, zIndex: 10, pointerEvents: "none" }}>
-                      {textContent.paragraph1 && (
-                        <div style={{ position: "absolute", left: "352px", top: "22px", width: "362px", pointerEvents: "auto" }}>
-                          <p className="font-pp-neue-corp m-0 text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">{textContent.paragraph1}</p>
-                        </div>
-                      )}
-                      {textContent.paragraph2 && (
-                        <div style={{ position: "absolute", left: "352px", top: "171px", width: "362px", pointerEvents: "auto" }}>
-                          <p className="font-pp-neue-corp m-0 text-[16px] font-medium leading-[145%] tracking-[0.32px] text-white">{textContent.paragraph2}</p>
-                        </div>
-                      )}
-                      {textContent.concludingStatement && (
-                        <div style={{ position: "absolute", left: "10px", top: "250px", width: "280px", pointerEvents: "auto" }}>
-                          <p className="font-pp-neue-corp m-0 text-[22px] font-medium leading-[145%] tracking-[0.32px] text-white">{textContent.concludingStatement}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                {/* Mobile: single-column layout */}
+                <div className="flex flex-col gap-3.5 md:hidden pointer-events-auto max-w-[520px]">
+                  {textContent.headline?.trim() && (
+                    <h2 className="font-pp-neue-corp-extended self-stretch m-0 whitespace-pre-line text-[20px] font-medium uppercase leading-[120%] tracking-[0.4px] text-[#333333]">
+                      {textContent.headline}
+                    </h2>
+                  )}
+                  {textContent.concludingStatement && (
+                    <p className="award-concluding-statement font-pp-neue-corp m-0 text-[16px] font-medium leading-[140%] tracking-[0.32px] text-white max-w-58.5 sm:max-w-none">
+                      {textContent.concludingStatement}
+                    </p>
+                  )}
+                  {textContent.paragraph2 && (
+                    <p className="font-pp-neue-corp m-0 text-[14px] font-medium leading-[140%] tracking-[0.32px] text-white">
+                      {textContent.paragraph2}
+                    </p>
+                  )}
+                  {textContent.paragraph1 && (
+                    <p className="font-pp-neue-corp m-0 text-[14px] font-medium leading-[140%] tracking-[0.32px] text-white">
+                      {textContent.paragraph1}
+                    </p>
+                  )}
                 </div>
 
                 {/* Tab / Desktop — original SVG + foreignObject, untouched */}
