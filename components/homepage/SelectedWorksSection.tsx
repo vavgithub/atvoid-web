@@ -17,9 +17,15 @@ export default function SelectedWorksSection({
   if (!selectedWorks) return null;
 
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [expandedNarratives, setExpandedNarratives] = useState<Set<number>>(new Set());
+  const programmaticRef = useRef(false);
+  const programmaticTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const swipeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  const totalCards = selectedWorks?.cards?.length ?? 0;
+  const canScrollLeft = activeIndex > 0;
+  const canScrollRight = activeIndex < totalCards - 1;
 
   const toggleNarrative = (idx: number) => {
     setExpandedNarratives(prev => {
@@ -29,28 +35,55 @@ export default function SelectedWorksSection({
     });
   };
 
-  const updateScrollState = () => {
+  const scrollToIndex = (index: number) => {
     const el = scrollRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 0);
-    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+    if (!el || index < 0 || index >= totalCards) return;
+    const cards = Array.from(el.querySelectorAll<HTMLElement>("[data-card]"));
+    const card = cards[index];
+    if (!card) return;
+    const elRect = el.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const cardLeft = el.scrollLeft + cardRect.left - elRect.left;
+    const targetLeft = cardLeft - (el.clientWidth - cardRect.width) / 2;
+    programmaticRef.current = true;
+    clearTimeout(programmaticTimerRef.current);
+    programmaticTimerRef.current = setTimeout(() => { programmaticRef.current = false; }, 600);
+    el.scrollTo({ left: Math.max(0, targetLeft), behavior: "smooth" });
+    setActiveIndex(index);
+  };
+
+  const scroll = (dir: "left" | "right") => {
+    scrollToIndex(dir === "right" ? activeIndex + 1 : activeIndex - 1);
   };
 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    updateScrollState();
-    el.addEventListener("scroll", updateScrollState, { passive: true });
-    return () => el.removeEventListener("scroll", updateScrollState);
+    const onScroll = () => {
+      if (programmaticRef.current) return;
+      clearTimeout(swipeTimerRef.current);
+      swipeTimerRef.current = setTimeout(() => {
+        const elRect = el.getBoundingClientRect();
+        const viewCenter = el.clientWidth / 2;
+        const cards = Array.from(el.querySelectorAll<HTMLElement>("[data-card]"));
+        let minDist = Infinity;
+        let closestIdx = 0;
+        cards.forEach((card, i) => {
+          const cardRect = card.getBoundingClientRect();
+          const cardCenter = cardRect.left - elRect.left + cardRect.width / 2;
+          const dist = Math.abs(cardCenter - viewCenter);
+          if (dist < minDist) { minDist = dist; closestIdx = i; }
+        });
+        setActiveIndex(closestIdx);
+      }, 100);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      clearTimeout(swipeTimerRef.current);
+      clearTimeout(programmaticTimerRef.current);
+    };
   }, []);
-
-  const scroll = (dir: "left" | "right") => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const card = el.querySelector<HTMLElement>("a, div.shrink-0");
-    const amount = (card?.offsetWidth ?? 344) + 40;
-    el.scrollBy({ left: dir === "right" ? amount : -amount, behavior: "smooth" });
-  };
 
   return (
     <section className="relative z-10 -mr-5 mt-[100px] w-full md:-mr-10 md:mt-[282px] lg:-mr-20">
@@ -222,6 +255,7 @@ export default function SelectedWorksSection({
                   <Link
                     key={idx}
                     href={card.href}
+                    data-card
                     className="flex w-[calc(100vw-2.5rem)] max-w-[344px] shrink-0 flex-col snap-center md:w-[560px] md:max-w-none"
                   >
                     {cardContent}
@@ -229,6 +263,7 @@ export default function SelectedWorksSection({
                 ) : (
                   <div
                     key={idx}
+                    data-card
                     className="flex w-[calc(100vw-2.5rem)] max-w-[344px] shrink-0 flex-col snap-center md:w-[560px] md:max-w-none"
                   >
                     {cardContent}
