@@ -301,6 +301,8 @@ export const homePageQuery = `*[_type == "homePage" && _id == "homePage"][0]{
       arrowPositionY,
       mobileArrowPositionX,
       mobileArrowPositionY,
+      tabletArrowPositionX,
+      tabletArrowPositionY,
       arrowRotationDeg
     }
   },

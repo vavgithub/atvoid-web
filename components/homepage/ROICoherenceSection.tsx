@@ -12,7 +12,7 @@ export default function ROICoherenceSection({
   if (!roiOfCoherence) return null;
 
   return (
-    <section className="w-screen ml-[calc(50%-50vw)] min-h-[600px] md:min-h-[1750px] relative overflow-hidden rounded-3xl md:px-10 lg:px-20 md:pt-[100px] lg:pt-[220px] pb-[133px] md:pb-0">
+    <section className="w-screen ml-[calc(50%-50vw)] min-h-[600px] md:min-h-[1750px] lg:min-h-[1180px] xl:min-h-[1320px] 2xl:min-h-[1750px] relative overflow-hidden rounded-3xl md:px-10 lg:px-20 md:pt-[100px] pb-[133px] md:pb-0 md:mb-16">
       {roiOfCoherence.backgroundImage?.asset?.url && (
         <>
           {/* Desktop/tablet: full-bleed bg */}
@@ -21,7 +21,7 @@ export default function ROICoherenceSection({
               src={urlFor(roiOfCoherence.backgroundImage).url()}
               alt=""
               fill
-              className="md:object-cover lg:object-contain object-center scale-125 md:scale-100"
+              className="object-cover object-center scale-125 md:scale-100 lg:object-cover xl:object-cover 2xl:object-contain"
               sizes="100vw"
             />
           </div>
@@ -45,7 +45,7 @@ export default function ROICoherenceSection({
           </h2>
         )}
         {roiOfCoherence.cards && roiOfCoherence.cards.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-10 pt-[90px] px-5 md:justify-center md:gap-14 md:px-0 md:max-xl:mx-auto md:max-xl:grid md:max-xl:w-full md:max-xl:max-w-[600px] md:max-xl:grid-cols-2 md:max-xl:justify-items-center md:max-xl:gap-x-10 md:max-xl:gap-y-14 xl:flex xl:flex-nowrap xl:justify-start xl:gap-4 2xl:justify-center overflow-visible xl:overflow-x-auto xl:overflow-y-visible xl:scrollbar-hide">
+          <div className="flex flex-wrap justify-center gap-16 pt-[90px] px-5 md:justify-center md:gap-14 md:px-0 md:max-xl:mx-auto md:max-xl:grid md:max-xl:w-full md:max-xl:max-w-[600px] md:max-xl:grid-cols-2 md:max-xl:justify-items-center md:max-xl:gap-x-10 md:max-xl:gap-y-14 xl:flex xl:flex-nowrap xl:justify-start xl:gap-4 2xl:justify-center overflow-visible xl:overflow-x-auto xl:overflow-y-visible xl:scrollbar-hide">
             {roiOfCoherence.cards.map((card, idx) => (
               <div
                 key={idx}
